@@ -4,7 +4,7 @@ Reliabilty Analysis
 Example 6.6 - Nonlinear limit state function with non-normal variables
 @author: MVREAL
 """
-from realpy import *
+from main import Reliability
 
 #
 # Step 0 - Beam: g(Y, Z, M) = Y*Z-M = 0
@@ -40,5 +40,5 @@ dvar = [
 # FORM method
 #
 beam = Reliability(xvar, dvar, gfunction, None, None)
-beam.form(iHLRF=True, toler=1.e-6)
+#beam.form(iHLRF=True, toler=1.e-6)
 #

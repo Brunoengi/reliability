@@ -5,7 +5,14 @@ Created on Sat Sep 28 05:17:45 2024
 @author: BrunoTeixeira
 """
 
-from src.distribution import Normal, Beta, Frechet, Gama, Gumbell, LogNormal, Uniform, Weibull
+from distribution.Beta import Beta
+from distribution.Frechet import Frechet
+from distribution.Gama import Gama
+from distribution.Gumbel import Gumbel
+from distribution.LogNormal import LogNormal
+from distribution.Normal import Normal
+from distribution.Uniform import Uniform
+from distribution.Weibull import Weibull
 
 DISTRIBUTION_MAP = {
   'gauss': {
@@ -22,7 +29,7 @@ DISTRIBUTION_MAP = {
   },
   'gumbel': {
     'names': ['gumbel', 'extvalue1', 'evt1max'],
-    'distribution': Gumbell  
+    'distribution': Gumbel
   },
   'frechet': {
     'names': ['frechet', 'extvalue2', 'evt2max'],
@@ -42,7 +49,7 @@ DISTRIBUTION_MAP = {
   }
 }
 
-def renameVariableDistribuition(oldName):
+def renameVariableDistribution(oldName):
         
     lowerOldName = oldName.lower()
 
@@ -52,7 +59,12 @@ def renameVariableDistribuition(oldName):
 
     raise ValueError(f"{oldName} is not a valid name")
 
-def createDistribution(name):
-    new_name = renameVariableDistribuition(name)
+def createDistribution(name, dictionaryInput):
+    # Rename the distribution using the renameVariableDistribuition function
+    new_name = renameVariableDistribution(name)
+    
+    # Get the corresponding distribution class from the dictionary
     distribution_class = DISTRIBUTION_MAP[new_name]['distribution']
-    return distribution_class
+
+    # Instantiate the distribution with the parameters
+    return distribution_class(dictionaryInput)

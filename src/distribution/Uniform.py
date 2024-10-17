@@ -1,6 +1,6 @@
-from src.distribution.AbstractDistribution import AbstractDistribution 
-from src.utils.validate.Dictionary import ValidateDictionary
-from src.utils.validate.Class import ValidateClass
+from distribution.AbstractDistribution import AbstractDistribution 
+from utils.validate.Dictionary import ValidateDictionary
+from utils.validate.Class import ValidateClass
 import numpy as np
 
 class Uniform(AbstractDistribution):

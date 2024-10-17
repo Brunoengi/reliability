@@ -5,9 +5,9 @@ Created on Tue Oct  8 12:32:15 2024
 @author: BrunoTeixeira
 """
 
-from src.distribution.AbstractDistribution import AbstractDistribution 
-from src.utils.validate.Dictionary import ValidateDictionary
-from src.utils.validate.Class import ValidateClass
+from distribution.AbstractDistribution import AbstractDistribution 
+from utils.validate.Dictionary import ValidateDictionary
+from utils.validate.Class import ValidateClass
 
 class Normal(AbstractDistribution):
   def __init__(self, dictionaryInfo):

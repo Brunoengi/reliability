@@ -13,10 +13,10 @@ from scipy import optimize
 from scipy.optimize import fsolve
 import scipy.linalg
 from scipy.special import gamma
-import pandas as pd
-import matplotlib.pyplot as plt
-import time
-from src.utils.distribution import createDistribution
+#import pandas as pd
+#import matplotlib.pyplot as plt
+#import time
+from utils.distribution import createDistribution
 
 
 class Reliability():
@@ -47,10 +47,10 @@ class Reliability():
             #
             # Setting standard variable distribution names and create distribution
             #
-            distribution = createDistribution(var['vardist'])
-            var['varmean'] = distribution['varmean']
-            var['varcov'] = distribution['varcov']
-            var['varstd'] = distribution['varstd']
+            distributionVariable = createDistribution(var['vardist'], var)
+            var['varmean'] = distributionVariable.varmean
+            var['varcov'] = distributionVariable.varcov
+            var['varstd'] = distributionVariable.varstd
 
         # Initial values of the aleatory variables
         #
@@ -69,6 +69,9 @@ class Reliability():
             self.Rz = np.eye(self.nxvar)
         else:
             self.Rz = self.nataf()
+
+        for nome, valor in vars(self).items():
+            print(f'{nome}: {valor}')
 
 #
 # Nataf correction of the correlation matrix
