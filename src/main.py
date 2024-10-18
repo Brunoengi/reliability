@@ -44,24 +44,30 @@ class Reliability():
         #
        
         for var in self.xvar:              
-            #
-            # Setting standard variable distribution names and create distribution
-            #
-            distributionVariable = createDistribution(var['vardist'], var)
-            var['varmean'] = distributionVariable.varmean
-            var['varcov'] = distributionVariable.varcov
-            var['varstd'] = distributionVariable.varstd
-
+          #
+          # Setting standard variable distribution names, create distribution and update the `var` dictionary with all distribution attributes
+          #
+          var.update(vars(createDistribution(var)))
+        #
         # Initial values of the aleatory variables
         #
         if x0 is None:
-          # Original mean of the variables x
-          self.x0 = np.array([float(var['varmean']) for var in self.xvar])
-          for var, mean in zip(self.xvar, self.x0):
-            var['varhmean'] = mean
+            #
+            # Original mean of the variables x
+            #
+            i = -1
+            self.x0 = np.zeros(self.nxvar)
+            for var in self.xvar:
+                i += 1
+                # Mean value of the random variables x
+                self.x0[i] = float(var['varmean'])
+                var['varhmean'] = float(var['varmean'])
         else:
-            for var, mean in zip(self.xvar, self.x0):
-                var['varhmean'] = mean
+            i = -1
+            for var in self.xvar:
+                i += 1
+                # Mean value of the random variables x
+                var['varhmean'] = self.x0[i]
         #
         # Initializes the correlation matrix
         #

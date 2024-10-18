@@ -1,6 +1,6 @@
 """
-Cálculo da probabilidade de falha para uma combinação de distribuição normal e beta
-Método de Monte Carlo Força Bruta
+Cálculo da probabilidade de falha para um combinação de distribuição normal e beta
+Mauro Real
 22/02/2023
 """
 #import numpy as np
@@ -11,7 +11,6 @@ Método de Monte Carlo Força Bruta
 #from scipy.stats import beta
 #from scipy.special import erf
 from main import Reliability
-
 
 
 
@@ -44,8 +43,13 @@ def gfunction(x, d):
 
 xvar = [
     {'varname': 'R', 'vardist': 'normal', 'varmean': 200, 'varstd': 30 },
-    {'varname': 'S', 'vardist': 'beta', 'parameter1': 50, 'parameter2': 150, 'parameter3': 2.625, 'parameter4': 2.625}      
+#    {'varname': 'S', 'vardist': 'uniform', 'parameter1': 50, 'parameter2': 150}      
+#    {'varname': 'S', 'vardist': 'beta', 'parameter1': 50, 'parameter2': 150, 'parameter3': 2.65, 'parameter4': 2.65} 
 #    {'varname': 'S', 'vardist': 'normal', 'varmean': 100, 'varstd': 20 }
+#    {'varname': 'S', 'vardist': 'lognormal', 'varmean': 100, 'varstd': 20 }
+#    {'varname': 'S', 'vardist': 'gumbel', 'varmean': 100, 'varstd': 20 }
+#    {'varname': 'S', 'vardist': 'frechet', 'varmean': 100, 'varstd': 20 }
+    {'varname': 'S', 'vardist': 'weibull', 'varmean': 100, 'varstd': 20, 'parameter3': 50 }
     ]
 
 # Design variables
@@ -56,15 +60,8 @@ dvar = [
 ]
 
 #
-# MCS - Adaptive  method
+# FORM method
 #
-column = Reliability(xvar, dvar, gfunction)
-#column.adaptive(100, 10000, 0.05, 1.00)
+column = Reliability(xvar, dvar, gfunction, None)
+#column.mc2(10, 100_000, 0.05, 1.00)
 #
-
-
-
-
-
-
-

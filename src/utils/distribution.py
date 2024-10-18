@@ -13,6 +13,7 @@ from distribution.LogNormal import LogNormal
 from distribution.Normal import Normal
 from distribution.Uniform import Uniform
 from distribution.Weibull import Weibull
+from utils.Dictionary import DictionaryUtils
 
 DISTRIBUTION_MAP = {
   'gauss': {
@@ -54,17 +55,23 @@ def renameVariableDistribution(oldName):
     lowerOldName = oldName.lower()
 
     for new_name, synonyms in DISTRIBUTION_MAP.items():
-        if lowerOldName in synonyms['names']:
-            return new_name 
+      if lowerOldName in synonyms['names']:
+        return new_name 
 
     raise ValueError(f"{oldName} is not a valid name")
 
-def createDistribution(name, dictionaryInput):
-    # Rename the distribution using the renameVariableDistribuition function
-    new_name = renameVariableDistribution(name)
-    
-    # Get the corresponding distribution class from the dictionary
-    distribution_class = DISTRIBUTION_MAP[new_name]['distribution']
+def createDistribution(dictionaryInput):
+  # Rename the distribution using the renameVariableDistribuition function
+  new_name = renameVariableDistribution(dictionaryInput['vardist'])
 
-    # Instantiate the distribution with the parameters
-    return distribution_class(dictionaryInput)
+  # Modified Dictionary based on new name
+  modified_dict = {**dictionaryInput, 'vardist': new_name}
+
+  # Convert all int values to float values
+  modified_dict = DictionaryUtils.convert_ints_to_floats(modified_dict)
+  
+  # Get the corresponding distribution class from the dictionary
+  distribution_class = DISTRIBUTION_MAP[new_name]['distribution']
+
+  # Instantiate the distribution with the parameters
+  return distribution_class(modified_dict)

@@ -4,7 +4,7 @@ Reliabilty Analysis
 Example 7.7 - Linear limit state function with non-normal independent variables
 @author: MVREAL
 """
-from realpy import *
+from main import Reliability
 
 #
 # Step 0 - Column: g(R, G, Q, W) = R-G-Q-W = 0
@@ -42,5 +42,5 @@ dvar = [
 # FORM adaptative method
 #
 column = Reliability(xvar, dvar, gfunction)
-column.form(iHLRF=True, toler=1.e-6)
+#column.form(iHLRF=True, toler=1.e-6)
 #
