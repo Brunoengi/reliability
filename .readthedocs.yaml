@@ -12,3 +12,8 @@ build:
 
 mkdocs:
   configuration: mkdocs.yml
+
+# Install additional dependencies
+python:
+  install:
+    - requirements: requirements.txt
