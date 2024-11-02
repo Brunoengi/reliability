@@ -1,0 +1,29 @@
+# Nome do projeto que aparecerá na barra de título
+site_name: "Reliability"
+
+# URL do site (pode ser deixada vazia, o Read the Docs define isso automaticamente)
+site_url: ""
+
+# Tema do site - aqui estou usando o tema 'material', que é bem popular
+theme:
+  name: "material"
+
+# Linguagem do site
+locale: "en"
+
+# Lista de páginas do site (navegação)
+nav:
+  - Home: docs/home.md
+  - Quick Start:
+      - Introduction: docs/introduction.md
+
+# Plugins do MkDocs
+plugins:
+  - search  # Adiciona funcionalidade de busca
+
+# Configuração do Markdown
+markdown_extensions:
+  - admonition
+  - codehilite
+  - toc:
+      permalink: True  # Adiciona links para os títulos da página
