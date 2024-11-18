@@ -1,9 +1,9 @@
-Instalação do Projeto
+Project Installation
 ======================
 
 Este guia irá orientá-lo sobre como instalar o projeto de confiabilidade.
 
-Pré-requisitos
+Requirements
 ---------------
 
 Antes de instalar o projeto, verifique se você possui os seguintes pré-requisitos:
@@ -11,8 +11,8 @@ Antes de instalar o projeto, verifique se você possui os seguintes pré-requisi
 - Python 3.6 ou superior
 - `pip` (gerenciador de pacotes do Python)
 
-Instalação
------------
+Installation
+----------------
 
 Siga os passos abaixo para instalar o projeto:
 
@@ -54,7 +54,7 @@ Siga os passos abaixo para instalar o projeto:
 
    Substitua `seu_modulo` pelo nome do seu módulo.
 
-Conclusão
+Conclusion
 ---------
 
 Após seguir estes passos, o projeto deverá estar instalado e pronto para uso. Se você encontrar algum problema durante a instalação, consulte a seção de **Ajuda** ou **Problemas Conhecidos** na documentação.

@@ -6,13 +6,13 @@
 Reliability Documentation
 =========================
 
-Esta documentação fornece informações sobre o projeto de confiabilidade. Aqui, você pode encontrar guias de instalação, uso, e detalhes sobre as funcionalidades.
+This documentation provides information about reliability design. Here, you can find installation guides, usage, and details about features.
 
 
 .. toctree::
    :maxdepth: 2
    :caption: Quick Start
-
+  
    guide/create
 
 .. toctree::

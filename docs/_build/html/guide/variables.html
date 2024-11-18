@@ -14,7 +14,7 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Instalação do Projeto" href="instalacao.html" />
+    <link rel="next" title="Project Installation" href="instalacao.html" />
     <link rel="prev" title="Simple Examples" href="create.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -54,17 +54,55 @@
 <li><p><a class="reference external" href="#id8">Weibull Distribution</a></p></li>
 </ul>
 </section>
-</section>
 <section id="how-to-create-a-variable-set">
-<h1>How to create a variable set<a class="headerlink" href="#how-to-create-a-variable-set" title="Link to this heading">¶</a></h1>
+<h2>How to create a variable set<a class="headerlink" href="#how-to-create-a-variable-set" title="Link to this heading">¶</a></h2>
+<dl>
+<dt>Variables must be entered in the form of a list where each position in the list will be a dictionary. In the following example, we have a problem involving three variables.</dt><dd><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">xvar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">  </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;Y&#39;</span>,<span class="w"> </span><span class="s1">&#39;vardist&#39;</span>:<span class="w"> </span><span class="s1">&#39;lognormal&#39;</span>,<span class="w"> </span><span class="s1">&#39;varmean&#39;</span>:<span class="w"> </span><span class="m">38</span>.00,<span class="w"> </span><span class="s1">&#39;varcov&#39;</span>:<span class="w"> </span><span class="m">0</span>.10<span class="o">}</span>,
+<span class="w">  </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;Z&#39;</span>,<span class="w"> </span><span class="s1">&#39;vardist&#39;</span>:<span class="w"> </span><span class="s1">&#39;normal&#39;</span>,<span class="w"> </span><span class="s1">&#39;varmean&#39;</span>:<span class="w"> </span><span class="m">60</span>.00,<span class="w"> </span><span class="s1">&#39;varcov&#39;</span>:<span class="w"> </span><span class="m">0</span>.05<span class="o">}</span>,
+<span class="w">  </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;M&#39;</span>,<span class="w"> </span><span class="s1">&#39;vardist&#39;</span>:<span class="w"> </span><span class="s1">&#39;frechet&#39;</span>,<span class="w"> </span><span class="s1">&#39;varmean&#39;</span>:<span class="w"> </span><span class="m">1000</span>.00,<span class="w"> </span><span class="s1">&#39;varcov&#39;</span>:<span class="w"> </span><span class="m">0</span>.30<span class="o">}</span>
+<span class="o">]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>However, the common mandatory parameters of all probability distributions are:
+<code class="docutils literal notranslate"><span class="pre">varname</span></code>,
+<code class="docutils literal notranslate"><span class="pre">vardist</span></code></p>
+<p>The other dictionary keys depend on each distribution type. In this case, it is necessary to read the documentation of the distribution of interest.</p>
+<section id="id1">
+<h3>Normal Distribution<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.</p>
+</section>
+<section id="id2">
+<h3>Log-normal Distribution<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.</p>
+</section>
+<section id="id3">
+<h3>Uniform Distribution<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.</p>
+</section>
+<section id="id4">
+<h3>Beta Distribution<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.</p>
+</section>
+<section id="id5">
+<h3>Gamma Distribution<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.</p>
+</section>
+<section id="id6">
+<h3>Gumbel Distribution<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.</p>
+</section>
+<section id="id7">
+<h3>Frechet Distribution<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.</p>
+</section>
+<section id="id8">
+<h3>Weibull Distribution<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.</p>
+</section>
+</section>
 </section>
 
 
@@ -102,13 +140,13 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Variables Distribution</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#typical-distribution">Typical Distribution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#extreme-value-distribution">Extreme Value Distribution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-create-a-variable-set">How to create a variable set</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#how-to-create-a-variable-set">How to create a variable set</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Instalation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="instalacao.html">Instalação do Projeto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instalacao.html">Project Installation</a></li>
 </ul>
 
 <div class="relations">
@@ -116,7 +154,7 @@
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="create.html" title="previous chapter">Simple Examples</a></li>
-      <li>Next: <a href="instalacao.html" title="next chapter">Instalação do Projeto</a></li>
+      <li>Next: <a href="instalacao.html" title="next chapter">Project Installation</a></li>
   </ul></li>
 </ul>
 </div>
