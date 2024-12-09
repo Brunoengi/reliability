@@ -36,47 +36,106 @@ However, the common mandatory parameters of all probability distributions are:
 ``vardist``
 
 The other dictionary keys depend on each distribution type. In this case, it is necessary to read the documentation of the distribution of interest.
-  
+
+List of all valid attributes and their expected data types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+=========================  =========================
+Key                         Type (Value)
+=========================  =========================
+varname                       string
+vardist                       'normal' | 'lognormal' | 'frechet' | 'gumbel'
+varmean                       number | float
+varcov                        number | float
+varstd                        number | float
+varhmean                      number | float
+parameter1                    number | float
+parameter2                    number | float
+parameter3                    number | float
+parameter4                    number | float
+=========================  =========================
 
 Normal Distribution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.
-
+Possible keys:
+                
+================ ======================================  =========================
+Combination          Required                                           Optional
+================ ======================================  =========================
+1                  varname, vardist, varmean, varcov                      varhmean
+2                  varname, vardist, varmean, varstd                      varhmean
+================ ======================================  =========================
 
 Log-normal Distribution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.
+Possible keys:
+                
+================ ======================================  =========================
+Combination          Required                                           Optional
+================ ======================================  =========================
+1                  varname, vardist, varmean, varcov                      varhmean
+2                  varname, vardist, varmean, varstd                      varhmean
+================ ======================================  =========================
 
 Uniform Distribution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.
+Possible keys:
+                
+================ ===============================================  =========================
+Combination          Required                                           Optional
+================ ===============================================  =========================
+1                  varname, vardist, varmean, varstd                      varhmean
+2                  varname, vardist, parameter1, parameter2               varhmean
+================ ===============================================  =========================
 
 Beta Distribution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.
+Possible keys:
+                
+================ ===============================================================================  =========================
+Combination          Required                                                                             Optional
+================ ===============================================================================  =========================
+1                  varname, vardist, parameter1, parameter2, parameter3, parameter4                       varhmean
+================ ===============================================================================  =========================
 
 Gamma Distribution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.
+Possible keys:
+                
+================ ======================================  =========================
+Combination          Required                                           Optional
+================ ======================================  =========================
+1                  varname, vardist, varmean, varcov                      varhmean
+================ ======================================  =========================
 
 
 Gumbel Distribution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.
+================ ======================================  =========================
+Combination          Required                                           Optional
+================ ======================================  =========================
+1                  varname, vardist, varmean, varstd                      varhmean
+2                  varname, vardist, varmean, varcov                      varhmean
+================ ======================================  =========================
 
 
 Frechet Distribution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.
+================ ======================================  =========================
+Combination          Required                                           Optional
+================ ======================================  =========================
+1                  varname, vardist, varmean, varcov                      varhmean
+================ ======================================  =========================
 
 Weibull Distribution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.
+================ ===============================================  =========================
+Combination          Required                                           Optional
+================ ===============================================  =========================
+1                varname, vardist, varmean, varstd, parameter3          varhmean
+================ ===============================================  =========================

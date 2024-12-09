@@ -70,37 +70,204 @@
 <code class="docutils literal notranslate"><span class="pre">varname</span></code>,
 <code class="docutils literal notranslate"><span class="pre">vardist</span></code></p>
 <p>The other dictionary keys depend on each distribution type. In this case, it is necessary to read the documentation of the distribution of interest.</p>
+<section id="list-of-all-valid-attributes-and-their-expected-data-types">
+<h3>List of all valid attributes and their expected data types<a class="headerlink" href="#list-of-all-valid-attributes-and-their-expected-data-types" title="Link to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Key</p></th>
+<th class="head"><p>Type (Value)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>varname</p></td>
+<td><p>string</p></td>
+</tr>
+<tr class="row-odd"><td><p>vardist</p></td>
+<td><p>‘normal’ | ‘lognormal’ | ‘frechet’ | ‘gumbel’</p></td>
+</tr>
+<tr class="row-even"><td><p>varmean</p></td>
+<td><p>number | float</p></td>
+</tr>
+<tr class="row-odd"><td><p>varcov</p></td>
+<td><p>number | float</p></td>
+</tr>
+<tr class="row-even"><td><p>varstd</p></td>
+<td><p>number | float</p></td>
+</tr>
+<tr class="row-odd"><td><p>varhmean</p></td>
+<td><p>number | float</p></td>
+</tr>
+<tr class="row-even"><td><p>parameter1</p></td>
+<td><p>number | float</p></td>
+</tr>
+<tr class="row-odd"><td><p>parameter2</p></td>
+<td><p>number | float</p></td>
+</tr>
+<tr class="row-even"><td><p>parameter3</p></td>
+<td><p>number | float</p></td>
+</tr>
+<tr class="row-odd"><td><p>parameter4</p></td>
+<td><p>number | float</p></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="id1">
 <h3>Normal Distribution<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.</p>
+<p>Possible keys:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Combination</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Optional</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>varname, vardist, varmean, varcov</p></td>
+<td><p>varhmean</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>varname, vardist, varmean, varstd</p></td>
+<td><p>varhmean</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="id2">
 <h3>Log-normal Distribution<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.</p>
+<p>Possible keys:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Combination</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Optional</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>varname, vardist, varmean, varcov</p></td>
+<td><p>varhmean</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>varname, vardist, varmean, varstd</p></td>
+<td><p>varhmean</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="id3">
 <h3>Uniform Distribution<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.</p>
+<p>Possible keys:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Combination</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Optional</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>varname, vardist, varmean, varstd</p></td>
+<td><p>varhmean</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>varname, vardist, parameter1, parameter2</p></td>
+<td><p>varhmean</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="id4">
 <h3>Beta Distribution<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.</p>
+<p>Possible keys:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Combination</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Optional</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>varname, vardist, parameter1, parameter2, parameter3, parameter4</p></td>
+<td><p>varhmean</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="id5">
 <h3>Gamma Distribution<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.</p>
+<p>Possible keys:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Combination</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Optional</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>varname, vardist, varmean, varcov</p></td>
+<td><p>varhmean</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="id6">
 <h3>Gumbel Distribution<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Combination</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Optional</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>varname, vardist, varmean, varstd</p></td>
+<td><p>varhmean</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>varname, vardist, varmean, varcov</p></td>
+<td><p>varhmean</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="id7">
 <h3>Frechet Distribution<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Combination</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Optional</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>varname, vardist, varmean, varcov</p></td>
+<td><p>varhmean</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="id8">
 <h3>Weibull Distribution<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et convallis ligula, aliquam consectetur nunc. Aliquam at justo non sapien euismod lobortis. In lacinia fringilla semper. Sed sed ex sit amet felis aliquet congue quis vel turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas vitae gravida dui, quis consectetur est. Donec sodales magna sed nisi viverra commodo. Nullam sed lectus euismod, blandit libero eu, ornare nulla. Nunc congue fermentum metus, sit amet elementum leo vestibulum ac. Duis vel congue elit. Integer porttitor tellus nec feugiat malesuada. Ut cursus sapien ac sapien suscipit, nec rutrum lacus semper.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Combination</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Optional</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>varname, vardist, varmean, varstd, parameter3</p></td>
+<td><p>varhmean</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 </section>
@@ -133,6 +300,7 @@
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Quick Start</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="start.html">Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="create.html">Simple Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Variable Types</span></p>
@@ -147,6 +315,10 @@
 <p class="caption" role="heading"><span class="caption-text">Instalation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="instalacao.html">Project Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="design.html">Design Variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="limit.html">Limit State Function</a></li>
 </ul>
 
 <div class="relations">

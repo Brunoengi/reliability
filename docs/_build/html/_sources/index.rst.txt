@@ -10,19 +10,29 @@ This documentation provides information about reliability design. Here, you can 
 
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Quick Start
+  :maxdepth: 1
+  :caption: Quick Start
 
-   guide/create
+  guide/start
+  guide/create
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Variable Types
+  :maxdepth: 2
+  :caption: Variable Types
 
-   guide/variables
+  guide/variables
   
 .. toctree::
-   :maxdepth: 2
-   :caption: Instalation
+  :maxdepth: 2
+  :caption: Instalation
 
-   guide/instalacao
+  guide/instalacao
+
+.. toctree::
+  :maxdepth: 5
+  :hidden:
+
+  guide/design
+  guide/limit
+
+
