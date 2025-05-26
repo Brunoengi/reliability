@@ -148,6 +148,69 @@ beam.form<span class="o">(</span><span class="nv">iHLRF</span><span class="o">=<
 </div>
 </section>
 </section>
+<section id="example-3-load-capacity-in-beams-correlated-variables-with-distribution-different-from-normal">
+<h2>Example 3 - Load capacity in beams: correlated variables with distribution different from normal<a class="headerlink" href="#example-3-load-capacity-in-beams-correlated-variables-with-distribution-different-from-normal" title="Link to this heading">¶</a></h2>
+<p>The proposed problem is similar to problem 1, the difference is that the variables are correlated. The demonstration coefficients between pairs of estimates are presented below:</p>
+<p><span class="math notranslate nohighlight">\(\rho_{x_{12}} = \rho_{x_{21}} = 0{,}8\hspace{2em} \rho_{x_{23}} = \rho_{x_{32}} = 0{,}3\)</span></p>
+<p>Considering:</p>
+<p><span class="math notranslate nohighlight">\(x_{1} = R \hspace{2em} x_{2} = G \hspace{2em} x_{3} = Q \hspace{2em} x_{4} = W\)</span></p>
+<p>In this context, it is possible to define the correlation matrix <span class="math notranslate nohighlight">\(R_{x}\)</span>:</p>
+<p><span class="math notranslate nohighlight">\(R_x = \begin{bmatrix}
+1{,}0 &amp; 0{,}8 &amp; 0{,}0 &amp; 0{,}0 \\
+0{,}8 &amp; 1{,}0 &amp; 0{,}3 &amp; 0{,}0 \\
+0{,}0 &amp; 0{,}3 &amp; 1{,}0 &amp; 0{,}0 \\
+0{,}0 &amp; 0{,}0 &amp; 0{,}0 &amp; 1{,}0
+\end{bmatrix}\)</span></p>
+<section id="id2">
+<h3>Computational development<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from<span class="w"> </span>main<span class="w"> </span>import<span class="w"> </span>Reliability
+
+<span class="c1">#</span>
+<span class="c1"># Step 0 - Column: g(R, G, Q, W) = R-G-Q-W = 0</span>
+<span class="c1">#</span>
+
+
+def<span class="w"> </span>gfunction<span class="o">(</span>x,<span class="w"> </span>d<span class="o">)</span>:
+
+<span class="w">    </span><span class="nv">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>d<span class="o">[</span><span class="m">0</span><span class="o">]</span><span class="w"> </span>*<span class="w"> </span>x<span class="o">[</span><span class="m">0</span><span class="o">]</span><span class="w"> </span>-<span class="w"> </span>d<span class="o">[</span><span class="m">1</span><span class="o">]</span><span class="w"> </span>*<span class="w"> </span>x<span class="o">[</span><span class="m">1</span><span class="o">]</span><span class="w"> </span>-<span class="w"> </span>d<span class="o">[</span><span class="m">2</span><span class="o">]</span><span class="w"> </span>*<span class="w"> </span>x<span class="o">[</span><span class="m">2</span><span class="o">]</span><span class="w"> </span>-<span class="w"> </span>d<span class="o">[</span><span class="m">3</span><span class="o">]</span><span class="w"> </span>*<span class="w"> </span>x<span class="o">[</span><span class="m">3</span><span class="o">]</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span>g
+
+
+<span class="c1"># Data input</span>
+<span class="c1">#</span>
+<span class="c1"># Random variables: name, probability distribution, mean and coefficient of variation</span>
+
+<span class="nv">xvar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;R&#39;</span>,<span class="w"> </span><span class="s1">&#39;vardist&#39;</span>:<span class="w"> </span><span class="s1">&#39;normal&#39;</span>,<span class="w"> </span><span class="s1">&#39;varmean&#39;</span>:<span class="w"> </span><span class="m">975</span>.00,<span class="w"> </span><span class="s1">&#39;varcov&#39;</span>:<span class="w"> </span><span class="m">0</span>.15<span class="o">}</span>,
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;G&#39;</span>,<span class="w"> </span><span class="s1">&#39;vardist&#39;</span>:<span class="w"> </span><span class="s1">&#39;normal&#39;</span>,<span class="w"> </span><span class="s1">&#39;varmean&#39;</span>:<span class="w"> </span><span class="m">200</span>.00,<span class="w"> </span><span class="s1">&#39;varcov&#39;</span>:<span class="w"> </span><span class="m">0</span>.07<span class="o">}</span>,
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;Q&#39;</span>,<span class="w"> </span><span class="s1">&#39;vardist&#39;</span>:<span class="w"> </span><span class="s1">&#39;normal&#39;</span>,<span class="w"> </span><span class="s1">&#39;varmean&#39;</span>:<span class="w"> </span><span class="m">300</span>.00,<span class="w"> </span><span class="s1">&#39;varcov&#39;</span>:<span class="w"> </span><span class="m">0</span>.12<span class="o">}</span>,
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;w&#39;</span>,<span class="w"> </span><span class="s1">&#39;vardist&#39;</span>:<span class="w"> </span><span class="s1">&#39;normal&#39;</span>,<span class="w"> </span><span class="s1">&#39;varmean&#39;</span>:<span class="w"> </span><span class="m">150</span>.00,<span class="w"> </span><span class="s1">&#39;varcov&#39;</span>:<span class="w"> </span><span class="m">0</span>.20<span class="o">}</span>
+<span class="o">]</span>
+<span class="c1"># Design variables</span>
+
+<span class="nv">dvar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;factor1&#39;</span>,<span class="w"> </span><span class="s1">&#39;varvalue&#39;</span>:<span class="w"> </span><span class="m">1</span>.00<span class="o">}</span>,
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;factor2&#39;</span>,<span class="w"> </span><span class="s1">&#39;varvalue&#39;</span>:<span class="w"> </span><span class="m">1</span>.00<span class="o">}</span>,
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;factor3&#39;</span>,<span class="w"> </span><span class="s1">&#39;varvalue&#39;</span>:<span class="w"> </span><span class="m">1</span>.00<span class="o">}</span>,
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;factor4&#39;</span>,<span class="w"> </span><span class="s1">&#39;varvalue&#39;</span>:<span class="w"> </span><span class="m">1</span>.00<span class="o">}</span>
+<span class="o">]</span>
+
+<span class="c1"># Correlation matrix</span>
+
+<span class="nv">corrmatrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[[</span><span class="m">1</span>.00,<span class="w"> </span><span class="m">0</span>.80,<span class="w"> </span><span class="m">0</span>.00,<span class="w"> </span><span class="m">0</span>.00<span class="o">]</span>,
+<span class="w">              </span><span class="o">[</span><span class="m">0</span>.80,<span class="w"> </span><span class="m">1</span>.00,<span class="w"> </span><span class="m">0</span>.30,<span class="w"> </span><span class="m">0</span>.00<span class="o">]</span>,
+<span class="w">              </span><span class="o">[</span><span class="m">0</span>.00,<span class="w"> </span><span class="m">0</span>.30,<span class="w"> </span><span class="m">1</span>.00,<span class="w"> </span><span class="m">0</span>.00<span class="o">]</span>,
+<span class="w">              </span><span class="o">[</span><span class="m">0</span>.00,<span class="w"> </span><span class="m">0</span>.00,<span class="w"> </span><span class="m">0</span>.00,<span class="w"> </span><span class="m">1</span>.00<span class="o">]]</span>
+
+<span class="c1"># FORM adaptative method</span>
+<span class="c1">#</span>
+<span class="nv">column</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Reliability<span class="o">(</span>xvar,<span class="w"> </span>dvar,<span class="w"> </span>gfunction,<span class="w"> </span>None,<span class="w"> </span>corrmatrix<span class="o">)</span>
+column.form<span class="o">(</span><span class="nv">iHLRF</span><span class="o">=</span>True,<span class="w"> </span><span class="nv">toler</span><span class="o">=</span>1e-6<span class="o">)</span>
+<span class="c1">#</span>
+</pre></div>
+</div>
+</section>
+</section>
 </section>
 
 

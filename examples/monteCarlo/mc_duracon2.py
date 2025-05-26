@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy.stats import norm
 from scipy.special import erfinv, erfc
-from realpy import *
+from main import *
 
 
 

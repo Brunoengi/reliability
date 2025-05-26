@@ -4,7 +4,7 @@ Reliability of reinforced concrete beams in fire situation
 
 """
 import numpy as np
-from realpy import *
+from main import *
 
 #
 def gfunction(x, d):

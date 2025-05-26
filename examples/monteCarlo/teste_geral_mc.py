@@ -10,7 +10,7 @@ Mauro Real
 #from scipy.stats import lognorm
 #from scipy.stats import beta
 #from scipy.special import erf
-from main import Reliability
+from main import *
 
 
 

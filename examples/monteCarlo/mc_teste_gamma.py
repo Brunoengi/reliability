@@ -4,7 +4,7 @@ Método de Monte Carlo Força Bruta
 22/02/2023
 """
 import numpy as np
-from realpy import *
+from main import *
 
 
 

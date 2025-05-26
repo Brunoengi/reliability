@@ -4,7 +4,7 @@ Reliabilty Analysis
 Example 7.9 - Nonlinear limit state function with non-normal correlated variables
 @author: MVREAL
 """
-from realpy import *
+from main import *
 
 #
 # Step 0 - Column: g(Y, Z, M) = Y*Z-M = 0

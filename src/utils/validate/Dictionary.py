@@ -14,13 +14,13 @@ class ValidateDictionary:
       missing_keys = [key for key in keys if key not in dictionary]
       raise KeyError(f"Error: The key(s) '{missing_keys}' are missing in {dictionary}")  
   
-@staticmethod
-def is_float(dictionary, *keys):
-  for key in keys:
-    value = dictionary.get(key)
-    if not isinstance(value, float):
-      raise TypeError(f"Error: The key '{key}' must be associated with a float type value, but got {type(value).__name__} with value {value}")
-        
+  @staticmethod
+  def is_float(dictionary, *keys):
+    for key in keys:
+      value = dictionary.get(key)
+      if not isinstance(value, float):
+        raise TypeError(f"Error: The key '{key}' must be associated with a float type value, but got {type(value).__name__} with value {value}")
+          
   @staticmethod
   def is_dictionary(dictionary):
     try:

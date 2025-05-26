@@ -4,7 +4,7 @@ Reliabilty Analysis
 Example 7.4 - Nonlinear limit state function with  normal independent variables
 @author: MVREAL
 """
-from main import Reliability
+from main import *
 
 #
 # Step 0 - Beam: g(Y, Z, M) = Y*Z-M = 0

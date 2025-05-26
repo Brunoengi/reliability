@@ -13,9 +13,9 @@ from scipy import optimize
 from scipy.optimize import fsolve
 import scipy.linalg
 from scipy.special import gamma
-#import pandas as pd
-#import matplotlib.pyplot as plt
-#import time
+import pandas as pd
+import matplotlib.pyplot as plt
+import time
 from utils.distribution import createDistribution
 
 

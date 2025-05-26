@@ -7,7 +7,7 @@ Strategies for finding the design point under bounded random variables
 Structural Safety 58 (2016) 79-93
 @author: MVREAL
 """
-from realpy import *
+from main import *
 
 #
 # Step 0 - Beam: g(D, P) = (Pb.L/4 - e) - P(D - D^2/L)

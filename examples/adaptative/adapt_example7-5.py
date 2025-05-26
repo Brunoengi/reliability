@@ -5,7 +5,7 @@ Example 7.5 - Linear limit state function with normal correlated variables
 @author: MVREAL
 """
 import numpy as np
-from realpy import *
+from main import *
 import time
 
 #

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Correlation between variables &#8212; reliability 0.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="correlation-between-variables">
+<h1>Correlation between variables<a class="headerlink" href="#correlation-between-variables" title="Link to this heading">¶</a></h1>
+<p>To solve problems in which there are correlated variables, it is possible to insert an correlation matrix containing the correlation coefficients between pairs of pairs of analyzed variables.</p>
+<p>To construct the matrix, some rules must be followed:</p>
+<p>1 - the main diagonal must be 1, considering that the display of an identified variable must be 1;</p>
+<p>2 - the other coefficients of the matrix must be values ​​greater than or equal to -1 and less than or equal to 1;</p>
+<p>3 - the number of rows and columns of the matrix must be equal to the number of random variables of the reliability problem that you want to solve.</p>
+<p>For example, you can define a situation with 4 random variables, as shown below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">xvar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;R&#39;</span>,<span class="w"> </span><span class="s1">&#39;vardist&#39;</span>:<span class="w"> </span><span class="s1">&#39;normal&#39;</span>,<span class="w"> </span><span class="s1">&#39;varmean&#39;</span>:<span class="w"> </span><span class="m">975</span>.00,<span class="w"> </span><span class="s1">&#39;varcov&#39;</span>:<span class="w"> </span><span class="m">0</span>.15<span class="o">}</span>,
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;G&#39;</span>,<span class="w"> </span><span class="s1">&#39;vardist&#39;</span>:<span class="w"> </span><span class="s1">&#39;normal&#39;</span>,<span class="w"> </span><span class="s1">&#39;varmean&#39;</span>:<span class="w"> </span><span class="m">200</span>.00,<span class="w"> </span><span class="s1">&#39;varcov&#39;</span>:<span class="w"> </span><span class="m">0</span>.07<span class="o">}</span>,
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;Q&#39;</span>,<span class="w"> </span><span class="s1">&#39;vardist&#39;</span>:<span class="w"> </span><span class="s1">&#39;normal&#39;</span>,<span class="w"> </span><span class="s1">&#39;varmean&#39;</span>:<span class="w"> </span><span class="m">300</span>.00,<span class="w"> </span><span class="s1">&#39;varcov&#39;</span>:<span class="w"> </span><span class="m">0</span>.12<span class="o">}</span>,
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;w&#39;</span>,<span class="w"> </span><span class="s1">&#39;vardist&#39;</span>:<span class="w"> </span><span class="s1">&#39;normal&#39;</span>,<span class="w"> </span><span class="s1">&#39;varmean&#39;</span>:<span class="w"> </span><span class="m">150</span>.00,<span class="w"> </span><span class="s1">&#39;varcov&#39;</span>:<span class="w"> </span><span class="m">0</span>.20<span class="o">}</span>
+<span class="o">]</span>
+</pre></div>
+</div>
+<p>In this case, the correlation matrix must contain 4 rows and 4 columns, since the number of calculated variables is equal to 4.
+An example of brightness between variables is shown below:</p>
+<div class="math notranslate nohighlight">
+\[\rho_{x_{12}} = \rho_{x_{21}} = 0{,}8\]</div>
+<div class="math notranslate nohighlight">
+\[\rho_{x_{23}} = \rho_{x_{32}} = 0{,}3\]</div>
+<p>Considering:</p>
+<p><span class="math notranslate nohighlight">\(x_{1} = R \hspace{2em} x_{2} = G \hspace{2em} x_{3} = Q \hspace{2em} x_{4} = W\)</span></p>
+<p>In this context, it is possible to define the correlation matrix <span class="math notranslate nohighlight">\(R_{x}\)</span>:</p>
+<p><span class="math notranslate nohighlight">\(R_x = \begin{bmatrix}
+1{,}0 &amp; 0{,}8 &amp; 0{,}0 &amp; 0{,}0 \\
+0{,}8 &amp; 1{,}0 &amp; 0{,}3 &amp; 0{,}0 \\
+0{,}0 &amp; 0{,}3 &amp; 1{,}0 &amp; 0{,}0 \\
+0{,}0 &amp; 0{,}0 &amp; 0{,}0 &amp; 1{,}0
+\end{bmatrix}\)</span></p>
+<p>The complete problem is presented below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from<span class="w"> </span>main<span class="w"> </span>import<span class="w"> </span>Reliability
+
+<span class="c1">#</span>
+<span class="c1"># Step 0 - Column: g(R, G, Q, W) = R-G-Q-W = 0</span>
+<span class="c1">#</span>
+
+
+def<span class="w"> </span>gfunction<span class="o">(</span>x,<span class="w"> </span>d<span class="o">)</span>:
+
+<span class="w">    </span><span class="nv">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>d<span class="o">[</span><span class="m">0</span><span class="o">]</span><span class="w"> </span>*<span class="w"> </span>x<span class="o">[</span><span class="m">0</span><span class="o">]</span><span class="w"> </span>-<span class="w"> </span>d<span class="o">[</span><span class="m">1</span><span class="o">]</span><span class="w"> </span>*<span class="w"> </span>x<span class="o">[</span><span class="m">1</span><span class="o">]</span><span class="w"> </span>-<span class="w"> </span>d<span class="o">[</span><span class="m">2</span><span class="o">]</span><span class="w"> </span>*<span class="w"> </span>x<span class="o">[</span><span class="m">2</span><span class="o">]</span><span class="w"> </span>-<span class="w"> </span>d<span class="o">[</span><span class="m">3</span><span class="o">]</span><span class="w"> </span>*<span class="w"> </span>x<span class="o">[</span><span class="m">3</span><span class="o">]</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span>g
+
+
+<span class="c1"># Data input</span>
+<span class="c1">#</span>
+<span class="c1"># Random variables: name, probability distribution, mean and coefficient of variation</span>
+
+<span class="nv">xvar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;R&#39;</span>,<span class="w"> </span><span class="s1">&#39;vardist&#39;</span>:<span class="w"> </span><span class="s1">&#39;normal&#39;</span>,<span class="w"> </span><span class="s1">&#39;varmean&#39;</span>:<span class="w"> </span><span class="m">975</span>.00,<span class="w"> </span><span class="s1">&#39;varcov&#39;</span>:<span class="w"> </span><span class="m">0</span>.15<span class="o">}</span>,
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;G&#39;</span>,<span class="w"> </span><span class="s1">&#39;vardist&#39;</span>:<span class="w"> </span><span class="s1">&#39;normal&#39;</span>,<span class="w"> </span><span class="s1">&#39;varmean&#39;</span>:<span class="w"> </span><span class="m">200</span>.00,<span class="w"> </span><span class="s1">&#39;varcov&#39;</span>:<span class="w"> </span><span class="m">0</span>.07<span class="o">}</span>,
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;Q&#39;</span>,<span class="w"> </span><span class="s1">&#39;vardist&#39;</span>:<span class="w"> </span><span class="s1">&#39;normal&#39;</span>,<span class="w"> </span><span class="s1">&#39;varmean&#39;</span>:<span class="w"> </span><span class="m">300</span>.00,<span class="w"> </span><span class="s1">&#39;varcov&#39;</span>:<span class="w"> </span><span class="m">0</span>.12<span class="o">}</span>,
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;w&#39;</span>,<span class="w"> </span><span class="s1">&#39;vardist&#39;</span>:<span class="w"> </span><span class="s1">&#39;normal&#39;</span>,<span class="w"> </span><span class="s1">&#39;varmean&#39;</span>:<span class="w"> </span><span class="m">150</span>.00,<span class="w"> </span><span class="s1">&#39;varcov&#39;</span>:<span class="w"> </span><span class="m">0</span>.20<span class="o">}</span>
+<span class="o">]</span>
+<span class="c1"># Design variables</span>
+
+<span class="nv">dvar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;factor1&#39;</span>,<span class="w"> </span><span class="s1">&#39;varvalue&#39;</span>:<span class="w"> </span><span class="m">1</span>.00<span class="o">}</span>,
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;factor2&#39;</span>,<span class="w"> </span><span class="s1">&#39;varvalue&#39;</span>:<span class="w"> </span><span class="m">1</span>.00<span class="o">}</span>,
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;factor3&#39;</span>,<span class="w"> </span><span class="s1">&#39;varvalue&#39;</span>:<span class="w"> </span><span class="m">1</span>.00<span class="o">}</span>,
+<span class="w">    </span><span class="o">{</span><span class="s1">&#39;varname&#39;</span>:<span class="w"> </span><span class="s1">&#39;factor4&#39;</span>,<span class="w"> </span><span class="s1">&#39;varvalue&#39;</span>:<span class="w"> </span><span class="m">1</span>.00<span class="o">}</span>
+<span class="o">]</span>
+
+<span class="c1"># Correlation matrix</span>
+
+<span class="nv">corrmatrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[[</span><span class="m">1</span>.00,<span class="w"> </span><span class="m">0</span>.80,<span class="w"> </span><span class="m">0</span>.00,<span class="w"> </span><span class="m">0</span>.00<span class="o">]</span>,
+<span class="w">              </span><span class="o">[</span><span class="m">0</span>.80,<span class="w"> </span><span class="m">1</span>.00,<span class="w"> </span><span class="m">0</span>.30,<span class="w"> </span><span class="m">0</span>.00<span class="o">]</span>,
+<span class="w">              </span><span class="o">[</span><span class="m">0</span>.00,<span class="w"> </span><span class="m">0</span>.30,<span class="w"> </span><span class="m">1</span>.00,<span class="w"> </span><span class="m">0</span>.00<span class="o">]</span>,
+<span class="w">              </span><span class="o">[</span><span class="m">0</span>.00,<span class="w"> </span><span class="m">0</span>.00,<span class="w"> </span><span class="m">0</span>.00,<span class="w"> </span><span class="m">1</span>.00<span class="o">]]</span>
+
+<span class="c1"># FORM adaptative method</span>
+<span class="c1">#</span>
+<span class="nv">column</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Reliability<span class="o">(</span>xvar,<span class="w"> </span>dvar,<span class="w"> </span>gfunction,<span class="w"> </span>None,<span class="w"> </span>corrmatrix<span class="o">)</span>
+column.form<span class="o">(</span><span class="nv">iHLRF</span><span class="o">=</span>True,<span class="w"> </span><span class="nv">toler</span><span class="o">=</span>1e-6<span class="o">)</span>
+<span class="c1">#</span>
+</pre></div>
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">reliability</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Quick Start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="start.html">Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="create.html">Simple Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Variable Types</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variables.html">Variables Distribution</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Instalation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="instalacao.html">Project Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="design.html">Design Variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="limit.html">Limit State Function</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Bruno Santos.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/guide/correlation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

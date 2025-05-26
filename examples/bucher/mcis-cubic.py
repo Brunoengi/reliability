@@ -7,7 +7,7 @@ First order control variates algorithm for reliability analysis of engineering s
 https://doi.org/10.1016/j.apm.2019.07.049
 @author: MVREAL
 """
-from realpy import *
+from main import *
 
 #
 # Step 0 - Function: g(X) = X1**3+X1**2*X2+X2**3-18 = 0

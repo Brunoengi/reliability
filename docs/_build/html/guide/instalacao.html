@@ -35,51 +35,29 @@
             
   <section id="project-installation">
 <h1>Project Installation<a class="headerlink" href="#project-installation" title="Link to this heading">¶</a></h1>
-<p>Este guia irá orientá-lo sobre como instalar o projeto de confiabilidade.</p>
+<p>This guide will walk you through how to install the library.</p>
 <section id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">¶</a></h2>
-<p>Antes de instalar o projeto, verifique se você possui os seguintes pré-requisitos:</p>
+<p>Before installing the project, make sure you have the following packages installed:</p>
 <ul class="simple">
-<li><p>Python 3.6 ou superior</p></li>
-<li><p><cite>pip</cite> (gerenciador de pacotes do Python)</p></li>
+<li><p>Python 3.6 or higher</p></li>
+<li><p>pip (Python package manager)</p></li>
 </ul>
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
-<p>Siga os passos abaixo para instalar o projeto:</p>
-<ol class="arabic">
-<li><p><strong>Clone o repositório</strong>:</p>
-<p>Abra um terminal e execute o seguinte comando para clonar o repositório:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/seu_usuario/repository.git
+<p>1 - Open a terminal and run the following command to clone the repository:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/Brunoengi/Reliability.git
 </pre></div>
 </div>
-<p>Substitua <cite>seu_usuario</cite> e <cite>repository</cite> pelo seu nome de usuário do GitHub e pelo nome do repositório.</p>
-</li>
-<li><p><strong>Navegue até o diretório do projeto</strong>:</p>
-<p>Depois de clonar o repositório, acesse o diretório do projeto:</p>
+<p>2 - Navigate to the project directory:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>repository
 </pre></div>
 </div>
-</li>
-<li><p><strong>Instale as dependências</strong>:</p>
-<p>Utilize o <cite>pip</cite> para instalar as dependências necessárias:</p>
+<p>3 - Install the dependencies:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 </pre></div>
 </div>
-<p>O arquivo <cite>requirements.txt</cite> deve conter todas as bibliotecas necessárias para o funcionamento do projeto.</p>
-</li>
-<li><p><strong>Verifique a instalação</strong>:</p>
-<p>Para garantir que o projeto foi instalado corretamente, você pode executar um teste simples:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>seu_modulo.test
-</pre></div>
-</div>
-<p>Substitua <cite>seu_modulo</cite> pelo nome do seu módulo.</p>
-</li>
-</ol>
-</section>
-<section id="conclusion">
-<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">¶</a></h2>
-<p>Após seguir estes passos, o projeto deverá estar instalado e pronto para uso. Se você encontrar algum problema durante a instalação, consulte a seção de <strong>Ajuda</strong> ou <strong>Problemas Conhecidos</strong> na documentação.</p>
 </section>
 </section>
 
@@ -123,7 +101,6 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Project Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a></li>
 </ul>
 </li>
 </ul>

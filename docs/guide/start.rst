@@ -4,7 +4,7 @@ Start Guide
 How to create an reliability situation
 --------------------------------------------
 
-There are 4 steps required to resolve a reliability issue using the repository. The first step consists of declaring the random variables, the second step consists of declaring the design variables, the third step consists of declaring the limite state function and the fourth step consists of instantiating the class and choosing which reliability method to use.
+There are 5 steps required to resolve a reliability problem using the repository. The first step consists of declaring the random variables, the second step consists of declaring the design variables, the third step consists of declaring the limite state function and the fourth step consists of instantiating the class and choosing which reliability method to use.
 
 Each step has detailed documentation that can be accessed through the links below.
 
@@ -12,4 +12,6 @@ Each step has detailed documentation that can be accessed through the links belo
 - :doc:`Random Variables <variables>`
 - :doc:`Design Variables <design>`
 - :doc:`Limit State Function <limit>`
+- :doc:`Correlation between variables <correlation>`
+- :doc:`Reliability Methods <methods>`
 

@@ -6,7 +6,7 @@ Ayyub, B.M.; McCuen, R.H. Probability, Statistics and Reliability for Engineers 
 Boca Raton, Chapman & Hall, 2003.
 @author: MVREAL
 """
-from realpy import *
+from main import *
 
 #
 # Step 0 - Column: g(Y, S, W, L) = YS-WL^2/4 = 0

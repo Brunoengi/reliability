@@ -5,7 +5,7 @@ Example of probabilistic column stability analysis
 Steel column with an I cross-section
 @author: MVREAL
 """
-from realpy import *
+from main import *
 import math
 
 #

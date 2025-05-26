@@ -4,7 +4,7 @@ Reliability of reinforced concrete colums reinforced with CFRP
 
 """
 import numpy as np
-from realpy import *
+from main import *
 
 #
 def gfunction(x, d):
