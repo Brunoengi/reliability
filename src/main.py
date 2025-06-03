@@ -17,6 +17,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import time
 from utils.distribution import createDistribution
+from visualize import DataVisualize
 
 
 class Reliability():
@@ -705,9 +706,15 @@ class Reliability():
         pf = norm.cdf(-beta)
         if iprint:
             print('\nProbability of Failure Pf = {0:0.4e}'.format(pf))
-        return beta, xk, alpha, normgradyk, sigmaxneqk
 
-
+        return {
+          "beta": beta,
+          "yk":yk,
+          "xk": xk,
+          "alpha": alpha,
+          "normgradyk": normgradyk,
+          "sigmaxneqk": sigmaxneqk
+          } 
 
     def form2(self, iHLRF, toler=1.e-3, iprint=True):
         """
@@ -1364,7 +1371,13 @@ class Reliability():
         pf = norm.cdf(-beta)
         if iprint:
             print('\nProbability of Failure Pf = {0:0.4e}'.format(pf))
-        return beta, xk, alpha, normgradyk
+   
+        return {
+            "beta": beta,
+            "xk": xk,
+            "alpha": alpha,
+            "normgradyk": normgradyk,
+            } 
 
     def sorm(self, iHLRF=True, toler=1.e-6, iprint=True):
         """
@@ -1795,7 +1808,6 @@ class Reliability():
 
         return x, weight, fxixj
     
-
     def var_rvs(self, ns, nsigma=1.00, iprint=True):
         """
 
@@ -2031,7 +2043,6 @@ class Reliability():
 
         return x, weight, fxixj
 
-
     def mc(self, nc, ns, delta_lim, nsigma=1.00, igraph=True, iprint=True):
         """
         Monte Carlo Simulation Method
@@ -2179,8 +2190,14 @@ class Reliability():
             plt.ylabel("CoV Pf")
             plt.show()
 
-        return beta, pf, delta_pf, nsimul, ttotal
-
+        return {
+            "beta": beta,
+            "pf": pf,
+            "delta_pf": delta_pf,
+            "nsimul": nsimul,
+            "ttotal": ttotal
+            }
+      
     def adaptive(self, nc, ns, delta_lim, nsigma=1.50, igraph=True, iprint=True):
         """
         Monte Carlo Simulations with Importance Sampling (MC-IS)
@@ -2355,7 +2372,13 @@ class Reliability():
             plt.ylabel("CoV Pf")
             plt.show()
 
-        return beta, pf, delta_pf, nsimul, ttotal
+        return {
+            "beta": beta,
+            "pf": pf,
+            "delta_pf": delta_pf,
+            "nsimul": nsimul,
+            "ttotal": ttotal
+        }
 
     def bucher(self, nc, ns, delta_lim, nsigma=1.50, igraph=True, iprint=True):
         """
@@ -2529,7 +2552,13 @@ class Reliability():
             plt.ylabel("CoV Pf")
             plt.show()
 
-        return beta, pf, delta_pf, nsimul, ttotal
+        return {
+            "beta": beta,
+            "pf": pf,
+            "delta_pf": delta_pf,
+            "nsimul": nsimul,
+            "ttotal": ttotal
+        }
 
     def multig(self, xvar, dvar, glist, iprint=True):
         """
@@ -2662,7 +2691,6 @@ class Reliability():
             print('beta_inf =', beta_inf)
             print('beta_sup =', beta_sup)
 
-
     def generator(self, ns, nsigma=1.00, iprint=False):
             """
             Method to generate random variables
@@ -2711,7 +2739,6 @@ class Reliability():
             #
 
             return xp
-
 
     def mc2(self, nc, ns, delta_lim, nsigma=1.00, igraph=True, iprint=True):
             """
@@ -2849,8 +2876,13 @@ class Reliability():
                 plt.ylabel("CoV Pf")
                 plt.show()
 
-            return beta, pf, delta_pf, nsimul, ttotal
-    
+            return {
+            "beta": beta,
+            "pf": pf,
+            "delta_pf": delta_pf,
+            "nsimul": nsimul,
+            "ttotal": ttotal
+            }
     
     def adaptive2(self, nc, ns, delta_lim, nsigma=1.50, igraph=True, iprint=True):
         """
@@ -3016,8 +3048,13 @@ class Reliability():
             plt.ylabel("CoV Pf")
             plt.show()
 
-        return beta, pf, delta_pf, nsimul, ttotal
-    
+        return {
+            "beta": beta,
+            "pf": pf,
+            "delta_pf": delta_pf,
+            "nsimul": nsimul,
+            "ttotal": ttotal
+        }
     
     def bucher2(self, nc, ns, delta_lim, nsigma=1.50, igraph=True, iprint=True):
         """
@@ -3181,4 +3218,96 @@ class Reliability():
             plt.ylabel("CoV Pf")
             plt.show()
 
-        return beta, pf, delta_pf, nsimul, ttotal
+        return {
+            "beta": beta,
+            "pf": pf,
+            "delta_pf": delta_pf,
+            "nsimul": nsimul,
+            "ttotal": ttotal
+        }
+    
+    def samplingProjectPoint(self, nc, ns, delta_lim, igraph=True, iprint=True):   
+
+      ti = time.time()
+      nc = int(nc)
+      ns = int(ns)
+      pfc = np.zeros(nc)
+      sum1 = 0.00
+      sum2 = 0.00
+      pf_mean = np.zeros(nc)
+      cov_pf = np.zeros(nc)
+
+      ## Apriori Results
+      formResults = self.form(iHLRF=True, toler=1.e-3, iprint=False)
+
+      ## Project Point
+      xk = formResults['xk']
+      self.x0 = xk
+
+      ## Using varhmean calculate based on x0
+      for var, mean_value in zip(self.xvar, self.x0):
+        var['varhmean'] = mean_value
+
+      # Matrix dmatrix(ns, self.ndvar) for ns Monte Carlo simulations and self.ndvar design variables
+      dmatrix = np.array([self.d.T] * ns)
+
+      for icycle in range(nc):
+        kcycle = icycle + 1
+
+        # Monte Carlo Simulations
+
+        # Generation of uniform random numbers - Antithetic Sampling
+        #
+        index = icycle % 2
+        uk_new = np.random.rand(ns, self.nxvar)
+        if index == 0:
+            uk_cycle = uk_new.copy()
+        else:
+            uk_cycle = 1.00 - uk_cycle
+
+        # Step 1 - Generation of the random numbers according to their appropriate distribution
+        xp, wp, fx = self.var_gen(ns, uk_cycle)
+
+        # Step 2 - Evaluation of the limit state function g(x)
+        gx = list(map(self.fel, xp, dmatrix))
+        gx = np.array(gx)
+
+        # Step 3 - Evaluation of the indicator function I[g(x)]
+        igx = np.where(gx <= 0.00, wp, 0)
+        nfail = sum(igx)
+        pfc[icycle] = nfail / ns
+        sum1 += pfc[icycle]
+        sum2 += pfc[icycle] ** 2
+      
+        # Step 4 - Evaluation of the error in the estimation of Pf
+        pf_mean[icycle] = sum1 / kcycle
+        pf = pf_mean[icycle]
+        if pf > 0.00 and kcycle > 1:
+            cov_pf[icycle] = 1. / (pf * np.sqrt(kcycle * (kcycle - 1))) * np.sqrt(sum2 - 1. / kcycle * sum1 ** 2)
+        else:
+            cov_pf[icycle] = 0.00
+        delta_pf = cov_pf[icycle]
+        # Plot probability of failure in this cycle
+        if iprint: DataVisualize.one_cycle_print_results(kcycle, self.xvar, pf, delta_pf)
+        if delta_pf < delta_lim and kcycle > 3:
+            break
+
+      beta = -norm.ppf(pf, 0, 1)
+      nsimul = kcycle * ns
+      tf = time.time()
+      ttotal = tf - ti
+
+      # Results viewer
+      
+      if iprint: DataVisualize.print_results("Monte Carlo – Importance Sampling Based on the Design Point", beta, pf, delta_pf, nsimul, gx, ttotal)
+      if igraph: DataVisualize.plot_results(pf_mean, cov_pf, kcycle)
+
+      return {
+            "beta": beta,
+            "pf": pf,
+            "delta_pf": delta_pf,
+            "nsimul": nsimul,
+            "ttotal": ttotal
+        }
+
+    
