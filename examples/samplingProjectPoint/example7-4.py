@@ -40,6 +40,6 @@ dvar = [
 # FORM method
 #
 beam = Reliability(xvar, dvar, gfunction)
-beam.samplingProjectPoint(100, 5000, 0.01)
+beam.sampling_project_point(100, 5000, 0.01)
 
 #

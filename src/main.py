@@ -11,6 +11,7 @@ from scipy.stats import gamma as gamma_dist
 import scipy.optimize
 from scipy import optimize
 from scipy.optimize import fsolve
+from scipy.optimize import curve_fit
 import scipy.linalg
 from scipy.special import gamma
 import pandas as pd
@@ -77,12 +78,12 @@ class Reliability():
         else:
             self.Rz = self.nataf()
 
-        for nome, valor in vars(self).items():
-            print(f'{nome}: {valor}')
+        # for nome, valor in vars(self).items():
+        #     print(f'{nome}: {valor}')
 
-#
-# Nataf correction of the correlation matrix
-#
+    #
+    # Nataf correction of the correlation matrix
+    #
 
     def nataf(self):
         """
@@ -1597,8 +1598,8 @@ class Reliability():
             i += 1
             if var['varstd'] == 0.00:
                 var['varstd'] = float(var['varcov']) * float(var['varmean'])
-            if iprint:
-                print(self.xvar[i])
+            #if iprint:
+                #print(self.xvar[i])
             #
             #
             # Normal distribution
@@ -3226,7 +3227,7 @@ class Reliability():
             "ttotal": ttotal
         }
     
-    def samplingProjectPoint(self, nc, ns, delta_lim, igraph=True, iprint=True):   
+    def sampling_project_point(self, nc, ns, delta_lim, igraph=True, iprint=True):   
 
       ti = time.time()
       nc = int(nc)
@@ -3281,14 +3282,17 @@ class Reliability():
       
         # Step 4 - Evaluation of the error in the estimation of Pf
         pf_mean[icycle] = sum1 / kcycle
+        
         pf = pf_mean[icycle]
         if pf > 0.00 and kcycle > 1:
             cov_pf[icycle] = 1. / (pf * np.sqrt(kcycle * (kcycle - 1))) * np.sqrt(sum2 - 1. / kcycle * sum1 ** 2)
         else:
             cov_pf[icycle] = 0.00
+
         delta_pf = cov_pf[icycle]
         # Plot probability of failure in this cycle
-        if iprint: DataVisualize.one_cycle_print_results(kcycle, self.xvar, pf, delta_pf)
+        if iprint: DataVisualize.one_cycle_print_results(kcycle, pf, delta_pf)
+        print('delta_pf',delta_pf)
         if delta_pf < delta_lim and kcycle > 3:
             break
 
@@ -3310,4 +3314,126 @@ class Reliability():
             "ttotal": ttotal
         }
 
-    
+    def sampling_enhanced(self, nc, ns, delta_lim, igraph=True, iprint=True):
+
+      def calculate_pf(arr_pf, arr_lambda):
+            def pf_model(lam, a, b, c, q):
+                base = np.maximum(lam - b, 0)
+                return q * np.exp(-a * base**c)
+
+            # Initial parameters and limits
+            initial_guess = [5.0, 0.1, 1.0, max(arr_pf)]
+            bounds = ([0.001, -1.0, 0.1, 0.001], [100.0, 1.5, 5.0, 1.0])
+
+            try:
+                params, _ = curve_fit(pf_model, arr_lambda, arr_pf, p0=initial_guess, bounds=bounds, maxfev=20000)
+                pf_at_cycle = pf_model(1.0, *params)
+                return pf_at_cycle
+            
+            except Exception as e:
+                print("Error in adjustment:", e)
+                return np.nan 
+                      
+      def linspace_between_0_and_1(n):
+        """
+        Returns a NumPy array with n equally spaced values between 0 and 1,
+        excluding 0 and 1.
+
+        Parameters:
+
+        n: int, the number of desired subdivisions in the interval (0, 1)
+
+        Returns:
+
+        numpy.ndarray of floats between 0 and 1, excluding the endpoints.
+        """
+        return np.linspace(0, 1, n + 2)[1:-1]
+      
+      ti = time.time()
+      nc = int(nc)
+      ns = int(ns)
+
+      lambdas = linspace_between_0_and_1(1000)
+      nlambdas = len(lambdas)
+
+      pfc = np.zeros((nc, nlambdas))
+      pf_mean = np.zeros(nc)
+      cov_pf = np.zeros(nc)
+      sum1 = 0.00
+      sum2 = 0.00
+
+      varhmean_array = [var['varhmean'] for var in self.xvar]
+      dvar_array = [var['varvalue'] for var in self.dvar]
+
+      gx_based_varhmean = self.fel(varhmean_array, dvar_array)
+
+      deduction = (1 - lambdas) * gx_based_varhmean
+      deductions = np.tile(deduction[:, None], (1, ns))
+
+      # Matrix dmatrix(ns, self.ndvar) for ns Monte Carlo simulations and self.ndvar design variables
+      dmatrix = np.array([self.d.T] * ns)
+
+      for icycle in range(nc):
+        kcycle = icycle + 1
+
+        # Monte Carlo Simulations
+        # Generation of uniform random numbers - Antithetic Sampling
+        #
+        index = icycle % 2
+        uk_new = np.random.rand(ns, self.nxvar)
+        if index == 0:
+            uk_cycle = uk_new.copy()
+        else:
+            uk_cycle = 1.00 - uk_cycle
+
+        # Step 1 - Generation of the random numbers according to their appropriate distribution
+        xp, wp, fx = self.var_gen(ns, uk_cycle)
+
+        # Step 2 - Evaluation of the limit state function g(x)
+        gx = list(map(self.fel, xp, dmatrix))
+        gx = np.array(gx)
+
+        # Step 3 - Evaluation of the new limit state function m(x)
+        gx_lambdas = np.tile(gx, (nlambdas, 1))
+        mx_lambdas = gx_lambdas - deductions
+
+        #Step 4 - Evaluation of the indicator function I[g(x)]
+        imx_lambdas = np.where(mx_lambdas <= 0.00, wp, 0)
+        nfail = np.sum(imx_lambdas, axis=1)
+        pfc[icycle] = nfail / ns       
+        pf_cycle = calculate_pf(pfc[icycle], lambdas)
+        sum1 += pf_cycle
+        sum2 += pf_cycle ** 2
+
+        pf_mean[icycle] = sum1 / kcycle
+        pf = pf_mean[icycle]
+  
+        if pf > 0.00 and kcycle > 1:
+            cov_pf[icycle] = 1. / (pf * np.sqrt(kcycle * (kcycle - 1))) * np.sqrt(sum2 - 1. / kcycle * sum1 ** 2)
+        else:
+            cov_pf[icycle] = 0.00
+
+        delta_pf = cov_pf[icycle]
+        
+        # Plot probability of failure in this cycle
+        if iprint: DataVisualize.one_cycle_print_results(kcycle, pf, delta_pf)
+        if delta_pf < delta_lim and kcycle > 3:
+            break
+
+      beta = -norm.ppf(pf, 0, 1)
+      nsimul = kcycle * ns
+      tf = time.time()
+      ttotal = tf - ti
+
+      # Results viewer   
+      if iprint: DataVisualize.print_results("Monte Carlo – Enhanced Importance Sampling", beta, pf, delta_pf, nsimul, gx, ttotal)
+      if igraph: DataVisualize.plot_results(pf_mean, cov_pf, kcycle)
+
+      return {
+            "beta": beta,
+            "pf": pf,
+            "delta_pf": delta_pf,
+            "nsimul": nsimul,
+            "ttotal": ttotal
+        }
+                

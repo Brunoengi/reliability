@@ -42,4 +42,4 @@ dvar = [
 # FORM method
 #
 column = Reliability(xvar, dvar, gfunction, None, None)
-column.samplingProjectPoint(100, 5000, 0.01)
+column.sampling_project_point(100, 5000, 0.01)

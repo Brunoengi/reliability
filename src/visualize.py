@@ -36,7 +36,7 @@ class DataVisualize:
     plt.show()
 
   @staticmethod
-  def one_cycle_print_results(kcycle, xvar, pf, delta_pf):
-    print('Cycle =', kcycle, xvar)
+  def one_cycle_print_results(kcycle, pf, delta_pf):
+    print('Cycle =', kcycle)
     print(f'Probability of failure pf ={pf}')
     print(f'Coefficient of variation of pf ={delta_pf}')

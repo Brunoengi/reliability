@@ -1,7 +1,7 @@
 """
 Created on Mon Feb 08 17:12:00 2021
 Reliabilty Analysis
-Example 7.8 - Nonlinear limit state function with non-normal independent variables
+Example 7.9 - Nonlinear limit state function with non-normal correlated variables
 @author: MVREAL
 """
 from main import *
@@ -22,22 +22,26 @@ def gfunction(x, d):
 #
 # Random variables: name, probability distribution, mean and coefficient of variation
 
-
 xvar = [
     {'varname': 'Y', 'vardist': 'lognormal', 'varmean': 40.00, 'varcov': 0.125},
     {'varname': 'Z', 'vardist': 'lognormal', 'varmean': 50.00, 'varcov': 0.05},
     {'varname': 'M', 'vardist': 'gumbel', 'varmean': 1000.00, 'varcov': 0.20}
 ]
-
 # Design variables
 
 dvar = [
     {'varname': 'gamma1', 'varvalue': 1.00},
     {'varname': 'gamma2', 'varvalue': 1.00}
 ]
+
+# Correlation matrix
+
+corrmatrix = [[1.00, 0.40, 0.00],
+              [0.40, 1.00, 0.00],
+              [0.00, 0.00, 1.00]]
 #
 # FORM method
 #
-beam = Reliability(xvar, dvar, gfunction)
-beam.sampling_project_point(100, 5000, 0.01)
+beam = Reliability(xvar, dvar, gfunction, None, corrmatrix)
+beam.sampling_enhanced(100, 5000, 0.02)
 #
