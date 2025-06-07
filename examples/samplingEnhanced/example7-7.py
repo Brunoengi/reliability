@@ -42,5 +42,5 @@ dvar = [
 # FORM adaptative method
 #
 column = Reliability(xvar, dvar, gfunction)
-column.sampling_enhanced(100, 5000, 0.02)
+column.sampling_enhanced(100, 5000, 0.03)
 #
