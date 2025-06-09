@@ -63,5 +63,5 @@ dvar = [
 # FORM method
 #
 column = Reliability(xvar, dvar, gfunction, None)
-#column.mc2(10, 100_000, 0.05, 1.00)
+column.mc2(10, 100_000, 0.05, 1.00)
 #

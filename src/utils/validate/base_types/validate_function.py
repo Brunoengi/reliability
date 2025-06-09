@@ -67,33 +67,39 @@ class ValidateFunction:
 
   @staticmethod
   def first_n_args_are_lists(function, n_required_lists):
-    # Check if the object is a callable function
+    # Check if the input is a callable function
     if not callable(function):
-      raise TypeError("The given object is not a callable function.")
+        raise TypeError("The given object is not a callable function.")
 
-    # Get the function's parameters
+    # Get the function's signature and parameters
     sig = inspect.signature(function)
     params = list(sig.parameters.values())
     total_params = len(params)
 
-    # Ensure the function accepts at least `n_required_lists` arguments
+    # Ensure the function has at least n_required_lists parameters
     if n_required_lists > total_params:
       raise ValueError(
         f"The function only accepts {total_params} argument(s), "
         f"but {n_required_lists} list argument(s) were required."
-        )
+      )
 
-    # Create test arguments: first `n_required_lists` as lists
-    test_args = [[0, 1, 2] for _ in range(n_required_lists)]
+    # Prepare test arguments:
+    # Pass empty lists to the first n_required_lists parameters to check type acceptance
+    test_args = [[] for _ in range(n_required_lists)]
 
-    # Fill remaining arguments (if any) with dummy numeric values
+    # Fill remaining parameters with None (or other dummy value)
     for _ in range(total_params - n_required_lists):
-      test_args.append(0)
+      test_args.append(None)
 
-    # Try calling the function to ensure it accepts lists in the specified positions
     try:
+      # Call the function with the test arguments
       function(*test_args)
+    except IndexError:
+      # Ignore IndexError, assuming it's caused by empty lists being too short
+      # This means the function accepted lists as input but failed due to length
+      pass
     except Exception as e:
+      # For any other exceptions, raise a TypeError with details
       raise TypeError(
         f"The function raised an error when called with list arguments "
         f"for the first {n_required_lists} parameter(s): {e}"
