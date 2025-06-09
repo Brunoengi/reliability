@@ -21,6 +21,7 @@ from utils.distribution import createDistribution
 from visualize import DataVisualize
 from utils.validate.domain_types.validate_dvar import ValidateDvar
 from utils.validate.domain_types.validate_gx import ValidateGx
+from utils.validate.domain_types.validate_corrmatrix import ValidateCorrelationMatrix
 
 
 class Reliability():
@@ -36,6 +37,7 @@ class Reliability():
 
         ValidateDvar(dvar)
         ValidateGx(gx)
+        
         
 
         #
@@ -84,9 +86,7 @@ class Reliability():
             self.Rz = np.eye(self.nxvar)
         else:
             self.Rz = self.nataf()
-
-        # for nome, valor in vars(self).items():
-        #     print(f'{nome}: {valor}')
+            ValidateCorrelationMatrix(self.Rz)
 
     #
     # Nataf correction of the correlation matrix
