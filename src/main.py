@@ -1871,8 +1871,8 @@ class Reliability():
             i += 1
             if var['varstd'] == 0.00:
                 var['varstd'] = float(var['varcov']) * float(var['varmean'])
-            if iprint:
-                print(self.xvar[i])
+            # if iprint:
+            #     print(self.xvar[i])
             #
             #
             # Normal distribution
