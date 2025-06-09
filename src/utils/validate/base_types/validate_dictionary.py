@@ -34,10 +34,10 @@ class ValidateDictionary:
         raise ValueError(f"Error: The value of '{key}' must be greater than {value}. Current value is {dictionary[key]}.")
       
   @staticmethod
-  def check_keys_count(dictionary, n, *possibleKeys):
-    count = sum(1 for key in possibleKeys if key in dictionary)
+  def check_keys_count(dictionary, n, *possible_keys):
+    count = sum(1 for key in possible_keys if key in dictionary)
     if count != n:
-        raise ValueError(f"Error: Exactly {n} of the following keys must be present: {possibleKeys}. Found {count}.")
+        raise ValueError(f"Error: Exactly {n} of the following keys must be present: {possible_keys}. Found {count}.")
     
   @staticmethod
   def check_possible_arrays_keys(dictionary, *arrays):
@@ -49,5 +49,18 @@ class ValidateDictionary:
       raise ValueError(
         f"Error: Exactly one of the key sets must be present in the dictionary.\n"
         f"Sets supplied: {array_str}\n"
-        f"Sets present in the dictionary: {valid_str or 'Nenhum'}"
+        f"Sets present in the dictionary: {valid_str or 'None'}"
       )
+    
+  @staticmethod
+  def has_invalid_keys(dictionary, *all_valid_keys):
+        if not isinstance(dictionary, dict):
+            raise TypeError(f"Expected a dictionary but received '{type(dictionary).__name__}'.")
+
+        invalid_keys = [key for key in dictionary if key not in all_valid_keys]
+
+        if invalid_keys:
+            raise ValueError(
+                f"Invalid keys found: {invalid_keys}. "
+                f"Valid keys are: {list(all_valid_keys)}."
+            )

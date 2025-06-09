@@ -1,6 +1,6 @@
 from distribution.AbstractDistribution import AbstractDistribution 
-from utils.validate.Dictionary import ValidateDictionary
-from utils.validate.Class import ValidateClass
+from utils.validate.base_types.validate_dictionary import ValidateDictionary
+from utils.validate.base_types.validate_class import ValidateClass 
 import numpy as np
 
 class Beta(AbstractDistribution):

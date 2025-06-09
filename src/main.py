@@ -19,6 +19,8 @@ import matplotlib.pyplot as plt
 import time
 from utils.distribution import createDistribution
 from visualize import DataVisualize
+from utils.validate.domain_types.validate_dvar import ValidateDvar
+from utils.validate.domain_types.validate_gx import ValidateGx
 
 
 class Reliability():
@@ -31,6 +33,11 @@ class Reliability():
         self.fel = gx
         self.x0 = x0
         self.Rz = Rz
+
+        ValidateDvar(dvar)
+        ValidateGx(gx)
+        
+
         #
         # Initial values of the design variables
         #

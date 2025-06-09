@@ -1,3 +1,3 @@
-from .Class import *
-from .Dictionary import *
+from .base_types import *
+from .domain_types import *
 

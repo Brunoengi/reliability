@@ -4,7 +4,7 @@ Created on Mon Oct  7 22:11:47 2024
 
 @author: BrunoTeixeira
 """
-from utils.validate.Dictionary import ValidateDictionary
+from utils.validate.base_types.validate_dictionary import ValidateDictionary
 
 class AbstractDistribution():
     def __init__ (self, dictionaryInfo):
