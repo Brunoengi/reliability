@@ -1547,12 +1547,17 @@ class Reliability():
 
         return
 
-    def var_gen(self, ns, uk_cycle, nsigma=1.00, iprint=True):
+    def var_gen(self, ns, nsigma=1.00, iprint=False):
         """
 
            Random variables generator for the Monte Carlo Simulation methods
 
         """
+
+        # Generation of uniform random numbers
+        uk_cycle = np.random.rand(ns, self.nxvar)
+        #
+
 
         def fkapa(kapa, deltax, gsignal):
             fk = 1.00 + deltax ** 2 - gamma(1.00 + gsignal * 2.00 / kapa) / gamma(1.00 + gsignal * 1.00 / kapa) ** 2
@@ -1605,8 +1610,6 @@ class Reliability():
             i += 1
             if var['varstd'] == 0.00:
                 var['varstd'] = float(var['varcov']) * float(var['varmean'])
-            #if iprint:
-                #print(self.xvar[i])
             #
             #
             # Normal distribution
@@ -1816,7 +1819,7 @@ class Reliability():
 
         return x, weight, fxixj
     
-    def var_rvs(self, ns, nsigma=1.00, iprint=True):
+    def var_rvs(self, ns, nsigma=1.00, iprint=False):
         """
 
            Random variables generator for the Monte Carlo Simulation methods
@@ -1871,8 +1874,8 @@ class Reliability():
             i += 1
             if var['varstd'] == 0.00:
                 var['varstd'] = float(var['varcov']) * float(var['varmean'])
-            # if iprint:
-            #     print(self.xvar[i])
+            if iprint:
+                print(self.xvar[i])
             #
             #
             # Normal distribution
@@ -2128,7 +2131,7 @@ class Reliability():
             # Step 1 - Generation of the random numbers according to their appropriate distribution
             #
 
-            xp, wp, fx = self.var_gen(ns, uk_cycle, nsigma, iprint)
+            xp, wp, fx = self.var_gen(ns, nsigma, iprint)
             #
             #
             # Step 2 - Evaluation of the limit state function g(x)
@@ -2244,21 +2247,10 @@ class Reliability():
             # Monte Carlo Simulations
             #
             #
-            # Generation of uniform random numbers
-            #
-            index = icycle % 2
-            uk_new = np.random.rand(ns, self.nxvar)
-            if index == 0:
-                uk_cycle = uk_new.copy()
-            else:
-                uk_cycle = 1.00 - uk_cycle
-
-            #
-            #
             # Step 1 - Generation of the random numbers according to their appropriate distribution
             #
 
-            xp, wp, fx = self.var_gen(ns, uk_cycle, nsigma, iprint)
+            xp, wp, fx = self.var_gen(ns, nsigma)
             #
             #
             # Step 2 - Evaluation of the limit state function g(x)
@@ -2395,22 +2387,10 @@ class Reliability():
             #
             # Monte Carlo Simulations
             #
-            #
-            # Generation of uniform random numbers
-            #
-            index = icycle % 2
-            uk_new = np.random.rand(ns, self.nxvar)
-            if index == 0:
-                uk_cycle = uk_new.copy()
-            else:
-                uk_cycle = 1.00 - uk_cycle
-
-            #
-            #
             # Step 1 - Generation of the random numbers according to their appropriate distribution
             #
 
-            xp, wp, fx = self.var_gen(ns, uk_cycle, nsigma, iprint)
+            xp, wp, fx = self.var_gen(ns, nsigma, iprint)
             #
             #
             # Step 2 - Evaluation of the limit state function g(x)
@@ -2657,16 +2637,12 @@ class Reliability():
             xp = np.zeros((ns, self.nxvar))
             wp = np.ones(ns)
             fx = np.ones(ns)
-            
-            #
-
-            uk_cycle = np.random.rand(ns, self.nxvar)
-            
+             
             #
             # Step 1 - Generation of the random numbers according to their appropriate distribution
             #
 
-            xp, wp, fx = self.var_gen(ns, uk_cycle, nsigma, iprint)
+            xp, wp, fx = self.var_gen(ns, nsigma, iprint)
             #
             #
 
@@ -3123,7 +3099,7 @@ class Reliability():
             uk_cycle = 1.00 - uk_cycle
 
         # Step 1 - Generation of the random numbers according to their appropriate distribution
-        xp, wp, fx = self.var_gen(ns, uk_cycle)
+        xp, wp, fx = self.var_gen(ns)
 
         # Step 2 - Evaluation of the limit state function g(x)
         gx = list(map(self.fel, xp, dmatrix))
@@ -3243,7 +3219,7 @@ class Reliability():
             uk_cycle = 1.00 - uk_cycle
 
         # Step 1 - Generation of the random numbers according to their appropriate distribution
-        xp, wp, fx = self.var_gen(ns, uk_cycle)
+        xp, wp, fx = self.var_gen(ns)
 
         # Step 2 - Evaluation of the limit state function g(x)
         gx = list(map(self.fel, xp, dmatrix))
