@@ -46,5 +46,5 @@ corrmatrix = [[1.00, 0.80, 0.00, 0.00],
 # MC-IS adaptative method
 #
 column = Reliability(xvar, dvar, gfunction, None, corrmatrix)
-column.bucher(100, 5000, 0.03, 1.50)
+column.bucher(100, 5000, 0.01, 1.50)
 #

@@ -1,7 +1,7 @@
 """
 Created on Mon Feb 08 17:12:00 2021
 Reliabilty Analysis
-Example 7.4 - Nonlinear limit state function with  normal independent variables
+Example 7.8 - Nonlinear limit state function with non-normal independent variables
 @author: MVREAL
 """
 from main import *
@@ -24,9 +24,9 @@ def gfunction(x, d):
 
 
 xvar = [
-    {'varname': 'Y', 'vardist': 'normal', 'varmean': 40.00, 'varcov': 0.125},
-    {'varname': 'Z', 'vardist': 'normal', 'varmean': 50.00, 'varcov': 0.05},
-    {'varname': 'M', 'vardist': 'normal', 'varmean': 1000.00, 'varcov': 0.20}
+    {'varname': 'Y', 'vardist': 'lognormal', 'varmean': 40.00, 'varcov': 0.125},
+    {'varname': 'Z', 'vardist': 'lognormal', 'varmean': 50.00, 'varcov': 0.05},
+    {'varname': 'M', 'vardist': 'gumbel', 'varmean': 1000.00, 'varcov': 0.20}
 ]
 
 # Design variables
@@ -35,9 +35,9 @@ dvar = [
     {'varname': 'gamma1', 'varvalue': 1.00},
     {'varname': 'gamma2', 'varvalue': 1.00}
 ]
-
-# MC-IS adaptative method
+#
+# MCS method
 #
 beam = Reliability(xvar, dvar, gfunction)
-beam.mc(100, 10000, 0.05, 1.00)
+beam.bucher2(100, 5000, 0.01, 1.50)
 #

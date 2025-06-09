@@ -2159,10 +2159,7 @@ class Reliability():
                 cov_pf[icycle] = 0.00
             delta_pf = cov_pf[icycle]
             # Probability of failure in this cycle
-            if iprint:
-                print('Cycle =', kcycle, self.xvar)
-                print(f'Probability of failure pf ={pf}')
-                print(f'Coefficient of variation of pf ={delta_pf}')
+            if iprint: DataVisualize.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
             if delta_pf < delta_lim and kcycle > 3:
                 break
 
@@ -2170,33 +2167,11 @@ class Reliability():
         nsimul = kcycle * ns
         tf = time.time()
         ttotal = tf - ti
-        #
-        if iprint:
-            print('*** Resultados do Método Monte Carlo ***')
-            print(f'\nReliability Index Beta = {beta}')
-            print(f'Probability of failure pf ={pf}')
-            print(f'COV of pf ={delta_pf}')
-            print('nimul = {0:0.4f} '.format(nsimul))
-            print(f'Function g(x): mean = {gx.mean()}, std = {gx.std()} ')
-            print(f'Processing time = {ttotal} s')
+        
+        # Results viewer   
+        if iprint: DataVisualize.print_results({'title':"Monte Carlo - Brute Force", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
 
-        if igraph:
-            # Plot results:
-            cycle = np.arange(1, kcycle + 1, 1)
-
-            plt.figure(1, figsize=(8.5, 6))
-            plt.plot(cycle, pf_mean[:kcycle])
-            plt.title("Convergence of Probability of Failure")
-            plt.xlabel("Cycle")
-            plt.ylabel("Pf")
-            plt.show()
-
-            plt.figure(2, figsize=(8.5, 6))
-            plt.plot(cycle, cov_pf[:kcycle])
-            plt.title("CoV of the Probability of Failure")
-            plt.xlabel("Cycle")
-            plt.ylabel("CoV Pf")
-            plt.show()
+        if igraph: DataVisualize.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
 
         return {
             "beta": beta,
@@ -2341,44 +2316,18 @@ class Reliability():
                 cov_pf[icycle] = 0.00
             delta_pf = cov_pf[icycle]
             # Probability of failure in this cycle
-            if iprint:
-                print('Cycle =', kcycle)
-                print(f'Probability of failure pf ={pf}')
-                print(f'Coefficient of variation of pf ={delta_pf}')
+            if iprint: DataVisualize.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
             if delta_pf < delta_lim and kcycle > 3:
-                break
+              break
 
         beta = -norm.ppf(pf, 0, 1)
         nsimul = kcycle * ns
         tf = time.time()
         ttotal = tf - ti
         #
-        if iprint:
-            print('*** Resultados do Método Monte Carlo ***')
-            print(f'\nReliability Index Beta = {beta}')
-            print(f'Probability of failure pf ={pf}')
-            print(f'COV of pf ={delta_pf}')
-            print('nimul = {0:0.4f} '.format(nsimul))
-            print(f'Function g(x): mean = {gx.mean()}, std = {gx.std()} ')
-            print(f'Processing time = {ttotal} s')
+        if iprint: DataVisualize.print_results({'title':"Monte Carlo – Adaptative Importance Sampling", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
 
-        if igraph:
-            # Plot results:
-            cycle = np.arange(1, kcycle+1, 1)
-
-            plt.figure(1, figsize=(8.5, 6))
-            plt.plot(cycle, pf_mean[:kcycle])
-            plt.title("Convergence of Probability of Failure")
-            plt.xlabel("Cycle")
-            plt.ylabel("Pf")
-            plt.show()
-
-            plt.figure(2, figsize=(8.5, 6))
-            plt.plot(cycle, cov_pf[:kcycle])
-            plt.title("CoV of the Probability of Failure")
-            plt.xlabel("Cycle")
-            plt.ylabel("CoV Pf")
-            plt.show()
+        if igraph: DataVisualize.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
 
         return {
             "beta": beta,
@@ -2521,44 +2470,19 @@ class Reliability():
             delta_pf = cov_pf[icycle]
             nc_final = icycle
             # Probability of failure in this cycle
-            if iprint:
-                print('Cycle =', kcycle)
-                print(f'Probability of failure pf ={pf}')
-                print(f'Coefficient of variation of pf ={delta_pf}')
+            if iprint: DataVisualize.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
             if delta_pf < delta_lim and kcycle > 3:
-                break
+              break
 
         beta = -norm.ppf(pf, 0, 1)
         nsimul = kcycle * ns
         tf = time.time()
         ttotal = tf - ti
         #
-        if iprint:
-            print('*** Resultados do Método Monte Carlo ***')
-            print(f'\nReliability Index Beta = {beta}')
-            print(f'Probability of failure pf ={pf}')
-            print(f'COV of pf ={delta_pf}')
-            print('nimul = {0:0.4f} '.format(nsimul))
-            print(f'Function g(x): mean = {gx.mean()}, std = {gx.std()} ')
-            print(f'Processing time = {ttotal} s')
+        if iprint: DataVisualize.print_results({'title':"Monte Carlo – Bucher Importance Sampling", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
 
-        if igraph:
-            # Plot results:
-            cycle = np.arange(1, kcycle+1, 1)
+        if igraph: DataVisualize.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
 
-            plt.figure(1, figsize=(8.5, 6))
-            plt.plot(cycle, pf_mean[:kcycle])
-            plt.title("Convergence of Probability of Failure")
-            plt.xlabel("Cycle")
-            plt.ylabel("Pf")
-            plt.show()
-
-            plt.figure(2, figsize=(8.5, 6))
-            plt.plot(cycle, cov_pf[:kcycle])
-            plt.title("CoV of the Probability of Failure")
-            plt.xlabel("Cycle")
-            plt.ylabel("CoV Pf")
-            plt.show()
 
         return {
             "beta": beta,
@@ -2845,44 +2769,19 @@ class Reliability():
                     cov_pf[icycle] = 0.00
                 delta_pf = cov_pf[icycle]
                 # Probability of failure in this cycle
-                if iprint:
-                    print('Cycle =', kcycle, self.xvar)
-                    print(f'Probability of failure pf ={pf}')
-                    print(f'Coefficient of variation of pf ={delta_pf}')
+                if iprint: DataVisualize.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
                 if delta_pf < delta_lim and kcycle > 3:
-                    break
+                  break
 
             beta = -norm.ppf(pf, 0, 1)
             nsimul = kcycle * ns
             tf = time.time()
             ttotal = tf - ti
-            #
-            if iprint:
-                print('*** Resultados do Método Monte Carlo ***')
-                print(f'\nReliability Index Beta = {beta}')
-                print(f'Probability of failure pf ={pf}')
-                print(f'COV of pf ={delta_pf}')
-                print('nimul = {0:0.4f} '.format(nsimul))
-                print(f'Function g(x): mean = {gx.mean()}, std = {gx.std()} ')
-                print(f'Processing time = {ttotal} s')
+            
+            # Results viewer   
+            if iprint: DataVisualize.print_results({'title':"Monte Carlo – Enhanced Importance Sampling", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
 
-            if igraph:
-                # Plot results:
-                cycle = np.arange(1, kcycle + 1, 1)
-
-                plt.figure(1, figsize=(8.5, 6))
-                plt.plot(cycle, pf_mean[:kcycle])
-                plt.title("Convergence of Probability of Failure")
-                plt.xlabel("Cycle")
-                plt.ylabel("Pf")
-                plt.show()
-
-                plt.figure(2, figsize=(8.5, 6))
-                plt.plot(cycle, cov_pf[:kcycle])
-                plt.title("CoV of the Probability of Failure")
-                plt.xlabel("Cycle")
-                plt.ylabel("CoV Pf")
-                plt.show()
+            if igraph: DataVisualize.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
 
             return {
             "beta": beta,
@@ -3017,44 +2916,18 @@ class Reliability():
                 cov_pf[icycle] = 0.00
             delta_pf = cov_pf[icycle]
             # Probability of failure in this cycle
-            if iprint:
-                print('Cycle =', kcycle)
-                print(f'Probability of failure pf ={pf}')
-                print(f'Coefficient of variation of pf ={delta_pf}')
+            if iprint: DataVisualize.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
             if delta_pf < delta_lim and kcycle > 3:
-                break
+              break
 
         beta = -norm.ppf(pf, 0, 1)
         nsimul = kcycle * ns
         tf = time.time()
         ttotal = tf - ti
         #
-        if iprint:
-            print('*** Resultados do Método Monte Carlo ***')
-            print(f'\nReliability Index Beta = {beta}')
-            print(f'Probability of failure pf ={pf}')
-            print(f'COV of pf ={delta_pf}')
-            print('nimul = {0:0.4f} '.format(nsimul))
-            print(f'Function g(x): mean = {gx.mean()}, std = {gx.std()} ')
-            print(f'Processing time = {ttotal} s')
+        if iprint: DataVisualize.print_results({'title':"Monte Carlo – Adaptative Importance Sampling", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
 
-        if igraph:
-            # Plot results:
-            cycle = np.arange(1, kcycle+1, 1)
-
-            plt.figure(1, figsize=(8.5, 6))
-            plt.plot(cycle, pf_mean[:kcycle])
-            plt.title("Convergence of Probability of Failure")
-            plt.xlabel("Cycle")
-            plt.ylabel("Pf")
-            plt.show()
-
-            plt.figure(2, figsize=(8.5, 6))
-            plt.plot(cycle, cov_pf[:kcycle])
-            plt.title("CoV of the Probability of Failure")
-            plt.xlabel("Cycle")
-            plt.ylabel("CoV Pf")
-            plt.show()
+        if igraph: DataVisualize.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
 
         return {
             "beta": beta,
@@ -3187,44 +3060,20 @@ class Reliability():
             delta_pf = cov_pf[icycle]
             nc_final = icycle
             # Probability of failure in this cycle
-            if iprint:
-                print('Cycle =', kcycle)
-                print(f'Probability of failure pf ={pf}')
-                print(f'Coefficient of variation of pf ={delta_pf}')
+            if iprint: DataVisualize.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
             if delta_pf < delta_lim and kcycle > 3:
-                break
+              break
 
         beta = -norm.ppf(pf, 0, 1)
         nsimul = kcycle * ns
         tf = time.time()
         ttotal = tf - ti
-        #
-        if iprint:
-            print('*** Resultados do Método Monte Carlo ***')
-            print(f'\nReliability Index Beta = {beta}')
-            print(f'Probability of failure pf ={pf}')
-            print(f'COV of pf ={delta_pf}')
-            print('nimul = {0:0.4f} '.format(nsimul))
-            print(f'Function g(x): mean = {gx.mean()}, std = {gx.std()} ')
-            print(f'Processing time = {ttotal} s')
+        
 
-        if igraph:
-            # Plot results:
-            cycle = np.arange(1, kcycle+1, 1)
+        # Results viewer   
+        if iprint: DataVisualize.print_results({'title':"Monte Carlo – Enhanced Importance Sampling", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
 
-            plt.figure(1, figsize=(8.5, 6))
-            plt.plot(cycle, pf_mean[:kcycle])
-            plt.title("Convergence of Probability of Failure")
-            plt.xlabel("Cycle")
-            plt.ylabel("Pf")
-            plt.show()
-
-            plt.figure(2, figsize=(8.5, 6))
-            plt.plot(cycle, cov_pf[:kcycle])
-            plt.title("CoV of the Probability of Failure")
-            plt.xlabel("Cycle")
-            plt.ylabel("CoV Pf")
-            plt.show()
+        if igraph: DataVisualize.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
 
         return {
             "beta": beta,
@@ -3298,7 +3147,7 @@ class Reliability():
 
         delta_pf = cov_pf[icycle]
         # Plot probability of failure in this cycle
-        if iprint: DataVisualize.one_cycle_print_results(kcycle, pf, delta_pf)
+        if iprint: DataVisualize.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
         print('delta_pf',delta_pf)
         if delta_pf < delta_lim and kcycle > 3:
             break
@@ -3310,8 +3159,8 @@ class Reliability():
 
       # Results viewer
       
-      if iprint: DataVisualize.print_results("Monte Carlo – Importance Sampling Based on the Design Point", beta, pf, delta_pf, nsimul, gx, ttotal)
-      if igraph: DataVisualize.plot_results(pf_mean, cov_pf, kcycle)
+      if iprint: DataVisualize.print_results({'title':"Monte Carlo – Importance Sampling Based on the Design Point", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
+      if igraph: DataVisualize.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
 
       return {
             "beta": beta,
@@ -3423,9 +3272,9 @@ class Reliability():
         delta_pf = cov_pf[icycle]
         
         # Plot probability of failure in this cycle
-        if iprint: DataVisualize.one_cycle_print_results(kcycle, pf, delta_pf)
+        if iprint: DataVisualize.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
         if delta_pf < delta_lim and kcycle > 3:
-            break
+          break
 
       beta = -norm.ppf(pf, 0, 1)
       nsimul = kcycle * ns
@@ -3433,8 +3282,9 @@ class Reliability():
       ttotal = tf - ti
 
       # Results viewer   
-      if iprint: DataVisualize.print_results("Monte Carlo – Enhanced Importance Sampling", beta, pf, delta_pf, nsimul, gx, ttotal)
-      if igraph: DataVisualize.plot_results(pf_mean, cov_pf, kcycle)
+      if iprint: DataVisualize.print_results({'title':"Monte Carlo – Enhanced Importance Sampling", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
+
+      if igraph: DataVisualize.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
 
       return {
             "beta": beta,
