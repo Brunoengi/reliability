@@ -1,0 +1,286 @@
+from abc import ABC, abstractmethod
+import numpy as np
+from utils.validate.domain_types.validate_corrmatrix import ValidateCorrelationMatrix
+
+class BaseCorrelation(ABC):
+
+  def __init__(self):
+    pass
+
+  @property
+  @abstractmethod
+  def nxvar(self):
+      """Number of random variables. Must be defined by the subclass."""
+      pass
+
+  @property
+  @abstractmethod
+  def Rz(self):
+      """Correlation Matriz. Must be defined by the subclass."""
+      pass
+
+  @property
+  @abstractmethod
+  def xvar(self):
+      """Random Variables. Must be defined by the subclass."""
+      pass
+
+  def correlation_summary(self, Rz, tol=1e-10):
+    """
+    Returns two lists:
+    - indices of variables that are correlated with at least one other variable
+    - indices of variables that are uncorrelated with all other variables
+
+    Parameters:
+    - R: Correlation matrix (must be square)
+    - tol: Tolerance threshold to consider a correlation as nonzero
+    """
+    n = Rz.shape[0]
+    correlated = set()
+
+    for i in range(n):
+        for j in range(n):
+            if i != j and abs(Rz[i, j]) > tol:
+                correlated.add(i)
+                break  # i is correlated with at least one j
+
+    all_indices = set(range(n))
+    uncorrelated = all_indices - correlated
+
+    return sorted(correlated), sorted(uncorrelated)
+  
+  #Nataf correction of the correlation matrix
+  def nataf(self, Rz, xvar, nxvar):
+        # print('Rz:',Rz)
+        # print('xvar:',xvar)
+        # print('nxvar:',nxvar)
+
+        """
+        Nataf correction of the correlation matrix
+        According to:
+        Liu, P.-L. and Kiureghian, A.D. Multivariate distribution models with prescribed marginals and covariances
+        Probabilistic Engineering Mechanics, 1986, Vol. 1, No.2, p. 105-112
+        """
+        Rz1 = np.array(Rz)
+        for i in range(nxvar):
+            # print('entrou no ii')
+            for j in range(i):
+                # print('vardistiiii',xvar[i]['vardist'])
+                # print('vardistjjjjjjjjjjjjjjj',xvar[j]['vardist'])
+                # print('entrou no jj')
+                # Variables parameters
+                f = 1.00
+                ro = Rz[i][j]
+                cvi = float(xvar[i]['varcov'])
+                cvj = float(xvar[j]['varcov'])
+
+                # Table 4: Xi is gauss and Xj belongs to group 1 - f is constant
+
+                # 1 Xi = gauss and Xj = gauss
+
+                if xvar[i]['vardist'] == 'gauss' and xvar[j]['vardist'] == 'gauss':
+                    f = 1.000
+
+                # 2 Xi = gauss and Xj = uniform
+
+                elif xvar[i]['vardist'] == 'gauss' and xvar[j]['vardist'] == 'uniform' \
+                        or xvar[i]['vardist'] == 'uniform' and xvar[j]['vardist'] == 'gauss':
+                    f = 1.023
+
+                # 3 Xi = gauss and Xj = gumbel
+
+                elif xvar[i]['vardist'] == 'gauss' and xvar[j]['vardist'] == 'gumbel' \
+                        or xvar[i]['vardist'] == 'gumbel' and xvar[j]['vardist'] == 'gauss':
+                    f = 1.031
+
+                # Table 5: Xi is gauss and Xj belongs to group 2 - f depends on cvj
+
+                # 4 Xi = gauss and Xj = lognorm
+
+                elif xvar[i]['vardist'] == 'gauss' and xvar[j]['vardist'] == 'lognorm' \
+                        or xvar[i]['vardist'] == 'lognorm' and xvar[j]['vardist'] == 'gauss':
+                    if xvar[i]['vardist'] == 'lognorm':
+                        cv = cvi
+                    else:
+                        cv = cvj
+                    f = cv / (np.sqrt(np.log(1.00 + cv ** 2)))
+
+                # 5 Xi = gauss and Xj = frechet
+
+                elif xvar[i]['vardist'] == 'gauss' and xvar[j]['vardist'] == 'frechet' \
+                        or xvar[i]['vardist'] == 'frechet' and xvar[j]['vardist'] == 'gauss':
+                    if xvar[i]['vardist'] == 'frechet':
+                        cv = cvi
+                    else:
+                        cv = cvj
+                    f = 1.030 + 0.238 * cv + 0.364 * cv ** 2
+
+                # 6 Xi = gauss and Xj = weibull - min
+
+                elif xvar[i]['vardist'] == 'gauss' and xvar[i]['vardist'] == 'weibull' \
+                        or xvar[i]['vardist'] == 'weibull' and xvar[j]['vardist'] == 'gauss':
+                    if xvar[i]['vardist'] == 'weibull':
+                        cv = cvi
+                    else:
+                        cv = cvj
+                    f = 1.031 - 0.195 * cv + 0.328 * cv ** 2
+
+                # Table 6: Xi  and Xj belongs to group 2 - f depends on ro
+
+                # 7 Xi = uniform and Xj = uniform
+
+                elif xvar[i]['vardist'] == 'uniform' and xvar[j]['vardist'] == 'uniform':
+                    f = 1.047 - 0.047 * ro ** 2
+
+                # 8 Xi = gumbel and Xj = gumbel
+
+                elif xvar[i]['vardist'] == 'gumbel' and xvar[j]['vardist'] == 'gumbel':
+                    f = 1.064 - 0.069 * ro + 0.005 * ro ** 2
+
+                # 9 Xi = uniform and Xj = gumbel
+
+                elif xvar[i]['vardist'] == 'uniform' and xvar[j]['vardist'] == 'gumbel' \
+                        or xvar[i]['vardist'] == 'gumbel' and xvar[j]['vardist'] == 'uniform':
+                    f = 1.055 + 0.015 * ro ** 2
+
+                # Table 7: Xi belongs to group 1 and Xj belongs to group 2 - f depends on ro and cvj
+
+                # 10 Xi = uniform and Xj = lognorm
+
+                elif xvar[i]['vardist'] == 'uniform' and xvar[j]['vardist'] == 'lognorm' \
+                        or xvar[i]['vardist'] == 'lognorm' and xvar[j]['vardist'] == 'uniform':
+                    if xvar[i]['vardist'] == 'lognorm':
+                        cv = cvi
+                    else:
+                        cv = cvj
+                    f = 1.019 - 0.014 * cv + 0.010 * ro ** 2 + 0.249 * cv ** 2
+
+                # 11 Xi = uniform and Xj = frechet
+
+                elif xvar[i]['vardist'] == 'uniform' and xvar[j]['vardist'] == 'frechet' \
+                        or xvar[i]['vardist'] == 'frechet' and xvar[j]['vardist'] == 'uniform':
+                    if xvar[i]['vardist'] == 'frechet':
+                        cv = cvi
+                    else:
+                        cv = cvj
+                    f = 1.033 + 0.305 * cv + 0.074 * ro ** 2 + 0.405 * cv ** 2
+
+                # 12 Xi = uniform and Xj = weibull - min
+
+                elif xvar[i]['vardist'] == 'uniform' and xvar[j]['vardist'] == 'weibull' \
+                        or xvar[i]['vardist'] == 'weibull' and xvar[j]['vardist'] == 'uniform':
+                    if xvar[i]['vardist'] == 'weibull':
+                        cv = cvi
+                    else:
+                        cv = cvj
+                    f = 1.061 - 0.237 * cv - 0.005 * ro ** 2 + 0.379 * cv ** 2
+
+                # 13 Xi = gumbel and Xj = lognorm
+
+                elif xvar[i]['vardist'] == 'gumbel' and xvar[j]['vardist'] == 'lognorm' \
+                        or xvar[i]['vardist'] == 'lognorm' and xvar[j]['vardist'] == 'gumbel':
+                    if xvar[i]['vardist'] == 'lognorm':
+                        cv = cvi
+                    else:
+                        cv = cvj
+                    f = 1.029 + 0.001 * ro + 0.014 * cv + 0.004 * ro ** 2 + 0.233 * cv ** 2 - 0.197 * ro * cv
+
+                # 14 Xi = gumbel and Xj = frechet
+
+                elif xvar[i]['vardist'] == 'gumbel' and xvar[j]['vardist'] == 'frechet' \
+                        or xvar[i]['vardist'] == 'frechet' and xvar[j]['vardist'] == 'gumbel':
+                    if xvar[i]['vardist'] == 'frechet':
+                        cv = cvi
+                    else:
+                        cv = cvj
+                    f = 1.056 - 0.060 * ro + 0.263 * cv + 0.020 * ro ** 2 + 0.383 * cv ** 2 - 0.332 * ro * cv
+
+                # 15 Xi = gumbel and Xj = weibull - min
+
+                elif xvar[i]['vardist'] == 'gumbel' and xvar[j]['vardist'] == 'weibull' \
+                        or xvar[i]['vardist'] == 'weibull' and xvar[j]['vardist'] == 'gumbel':
+                    if xvar[i]['vardist'] == 'weibull':
+                        cv = cvi
+                    else:
+                        cv = cvj
+                    f = 1.064 + 0.065 * ro - 0.210 * cv + 0.003 * ro ** 2 + 0.356 * cv ** 2 - 0.211 * ro * cv
+
+                # Table 8 both Xi and Xj belong to group 2: f depends on ro, cvi e cvj
+
+                # 16 Xi = lognorm and Xj = lognorm
+
+                elif xvar[i]['vardist'] == 'lognorm' and xvar[j]['vardist'] == 'lognorm':
+                    f = np.log(1.00 + ro * cvi * cvj)/(ro * np.sqrt(np.log(1.00 + cvi ** 2) * np.log(1.00 + cvj ** 2)))
+    
+
+                # 17 Xi = lognorm and Xj = frechet
+
+                elif xvar[i]['vardist'] == 'lognorm' and xvar[j]['vardist'] == 'frechet' \
+                        or xvar[i]['vardist'] == 'frechet' and xvar[j]['vardist'] == 'lognorm':
+                    if xvar[i]['vardist'] == 'frechet':
+                        cvf = cvi
+                        cvl = cvj
+                    else:
+                        cvf = cvj
+                        cvl = cvi
+                    f = 1.026 + 0.082 * ro - 0.019 * cvl + 0.222 * cvf \
+                        + 0.018 * ro ** 2 + 0.288 * cvl ** 2 + 0.379 * cvf ** 2 \
+                        - 0.441 * ro * cvl + 0.126 * cvl * cvf - 0.277 * ro * cvf
+
+                # 18 Xi = lognorm and Xj = weibull - min
+
+                elif xvar[i]['vardist'] == 'lognorm' and xvar[j]['vardist'] == 'weibull' \
+                        or xvar[i]['vardist'] == 'weibull' and xvar[j]['vardist'] == 'lognorm':
+                    if xvar[i]['vardist'] == 'weibull':
+                        cvw = cvi
+                        cvl = cvj
+                    else:
+                        cvw = cvj
+                        cvl = cvi
+                    f = 1.031 + 0.052 * ro + 0.011 * cvl - 0.210 * cvw \
+                        + 0.002 * ro ** 2 + 0.220 * cvl ** 2 + 0.350 * cvw ** 2 \
+                        + 0.005 * ro * cvl + 0.009 * cvl * cvw - 0.174 * ro * cvw
+
+                # 19 Xi = frechet and Xj = frechet
+
+                elif xvar[i]['vardist'] == 'frechet' and xvar[j]['vardist'] == 'frechet':
+                    f = 1.086 + 0.054 * ro + 0.104 * (cvi + cvj) \
+                        - 0.055 * ro ** 2 + 0.662 * (cvi ** 2 + cvj ** 2)  \
+                        - 0.570 * ro * (cvi + cvj) + 0.203 * cvi * cvj \
+                        - 0.020 * ro ** 3 - 0.218 * (cvi ** 3 + cvj ** 3) \
+                        - 0.371 * ro * (cvi ** 2 + cvj ** 2) + 0.257 * ro ** 2 * (cvi + cvj) \
+                        + 0.141 * cvi * cvj * (cvi + cvj)
+
+                # 20 Xi = frechet and Xj = weibull min
+
+                elif xvar[i]['vardist'] == 'frechet' and xvar[j]['vardist'] == 'weibull' \
+                        or xvar[i]['vardist'] == 'weibull' and xvar[j]['vardist'] == 'frechet':
+                    if xvar[i]['vardist'] == 'frechet':
+                        cvf = cvi
+                        cvw = cvj
+                    else:
+                        cvf = cvj
+                        cvw = cvi
+                    f = 1.065 + 0.146 * ro + 0.241 * cvf - 0.259 * cvw \
+                        + 0.013 * ro ** 2 + 0.372 * cvf ** 2 + 0.435 * cvw ** 2  \
+                        + 0.005 * ro * cvf + 0.034 * cvf * cvw - 0.481 * ro * cvw
+
+                # 20 Xi = weibull and Xj = weibull min
+
+                elif xvar[i]['vardist'] == 'weibull' and xvar[j]['vardist'] == 'weibull':
+                    f = 1.063 - 0.004 * ro - 0.200 * (cvi + cvj) \
+                        - 0.001 * ro ** 2 + 0.337 * (cvi ** 2 + cvj ** 2)  \
+                        + 0.007 * ro * (cvi + cvj) - 0.007 * cvi * cvj
+
+                # Application of the correction factor f on the ro coefficient
+                ro = f * ro
+                Rz1[i, j] = ro
+                Rz1[j, i] = ro
+        print('Nataf correlation matrix:')
+        print(Rz1)
+        return Rz1
+  
+
+    # @Rz.setter
+    # def Rz(self, Rz):
+    #     super().__init__(Rz)

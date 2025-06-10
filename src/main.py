@@ -22,43 +22,97 @@ from visualize import DataVisualize
 from utils.validate.domain_types.validate_dvar import ValidateDvar
 from utils.validate.domain_types.validate_gx import ValidateGx
 from utils.validate.domain_types.validate_corrmatrix import ValidateCorrelationMatrix
+from correlation import BaseCorrelation
 
 
-class Reliability():
+class Reliability(BaseCorrelation):
 
     def __init__(self, xvar, dvar, gx, x0=None, Rz=None):
-        self.xvar = xvar
-        self.dvar = dvar
-        self.nxvar = len(xvar)
-        self.ndvar = len(dvar)
+        
+        #Simple setters
+        self.dvar = dvar 
         self.fel = gx
-        self.x0 = x0
-        self.Rz = Rz
+        self.ndvar = len(dvar)
+        self.nxvar = len(xvar)
 
-        ValidateDvar(dvar)
-        ValidateGx(gx)
-        
-        
+        #Data processing - Complex setters
+        self._xvar = self.set_xvar(xvar, x0)
+        self._Rz = self.set_Rz(Rz, self._xvar, self.nxvar)
+        self._d = self.set_d(self.dvar, self.ndvar)
+        self._x0 = self.set_x0(x0, self.nxvar, self.xvar)
 
-        #
-        # Initial values of the design variables
-        #
-        i = -1
-        self.d = np.zeros(self.ndvar)
-        for var in self.dvar:
-            i += 1
-            # Mean value of the random variables x
-            self.d[i] = float(var['varvalue'])
+        super().__init__()        
         
-        #
-        # Setting variables initial values
-        #
        
-        for var in self.xvar:              
-          #
-          # Setting standard variable distribution names, create distribution and update the `var` dictionary with all distribution attributes
-          #
-          var.update(vars(createDistribution(var)))
+    @property
+    def xvar(self):
+      return self._xvar
+
+    @property
+    def dvar(self):
+      return self._dvar
+
+    @property
+    def gx(self):
+      return self._gx
+
+    @property
+    def Rz(self):
+      return self._Rz
+
+    @property
+    def x0(self):
+      return self._x0
+
+    @property
+    def nxvar(self):
+      return len(self.xvar)
+    
+    @property
+    def ndvar(self):
+      return len(self.dvar)
+    
+    @property
+    def d(self):
+        return self._d
+
+    @xvar.setter
+    def xvar(self, xvar):
+        self._xvar = xvar
+
+    @dvar.setter
+    def dvar(self, dvar): 
+      ValidateDvar(dvar)
+      self._dvar = dvar
+
+    @gx.setter
+    def gx(self, gx): 
+      ValidateGx(gx)
+      self._gx = gx
+
+    @Rz.setter
+    def Rz(self, Rz):
+        self._Rz = Rz
+
+    @x0.setter
+    def x0(self, x0):
+        self._x0 = x0 
+
+    @nxvar.setter
+    def nxvar(self, nxvar): 
+      self._nxvar = nxvar
+  
+    @ndvar.setter
+    def ndvar(self, ndvar): 
+      self._ndvar = ndvar
+
+    def set_xvar(self, xvar, x0): 
+      nxvar = len(xvar)
+      for var in xvar:              
+        #
+        # Setting standard variable distribution names, create distribution and update the `var` dictionary with all distribution attributes
+        #
+        var.update(vars(createDistribution(var)))
         #
         # Initial values of the aleatory variables
         #
@@ -67,252 +121,65 @@ class Reliability():
             # Original mean of the variables x
             #
             i = -1
-            self.x0 = np.zeros(self.nxvar)
-            for var in self.xvar:
+            x0 = np.zeros(nxvar)
+            for var in xvar:
                 i += 1
                 # Mean value of the random variables x
-                self.x0[i] = float(var['varmean'])
+                x0[i] = float(var['varmean'])
                 var['varhmean'] = float(var['varmean'])
         else:
             i = -1
-            for var in self.xvar:
+            for var in xvar:
                 i += 1
                 # Mean value of the random variables x
-                var['varhmean'] = self.x0[i]
-        #
-        # Initializes the correlation matrix
-        #
-        if self.Rz is None:
-            self.Rz = np.eye(self.nxvar)
-        else:
-            self.Rz = self.nataf()
-            ValidateCorrelationMatrix(self.Rz)
+                var['varhmean'] = x0[i]
 
-    #
-    # Nataf correction of the correlation matrix
-    #
+      return xvar
 
-    def nataf(self):
-        """
-        Nataf correction of the correlation matrix
-        According to:
-        Liu, P.-L. and Kiureghian, A.D. Multivariate distribution models with prescribed marginals and covariances
-        Probabilistic Engineering Mechanics, 1986, Vol. 1, No.2, p. 105-112
-        """
-        Rz1 = np.array(self.Rz)
-        for i in range(self.nxvar):
-            for j in range(i):
 
-                # Variables parameters
-                f = 1.00
-                ro = self.Rz[i][j]
-                cvi = float(self.xvar[i]['varcov'])
-                cvj = float(self.xvar[j]['varcov'])
+    def set_Rz(self, Rz, xvar, nxvar):
+      if Rz is None:
+          return np.eye(self.nxvar)
+      else:
+        ValidateCorrelationMatrix(Rz)
+        return self.nataf(Rz, xvar, nxvar)
+        
+    def set_d(self, dvar, ndvar):
+      #
+      # Initial values of the design variables
+      #
+      i = -1
+      d = np.zeros(ndvar)
+      for var in dvar:
+          i += 1
+          # Mean value of the random variables x
+          d[i] = float(var['varvalue'])
+      
+      #
+      # Setting variables initial values
+      #
+      return d
 
-                # Table 4: Xi is gauss and Xj belongs to group 1 - f is constant
+    def set_x0(self, x0, nxvar, xvar):
+      if x0 is None:
+          #
+          # Original mean of the variables x
+          #
+          i = -1
+          x0 = np.zeros(nxvar)
+          for var in xvar:
+              i += 1
+              # Mean value of the random variables x
+              x0[i] = float(var['varmean'])
+              var['varhmean'] = float(var['varmean'])
+      else:
+          i = -1
+          for var in xvar:
+              i += 1
+              # Mean value of the random variables x
+              var['varhmean'] = x0[i]
 
-                # 1 Xi = gauss and Xj = gauss
-
-                if self.xvar[i]['vardist'] == 'gauss' and self.xvar[j]['vardist'] == 'gauss':
-                    f = 1.000
-
-                # 2 Xi = gauss and Xj = uniform
-
-                elif self.xvar[i]['vardist'] == 'gauss' and self.xvar[j]['vardist'] == 'uniform' \
-                        or self.xvar[i]['vardist'] == 'uniform' and self.xvar[j]['vardist'] == 'gauss':
-                    f = 1.023
-
-                # 3 Xi = gauss and Xj = gumbel
-
-                elif self.xvar[i]['vardist'] == 'gauss' and self.xvar[j]['vardist'] == 'gumbel' \
-                        or self.xvar[i]['vardist'] == 'gumbel' and self.xvar[j]['vardist'] == 'gauss':
-                    f = 1.031
-
-                # Table 5: Xi is gauss and Xj belongs to group 2 - f depends on cvj
-
-                # 4 Xi = gauss and Xj = lognorm
-
-                elif self.xvar[i]['vardist'] == 'gauss' and self.xvar[j]['vardist'] == 'lognorm' \
-                        or self.xvar[i]['vardist'] == 'lognorm' and self.xvar[j]['vardist'] == 'gauss':
-                    if self.xvar[i]['vardist'] == 'lognorm':
-                        cv = cvi
-                    else:
-                        cv = cvj
-                    f = cv / (np.sqrt(np.log(1.00 + cv ** 2)))
-
-                # 5 Xi = gauss and Xj = frechet
-
-                elif self.xvar[i]['vardist'] == 'gauss' and self.xvar[j]['vardist'] == 'frechet' \
-                        or self.xvar[i]['vardist'] == 'frechet' and self.xvar[j]['vardist'] == 'gauss':
-                    if self.xvar[i]['vardist'] == 'frechet':
-                        cv = cvi
-                    else:
-                        cv = cvj
-                    f = 1.030 + 0.238 * cv + 0.364 * cv ** 2
-
-                # 6 Xi = gauss and Xj = weibull - min
-
-                elif self.xvar[i]['vardist'] == 'gauss' and self.xvar[i]['vardist'] == 'weibull' \
-                        or self.xvar[i]['vardist'] == 'weibull' and self.xvar[j]['vardist'] == 'gauss':
-                    if self.xvar[i]['vardist'] == 'weibull':
-                        cv = cvi
-                    else:
-                        cv = cvj
-                    f = 1.031 - 0.195 * cv + 0.328 * cv ** 2
-
-                # Table 6: Xi  and Xj belongs to group 2 - f depends on ro
-
-                # 7 Xi = uniform and Xj = uniform
-
-                elif self.xvar[i]['vardist'] == 'uniform' and self.xvar[j]['vardist'] == 'uniform':
-                    f = 1.047 - 0.047 * ro ** 2
-
-                # 8 Xi = gumbel and Xj = gumbel
-
-                elif self.xvar[i]['vardist'] == 'gumbel' and self.xvar[j]['vardist'] == 'gumbel':
-                    f = 1.064 - 0.069 * ro + 0.005 * ro ** 2
-
-                # 9 Xi = uniform and Xj = gumbel
-
-                elif self.xvar[i]['vardist'] == 'uniform' and self.xvar[j]['vardist'] == 'gumbel' \
-                        or self.xvar[i]['vardist'] == 'gumbel' and self.xvar[j]['vardist'] == 'uniform':
-                    f = 1.055 + 0.015 * ro ** 2
-
-                # Table 7: Xi belongs to group 1 and Xj belongs to group 2 - f depends on ro and cvj
-
-                # 10 Xi = uniform and Xj = lognorm
-
-                elif self.xvar[i]['vardist'] == 'uniform' and self.xvar[j]['vardist'] == 'lognorm' \
-                        or self.xvar[i]['vardist'] == 'lognorm' and self.xvar[j]['vardist'] == 'uniform':
-                    if self.xvar[i]['vardist'] == 'lognorm':
-                        cv = cvi
-                    else:
-                        cv = cvj
-                    f = 1.019 - 0.014 * cv + 0.010 * ro ** 2 + 0.249 * cv ** 2
-
-                # 11 Xi = uniform and Xj = frechet
-
-                elif self.xvar[i]['vardist'] == 'uniform' and self.xvar[j]['vardist'] == 'frechet' \
-                        or self.xvar[i]['vardist'] == 'frechet' and self.xvar[j]['vardist'] == 'uniform':
-                    if self.xvar[i]['vardist'] == 'frechet':
-                        cv = cvi
-                    else:
-                        cv = cvj
-                    f = 1.033 + 0.305 * cv + 0.074 * ro ** 2 + 0.405 * cv ** 2
-
-                # 12 Xi = uniform and Xj = weibull - min
-
-                elif self.xvar[i]['vardist'] == 'uniform' and self.xvar[j]['vardist'] == 'weibull' \
-                        or self.xvar[i]['vardist'] == 'weibull' and self.xvar[j]['vardist'] == 'uniform':
-                    if self.xvar[i]['vardist'] == 'weibull':
-                        cv = cvi
-                    else:
-                        cv = cvj
-                    f = 1.061 - 0.237 * cv - 0.005 * ro ** 2 + 0.379 * cv ** 2
-
-                # 13 Xi = gumbel and Xj = lognorm
-
-                elif self.xvar[i]['vardist'] == 'gumbel' and self.xvar[j]['vardist'] == 'lognorm' \
-                        or self.xvar[i]['vardist'] == 'lognorm' and self.xvar[j]['vardist'] == 'gumbel':
-                    if self.xvar[i]['vardist'] == 'lognorm':
-                        cv = cvi
-                    else:
-                        cv = cvj
-                    f = 1.029 + 0.001 * ro + 0.014 * cv + 0.004 * ro ** 2 + 0.233 * cv ** 2 - 0.197 * ro * cv
-
-                # 14 Xi = gumbel and Xj = frechet
-
-                elif self.xvar[i]['vardist'] == 'gumbel' and self.xvar[j]['vardist'] == 'frechet' \
-                        or self.xvar[i]['vardist'] == 'frechet' and self.xvar[j]['vardist'] == 'gumbel':
-                    if self.xvar[i]['vardist'] == 'frechet':
-                        cv = cvi
-                    else:
-                        cv = cvj
-                    f = 1.056 - 0.060 * ro + 0.263 * cv + 0.020 * ro ** 2 + 0.383 * cv ** 2 - 0.332 * ro * cv
-
-                # 15 Xi = gumbel and Xj = weibull - min
-
-                elif self.xvar[i]['vardist'] == 'gumbel' and self.xvar[j]['vardist'] == 'weibull' \
-                        or self.xvar[i]['vardist'] == 'weibull' and self.xvar[j]['vardist'] == 'gumbel':
-                    if self.xvar[i]['vardist'] == 'weibull':
-                        cv = cvi
-                    else:
-                        cv = cvj
-                    f = 1.064 + 0.065 * ro - 0.210 * cv + 0.003 * ro ** 2 + 0.356 * cv ** 2 - 0.211 * ro * cv
-
-                # Table 8 both Xi and Xj belong to group 2: f depends on ro, cvi e cvj
-
-                # 16 Xi = lognorm and Xj = lognorm
-
-                elif self.xvar[i]['vardist'] == 'lognorm' and self.xvar[j]['vardist'] == 'lognorm':
-                    f = np.log(1.00 + ro * cvi * cvj)/(ro * np.sqrt(np.log(1.00 + cvi ** 2) * np.log(1.00 + cvj ** 2)))
-
-                # 17 Xi = lognorm and Xj = frechet
-
-                elif self.xvar[i]['vardist'] == 'lognorm' and self.xvar[j]['vardist'] == 'frechet' \
-                        or self.xvar[i]['vardist'] == 'frechet' and self.xvar[j]['vardist'] == 'lognorm':
-                    if self.xvar[i]['vardist'] == 'frechet':
-                        cvf = cvi
-                        cvl = cvj
-                    else:
-                        cvf = cvj
-                        cvl = cvi
-                    f = 1.026 + 0.082 * ro - 0.019 * cvl + 0.222 * cvf \
-                        + 0.018 * ro ** 2 + 0.288 * cvl ** 2 + 0.379 * cvf ** 2 \
-                        - 0.441 * ro * cvl + 0.126 * cvl * cvf - 0.277 * ro * cvf
-
-                # 18 Xi = lognorm and Xj = weibull - min
-
-                elif self.xvar[i]['vardist'] == 'lognorm' and self.xvar[j]['vardist'] == 'weibull' \
-                        or self.xvar[i]['vardist'] == 'weibull' and self.xvar[j]['vardist'] == 'lognorm':
-                    if self.xvar[i]['vardist'] == 'weibull':
-                        cvw = cvi
-                        cvl = cvj
-                    else:
-                        cvw = cvj
-                        cvl = cvi
-                    f = 1.031 + 0.052 * ro + 0.011 * cvl - 0.210 * cvw \
-                        + 0.002 * ro ** 2 + 0.220 * cvl ** 2 + 0.350 * cvw ** 2 \
-                        + 0.005 * ro * cvl + 0.009 * cvl * cvw - 0.174 * ro * cvw
-
-                # 19 Xi = frechet and Xj = frechet
-
-                elif self.xvar[i]['vardist'] == 'frechet' and self.xvar[j]['vardist'] == 'frechet':
-                    f = 1.086 + 0.054 * ro + 0.104 * (cvi + cvj) \
-                        - 0.055 * ro ** 2 + 0.662 * (cvi ** 2 + cvj ** 2)  \
-                        - 0.570 * ro * (cvi + cvj) + 0.203 * cvi * cvj \
-                        - 0.020 * ro ** 3 - 0.218 * (cvi ** 3 + cvj ** 3) \
-                        - 0.371 * ro * (cvi ** 2 + cvj ** 2) + 0.257 * ro ** 2 * (cvi + cvj) \
-                        + 0.141 * cvi * cvj * (cvi + cvj)
-
-                # 20 Xi = frechet and Xj = weibull min
-
-                elif self.xvar[i]['vardist'] == 'frechet' and self.xvar[j]['vardist'] == 'weibull' \
-                        or self.xvar[i]['vardist'] == 'weibull' and self.xvar[j]['vardist'] == 'frechet':
-                    if self.xvar[i]['vardist'] == 'frechet':
-                        cvf = cvi
-                        cvw = cvj
-                    else:
-                        cvf = cvj
-                        cvw = cvi
-                    f = 1.065 + 0.146 * ro + 0.241 * cvf - 0.259 * cvw \
-                        + 0.013 * ro ** 2 + 0.372 * cvf ** 2 + 0.435 * cvw ** 2  \
-                        + 0.005 * ro * cvf + 0.034 * cvf * cvw - 0.481 * ro * cvw
-
-                # 20 Xi = weibull and Xj = weibull min
-
-                elif self.xvar[i]['vardist'] == 'weibull' and self.xvar[j]['vardist'] == 'weibull':
-                    f = 1.063 - 0.004 * ro - 0.200 * (cvi + cvj) \
-                        - 0.001 * ro ** 2 + 0.337 * (cvi ** 2 + cvj ** 2)  \
-                        + 0.007 * ro * (cvi + cvj) - 0.007 * cvi * cvj
-
-                # Application of the correction factor f on the ro coefficient
-                ro = f * ro
-                Rz1[i, j] = ro
-                Rz1[j, i] = ro
-#        print('Nataf correlation matrix:')
-#        print(Rz1)
-        return Rz1
+      return x0
 
     def form(self, iHLRF, toler=1.e-3, iprint=True):
         """
@@ -2614,7 +2481,6 @@ class Reliability():
             #
             
             ns = int(ns)
-            uk_cycle = np.zeros((ns, self.nxvar))
             #
             # Correlation matrix is self.Rz
             #
