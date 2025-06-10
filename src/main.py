@@ -98,14 +98,6 @@ class Reliability(BaseCorrelation):
     def x0(self, x0):
         self._x0 = x0 
 
-    @nxvar.setter
-    def nxvar(self, nxvar): 
-      self._nxvar = nxvar
-  
-    @ndvar.setter
-    def ndvar(self, ndvar): 
-      self._ndvar = ndvar
-
     def set_xvar(self, xvar, x0): 
       nxvar = len(xvar)
       for var in xvar:              
@@ -144,6 +136,14 @@ class Reliability(BaseCorrelation):
         ValidateCorrelationMatrix(Rz)
         return self.nataf(Rz, xvar, nxvar)
         
+    @nxvar.setter
+    def nxvar(self, nxvar): 
+      self._nxvar = nxvar
+  
+    @ndvar.setter
+    def ndvar(self, ndvar): 
+      self._ndvar = ndvar
+
     def set_d(self, dvar, ndvar):
       #
       # Initial values of the design variables
