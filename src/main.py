@@ -22,10 +22,10 @@ from visualize import DataVisualize
 from utils.validate.domain_types.validate_dvar import ValidateDvar
 from utils.validate.domain_types.validate_gx import ValidateGx
 from utils.validate.domain_types.validate_corrmatrix import ValidateCorrelationMatrix
-from correlation import BaseCorrelation
+from correlation import Correlation
 
 
-class Reliability(BaseCorrelation):
+class Reliability(Correlation):
 
     def __init__(self, xvar, dvar, gx, x0=None, Rz=None):
         

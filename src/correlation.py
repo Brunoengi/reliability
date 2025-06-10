@@ -1,29 +1,7 @@
-from abc import ABC, abstractmethod
 import numpy as np
 from utils.validate.domain_types.validate_corrmatrix import ValidateCorrelationMatrix
 
-class BaseCorrelation(ABC):
-
-  def __init__(self):
-    pass
-
-  @property
-  @abstractmethod
-  def nxvar(self):
-      """Number of random variables. Must be defined by the subclass."""
-      pass
-
-  @property
-  @abstractmethod
-  def Rz(self):
-      """Correlation Matriz. Must be defined by the subclass."""
-      pass
-
-  @property
-  @abstractmethod
-  def xvar(self):
-      """Random Variables. Must be defined by the subclass."""
-      pass
+class Correlation:
 
   def correlation_summary(self, Rz, tol=1e-10):
     """
@@ -51,10 +29,6 @@ class BaseCorrelation(ABC):
   
   #Nataf correction of the correlation matrix
   def nataf(self, Rz, xvar, nxvar):
-        # print('Rz:',Rz)
-        # print('xvar:',xvar)
-        # print('nxvar:',nxvar)
-
         """
         Nataf correction of the correlation matrix
         According to:
@@ -63,11 +37,7 @@ class BaseCorrelation(ABC):
         """
         Rz1 = np.array(Rz)
         for i in range(nxvar):
-            # print('entrou no ii')
             for j in range(i):
-                # print('vardistiiii',xvar[i]['vardist'])
-                # print('vardistjjjjjjjjjjjjjjj',xvar[j]['vardist'])
-                # print('entrou no jj')
                 # Variables parameters
                 f = 1.00
                 ro = Rz[i][j]
