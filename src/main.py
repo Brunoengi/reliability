@@ -42,8 +42,7 @@ class Reliability(Correlation):
         self._x0 = self.set_x0(x0, self.nxvar, self.xvar)
 
         super().__init__()        
-        
-       
+           
     @property
     def xvar(self):
       return self._xvar
@@ -1414,15 +1413,20 @@ class Reliability(Correlation):
 
         return
 
-    def var_gen(self, ns, nsigma=1.00, iprint=False):
+    def var_gen(self, ns, indexes_correlated_xvar, nsigma=1.00, iprint=False):
         """
 
            Random variables generator for the Monte Carlo Simulation methods
 
         """
 
+        #Get only correlated variables
+        xvar_correlated = [self.xvar[i] for i in indexes_correlated_xvar]
+        nxvar_correlated = len(xvar_correlated)
+
+
         # Generation of uniform random numbers
-        uk_cycle = np.random.rand(ns, self.nxvar)
+        uk_cycle = np.random.rand(ns, nxvar_correlated)
         #
 
 
@@ -1442,23 +1446,27 @@ class Reliability(Correlation):
             eq2 = (b - a) / np.sqrt(12.) - sigmax
             return [eq1, eq2]
 
-        x = np.zeros((ns, self.nxvar))
+
+        x = np.zeros((ns, nxvar_correlated))
         weight = np.ones(ns)
         fx = np.zeros(ns)
         hx = np.zeros(ns)
         fxixj = np.ones(ns)
-        yk = np.zeros((ns, self.nxvar))
+        yk = np.zeros((ns, nxvar_correlated))
 
 
 
-        #
+        # Get a sub-matrix only correlated variables
+        matrix = self.Rz[np.ix_(indexes_correlated_xvar, indexes_correlated_xvar)]
+
+
         # Step 1 - Determination of equivalent correlation coefficients and
         #          Jacobian matrix Jzy
         #
         #
         # Cholesky decomposition of the correlation matrix
         #
-        L = scipy.linalg.cholesky(self.Rz, lower=True)
+        L = scipy.linalg.cholesky(matrix, lower=True)
         Jzy = np.copy(L)
 
         #
@@ -1466,15 +1474,15 @@ class Reliability(Correlation):
         #
 
         yk = norm.ppf(uk_cycle)
-        zf = np.zeros((ns, self.nxvar))
+        zf = np.zeros((ns, nxvar_correlated))
         zk = np.dot(Jzy, yk.T).T
         # zk = multivariate_normal.rvs(mean = np.zeros(self.nxvar), cov = self.Rz, size=ns)
 
 
-        #
         i = -1
-        for var in self.xvar:
+        for var in xvar_correlated:
             i += 1
+            
             if var['varstd'] == 0.00:
                 var['varstd'] = float(var['varcov']) * float(var['varmean'])
             #
@@ -1674,11 +1682,11 @@ class Reliability(Correlation):
                 weight = weight * ((fx/norm.pdf(zf[:, i], 0, 1)) / (hx/norm.pdf(zk[:, i], 0, 1)))
                 fxixj = fxixj * fx / norm.pdf(zf[:, i], 0, 1)
                 
-
-        norm_multivarf = multivariate_normal(mean=None, cov=self.Rz)
+        
+        norm_multivarf = multivariate_normal(mean=None, cov=matrix)
         phif = list(map(norm_multivarf.pdf, zf))
         phif = np.array(phif)
-        norm_multivarh = multivariate_normal(mean=None, cov=self.Rz)
+        norm_multivarh = multivariate_normal(mean=None, cov=matrix)
         phih = list(map(norm_multivarh.pdf, zk))
         phih = np.array(phih)
         weight = weight * phif / phih
@@ -1686,12 +1694,16 @@ class Reliability(Correlation):
 
         return x, weight, fxixj
     
-    def var_rvs(self, ns, nsigma=1.00, iprint=False):
+    def var_rvs(self, ns, indexes_uncorrelated_xvar, nsigma=1.00, iprint=False):
         """
 
            Random variables generator for the Monte Carlo Simulation methods
 
         """
+
+        #Get only correlated variables
+        xvar_uncorrelated = [self.xvar[i] for i in indexes_uncorrelated_xvar]
+        nxvar_uncorrelated = len(xvar_uncorrelated)
 
         def fkapa(kapa, deltax, gsignal):
             fk = 1.00 + deltax ** 2 - gamma(1.00 + gsignal * 2.00 / kapa) / gamma(1.00 + gsignal * 1.00 / kapa) ** 2
@@ -1709,15 +1721,14 @@ class Reliability(Correlation):
             eq2 = (b - a) / np.sqrt(12.) - sigmax
             return [eq1, eq2]
 
-        x = np.zeros((ns, self.nxvar))
+        
+
+        x = np.zeros((ns, nxvar_uncorrelated))
         weight = np.ones(ns)
         fx = np.zeros(ns)
         hx = np.zeros(ns)
         fxixj = np.ones(ns)
         
-
-
-
         #
         # Step 1 - Determination of equivalent correlation coefficients and
         #          Jacobian matrix Jzy
@@ -1733,11 +1744,11 @@ class Reliability(Correlation):
         #
 
         
-        zf = np.zeros((ns, self.nxvar))
+        zf = np.zeros((ns, nxvar_uncorrelated))
         
         #
         i = -1
-        for var in self.xvar:
+        for var in xvar_uncorrelated:
             i += 1
             if var['varstd'] == 0.00:
                 var['varstd'] = float(var['varcov']) * float(var['varmean'])
@@ -1998,7 +2009,8 @@ class Reliability(Correlation):
             # Step 1 - Generation of the random numbers according to their appropriate distribution
             #
 
-            xp, wp, fx = self.var_gen(ns, nsigma, iprint)
+            xp, wp, fx = self.generator(ns)
+            
             #
             #
             # Step 2 - Evaluation of the limit state function g(x)
@@ -2117,7 +2129,7 @@ class Reliability(Correlation):
             # Step 1 - Generation of the random numbers according to their appropriate distribution
             #
 
-            xp, wp, fx = self.var_gen(ns, nsigma)
+            xp, wp, fx = self.generator(ns)
             #
             #
             # Step 2 - Evaluation of the limit state function g(x)
@@ -2257,7 +2269,7 @@ class Reliability(Correlation):
             # Step 1 - Generation of the random numbers according to their appropriate distribution
             #
 
-            xp, wp, fx = self.var_gen(ns, nsigma, iprint)
+            xp, wp, fx = self.generator(ns)
             #
             #
             # Step 2 - Evaluation of the limit state function g(x)
@@ -2475,455 +2487,60 @@ class Reliability(Correlation):
             Method to generate random variables
 
             """
-            #
-            #
             # Number of variables of the problem
-            #
-            
             ns = int(ns)
-            #
+            
             # Correlation matrix is self.Rz
-            #
-            if iprint:
-                print('Correlation Matrix after Nataf correction:')
-                print(self.Rz)
+            correlation_matrix = self.Rz
+
+            # Get index of correlated and uncorrelated variables
+            index_correlated, index_uncorrelated = self.correlation_summary(correlation_matrix)
+            total_index = len(index_correlated) + len(index_uncorrelated) 
+
+            print('correlated', index_correlated)
+            print('uncorrelated', index_uncorrelated)
+
+            # Empty matrix 
+            x = np.empty((ns, total_index))
+
             #
             # Standard deviation multiplier for MC-IS
-            #
-            #
-            nsigma = 1.00
-
-            #
-            #
-            # Number of Monte Carlo simulations
-            #
-            #
-            # Matrix xp(ns, self.nxvar) for ns Monte Carlo simulations and self.nxvar random variables
-            #
-            xp = np.zeros((ns, self.nxvar))
-            wp = np.ones(ns)
-            fx = np.ones(ns)
-             
-            #
-            # Step 1 - Generation of the random numbers according to their appropriate distribution
-            #
-
-            xp, wp, fx = self.var_gen(ns, nsigma, iprint)
-            #
-            #
-
-            return xp
-
-    def mc2(self, nc, ns, delta_lim, nsigma=1.00, igraph=True, iprint=True):
-            """
-            Monte Carlo Simulation Method
-            nc Cycles
-            ns Simulations
-            Brute force = no adaptive technique
-
-            """
-            #
-            #
-            ti = time.time()
-            #
-            # Number of variables of the problem
-            #
-            nc = int(nc)
-            ns = int(ns)
-            pfc = np.zeros(nc)
-            cov_pf = np.zeros(nc)
-            pf_mean = np.zeros(nc)
-            sum1 = 0.00
-            sum2 = 0.00
-            fxmax_cycle = np.zeros(nc)
-            
-            #
-            # Correlation matrix is self.Rz
-            #
-            if iprint:
-                print('Correlation Matrix after Nataf correction:')
-                print(self.Rz)
-            #
-            # Standard deviation multiplier for MC-IS
-            #
-            #
-            nsigma = 1.00
-
-            #
-            #
-            # Number of Monte Carlo simulations
-            #
-            #
-            # Matrix xp(ns, self.nxvar) for ns Monte Carlo simulations and self.nxvar random variables
-            #
-            xp = np.zeros((ns, self.nxvar))
-            wp = np.ones(ns)
-            fx = np.ones(ns)
-            
-            # Matrix dmatrix(ns, self.ndvar) for ns Monte Carlo simulations and self.ndvar design variables
-
-            dmatrix = np.array([self.d.T] * ns)
-
-            #
-            # Adaptive cycles
-            #
-
-            for icycle in range(nc):
-                kcycle = icycle + 1
-
-                #
-                # Monte Carlo Simulations
-                #
-                
-                #
-                #
-                # Step 1 - Generation of the random numbers according to their appropriate distribution
-                #
-
-                xp, wp, fx = self.var_rvs(ns, nsigma, iprint)
-                #
-                #
-                # Step 2 - Evaluation of the limit state function g(x)
-                #
-                gx = list(map(self.fel, xp, dmatrix))
-                gx = np.array(gx)
-
-                #
-                #
-                # Step 3 - Evaluation of the indicator function I[g(x)]
-                #
-                igx = np.where(gx <= 0.00, wp, 0)
-                nfail = sum(igx)
-                pfc[icycle] = nfail/ns
-                sum1 += pfc[icycle]
-                sum2 += pfc[icycle] ** 2
-                fxmax_cycle[icycle] = fx.max()
-
-                #
-                #  Step 6 - Evaluation of the error in the estimation of Pf
-                #
-
-                pf_mean[icycle] = sum1 / kcycle
-                pf = pf_mean[icycle]
-                if pf > 0.00 and kcycle > 1:
-                    cov_pf[icycle] = 1. / (pf * np.sqrt(kcycle * (kcycle - 1))) * np.sqrt(sum2 - 1. / kcycle * sum1 ** 2)
-                else:
-                    cov_pf[icycle] = 0.00
-                delta_pf = cov_pf[icycle]
-                # Probability of failure in this cycle
-                if iprint: DataVisualize.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
-                if delta_pf < delta_lim and kcycle > 3:
-                  break
-
-            beta = -norm.ppf(pf, 0, 1)
-            nsimul = kcycle * ns
-            tf = time.time()
-            ttotal = tf - ti
-            
-            # Results viewer   
-            if iprint: DataVisualize.print_results({'title':"Monte Carlo – Enhanced Importance Sampling", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
-
-            if igraph: DataVisualize.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
-
-            return {
-            "beta": beta,
-            "pf": pf,
-            "delta_pf": delta_pf,
-            "nsimul": nsimul,
-            "ttotal": ttotal
-            }
-    
-    def adaptive2(self, nc, ns, delta_lim, nsigma=1.50, igraph=True, iprint=True):
-        """
-        Monte Carlo Simulations with Importance Sampling (MC-IS)
-        Importance sampling with adaptative technique
-        Melchers, R.E. Search-based importance sampling.
-        Structural Safety, 9 (1990) 117-128
-
-        """
-        #
-        #
-        ti = time.time()
-        #
-        # Number of variables of the problem
-        #
-        nfail = 0
-        niter = 0
-        nc = int(nc)
-        ns = int(ns)
-        pfc = np.zeros(nc)
-        cov_pf = np.zeros(nc)
-        pf_mean = np.zeros(nc)
-        sum1 = 0.00
-        sum2 = 0.00
-        fxmax = 0.00
-        fxmax_cycle = np.zeros(nc)
-        
-
-        #
-        # Correlation matrix is self.Rz
-        #
-        if iprint:
-            print('Correlation Matrix after Nataf correction:')
-            print(self.Rz)
-
-        #
-        #
-        # Number of Monte Carlo simulations
-        #
-        #
-        # Matrix xp(ns, self.nxvar) for ns Monte Carlo simulations and self.nxvar random variables
-        #
-        xp = np.zeros((ns, self.nxvar))
-        wp = np.ones(ns)
-        fx = np.ones(ns)
-        
-
-
-        # Matrix dmatrix(ns, self.ndvar) for ns Monte Carlo simulations and self.ndvar design variables
-
-        dmatrix = np.array([self.d.T] * ns)
-
-        #
-        # Adaptive cycles
-        #
-
-        for icycle in range(nc):
-            kcycle = icycle + 1
-
-            #
-            # Monte Carlo Simulations
-            #
-            
-            #
-            #
-            # Step 1 - Generation of the random numbers according to their appropriate distribution
-            #
-
-            xp, wp, fx = self.var_rvs(ns, nsigma, iprint)
-            #
-            #
-            # Step 2 - Evaluation of the limit state function g(x)
-            #
-            gx = list(map(self.fel, xp, dmatrix))
-            gx = np.array(gx)
-
-            #
-            #
-            # Step 3 - Evaluation of the indicator function I[g(x)]
-            #
-            igx = np.where(gx <= 0.00, wp, 0)
-            nfail = sum(igx)
-            pfc[icycle] = nfail / ns
-            sum1 += pfc[icycle]
-            sum2 += pfc[icycle] ** 2
-            fxmax_cycle[icycle] = fx.max()
-
-            #
-            #  Step 4 - Select adaptative mean
-            #
-            if nfail == 0:
-                #
-                # No failures in ns simulations
-                #
-                imin = np.argmin(gx)
-                #
-                i = -1
-                for var in self.xvar:
-                    i += 1
-                    var['varhmean'] = xp[imin, i]
-
-            else:
-                #
-                # Ocurrence of nfail failures in ns simulations
-                #
-                if fxmax_cycle[icycle] > 1.02 * fxmax:
-                    fxmax = fxmax_cycle[icycle]
-                    imax = np.argmax(fx)
-                    #
-                    i = -1
-                    for var in self.xvar:
-                        i += 1
-                        var['varhmean'] = xp[imax, i]
-
-            #
-            #  Step 6 - Evaluation of the error in the estimation of Pf
-            #
-
-            pf_mean[icycle] = sum1 / kcycle
-            pf = pf_mean[icycle]
-            if pf > 0.00 and kcycle > 1:
-                cov_pf[icycle] = 1. / (pf * np.sqrt(kcycle * (kcycle - 1))) * np.sqrt(sum2 - 1. / kcycle * sum1 ** 2)
-            else:
-                cov_pf[icycle] = 0.00
-            delta_pf = cov_pf[icycle]
-            # Probability of failure in this cycle
-            if iprint: DataVisualize.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
-            if delta_pf < delta_lim and kcycle > 3:
-              break
-
-        beta = -norm.ppf(pf, 0, 1)
-        nsimul = kcycle * ns
-        tf = time.time()
-        ttotal = tf - ti
-        #
-        if iprint: DataVisualize.print_results({'title':"Monte Carlo – Adaptative Importance Sampling", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
-
-        if igraph: DataVisualize.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
-
-        return {
-            "beta": beta,
-            "pf": pf,
-            "delta_pf": delta_pf,
-            "nsimul": nsimul,
-            "ttotal": ttotal
-        }
-    
-    def bucher2(self, nc, ns, delta_lim, nsigma=1.50, igraph=True, iprint=True):
-        """
-        Monte Carlo Simulations with Importance Sampling (MC-IS)
-        Importance sampling with adaptive technique
-        BUCHER, C.G. Adaptive sampling – an iterative fast Monte Carlo procedure. Structural
-        safety, v. 5, n. 2, p. 119-126, 1988.
-
-        """
-        #
-        #
-        ti = time.time()
-        #
-        # Number of variables of the problem
-        #
-        nc = int(nc)
-        ns = int(ns)
-        xm = np.zeros(self.nxvar)
-        sum_xwig = np.zeros(self.nxvar)
-        sum_wig = 0.00
-        pfc = np.zeros(nc)
-        cov_pf = np.zeros(nc)
-        pf_mean = np.zeros(nc)
-        sum1 = 0.00
-        sum2 = 0.00
-       
-
-        #
-        # Correlation matrix is self.Rz
-        #
-        if iprint:
-            print('Correlation Matrix after Nataf correction:')
-            print(self.Rz)
-
-        #
-        #
-        # Number of Monte Carlo simulations
-        #
-        #
-        # Matrix xp(ns, self.nxvar) for ns Monte Carlo simulations and self.nxvar random variables
-        #
-        xp = np.zeros((ns, self.nxvar))
-        wp = np.ones(ns)
-        fx = np.ones(ns)
-
-        # Matrix dmatrix(ns, self.ndvar) for ns Monte Carlo simulations and self.ndvar design variables
-
-        dmatrix = np.array([self.d.T] * ns)
-
-        #
-        # Adaptive cycles
-        #
-
-        for icycle in range(nc):
-            kcycle = icycle + 1
-
-            #
-            # Monte Carlo Simulations
-            #
             
             #
             # Step 1 - Generation of the random numbers according to their appropriate distribution
             #
 
-            xp, wp, fx = self.var_rvs(ns, nsigma, iprint)
-            #
-            #
-            # Step 2 - Evaluation of the limit state function g(x)
-            #
-            gx = list(map(self.fel, xp, dmatrix))
-            gx = np.array(gx)
+            wpc = np.ones(ns)
+            fxc = np.ones(ns)
+            wpu = np.ones(ns)
+            fxu = np.ones(ns)
+            
+            if index_correlated:
+              xpc, wpc, fxc = self.var_gen(ns, index_correlated, nsigma)
+            
+            if index_uncorrelated:
+              xpu, wpu, fxu = self.var_rvs(ns, index_uncorrelated, nsigma)
+            
 
-            #
-            #
-            # Step 3 - Evaluation of the indicator function I[g(x)]
-            #
-            igx = np.where(gx <= 0.00, wp, 0)
-            nfail = sum(igx)
-            pfc[icycle] = nfail / ns
-            sum1 += pfc[icycle]
-            sum2 += pfc[icycle] ** 2
-            wig = np.copy(igx)
 
-            #
-            #  Step 4 - Select adaptive mean
-            #
-            if nfail == 0:
-                #
-                # No failures in ns simulations
-                #
-                imin = np.argmin(gx)
-                #
-                i = -1
-                for var in self.xvar:
-                    i += 1
-                    xm[i] = xp[imin, i]
-                    var['varhmean'] = xm[i]
+            for i, idx in enumerate(index_correlated):
+              x[:, idx] = xpc[:, i]
 
-            else:
-                #
-                # Ocurrence of nfail failures in ns simulations
-                #
-                sum_xwig += np.dot(wig.T, xp)
-                sum_wig += sum(wig)
-                #
-                i = -1
-                for var in self.xvar:
-                    i += 1
-                    xm[i] = sum_xwig[i] / sum_wig
-                    var['varhmean'] = xm[i]
+            # Preencher as colunas dos não correlacionados
+            if index_correlated:
+              for i, idx in enumerate(index_correlated):
+                x[:, idx] = xpc[:, i]
 
-            #
-            #  Step 6 - Evaluation of the error in the estimation of Pf
-            #
+            if index_uncorrelated:
+              for i, idx in enumerate(index_uncorrelated):
+                x[:, idx] = xpu[:, i]
 
-            pf_mean[icycle] = sum1 / kcycle
-            pf = pf_mean[icycle]
-            if pf > 0.00 and kcycle > 1:
-                cov_pf[icycle] = 1. / (pf * np.sqrt(kcycle * (kcycle - 1))) * np.sqrt(sum2 - 1. / kcycle * sum1 ** 2)
-            else:
-                cov_pf[icycle] = 0.00
-            delta_pf = cov_pf[icycle]
-            nc_final = icycle
-            # Probability of failure in this cycle
-            if iprint: DataVisualize.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
-            if delta_pf < delta_lim and kcycle > 3:
-              break
-
-        beta = -norm.ppf(pf, 0, 1)
-        nsimul = kcycle * ns
-        tf = time.time()
-        ttotal = tf - ti
-        
-
-        # Results viewer   
-        if iprint: DataVisualize.print_results({'title':"Monte Carlo – Enhanced Importance Sampling", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
-
-        if igraph: DataVisualize.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
-
-        return {
-            "beta": beta,
-            "pf": pf,
-            "delta_pf": delta_pf,
-            "nsimul": nsimul,
-            "ttotal": ttotal
-        }
+            wp = wpc * wpu
+            print('wp',wp)
+          
+            fx = fxc * fxu
+            print('fx',fx)
+            return x, wp, fx
     
     def sampling_project_point(self, nc, ns, delta_lim, igraph=True, iprint=True):   
 
@@ -2965,7 +2582,7 @@ class Reliability(Correlation):
             uk_cycle = 1.00 - uk_cycle
 
         # Step 1 - Generation of the random numbers according to their appropriate distribution
-        xp, wp, fx = self.var_gen(ns)
+        xp, wp, fx = self.generator(ns)
 
         # Step 2 - Evaluation of the limit state function g(x)
         gx = list(map(self.fel, xp, dmatrix))
@@ -3085,7 +2702,7 @@ class Reliability(Correlation):
             uk_cycle = 1.00 - uk_cycle
 
         # Step 1 - Generation of the random numbers according to their appropriate distribution
-        xp, wp, fx = self.var_gen(ns)
+        xp, wp, fx = self.generator(ns)
 
         # Step 2 - Evaluation of the limit state function g(x)
         gx = list(map(self.fel, xp, dmatrix))

@@ -1,5 +1,4 @@
 import numpy as np
-from utils.validate.domain_types.validate_corrmatrix import ValidateCorrelationMatrix
 
 class Correlation:
 
@@ -251,6 +250,4 @@ class Correlation:
         return Rz1
   
 
-    # @Rz.setter
-    # def Rz(self, Rz):
-    #     super().__init__(Rz)
+ 
