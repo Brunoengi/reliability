@@ -25,7 +25,7 @@ from utils.validate.domain_types.validate_corrmatrix import ValidateCorrelationM
 from correlation import Correlation
 
 
-class Reliability(Correlation):
+class Reliability():
 
     def __init__(self, xvar, dvar, gx, x0=None, Rz=None):
         
@@ -37,11 +37,11 @@ class Reliability(Correlation):
 
         #Data processing - Complex setters
         self._xvar = self.set_xvar(xvar, x0)
-        self._Rz = self.set_Rz(Rz, self._xvar, self.nxvar)
+        self._Rz = self.set_Rz(Rz)
         self._d = self.set_d(self.dvar, self.ndvar)
         self._x0 = self.set_x0(x0, self.nxvar, self.xvar)
 
-        super().__init__()        
+        self._correlation = Correlation({'Rz': self._Rz, 'xvar': self._xvar, 'nxvar': self.nxvar})
            
     @property
     def xvar(self):
@@ -74,6 +74,10 @@ class Reliability(Correlation):
     @property
     def d(self):
         return self._d
+    
+    @property
+    def correlation(self):
+      return self._correlation
 
     @xvar.setter
     def xvar(self, xvar):
@@ -128,12 +132,12 @@ class Reliability(Correlation):
       return xvar
 
 
-    def set_Rz(self, Rz, xvar, nxvar):
+    def set_Rz(self, Rz):
       if Rz is None:
           return np.eye(self.nxvar)
       else:
         ValidateCorrelationMatrix(Rz)
-        return self.nataf(Rz, xvar, nxvar)
+        return np.array(Rz)
         
     @nxvar.setter
     def nxvar(self, nxvar): 
@@ -142,6 +146,11 @@ class Reliability(Correlation):
     @ndvar.setter
     def ndvar(self, ndvar): 
       self._ndvar = ndvar
+
+    @correlation.setter
+    def correlation(self, correlation): 
+      self._correlation = correlation
+
 
     def set_d(self, dvar, ndvar):
       #
@@ -413,11 +422,11 @@ class Reliability(Correlation):
         #
         if iprint:
             print('Correlation Matrix after Nataf correction:')
-            print(self.Rz)
+            print(self.correlation.Rz_rectify)
         #
         # Cholesky decomposition of the correlation matrix
         #
-        L = scipy.linalg.cholesky(self.Rz, lower=True)
+        L = scipy.linalg.cholesky(self.correlation.Rz_rectify, lower=True)
         Jzy = np.copy(L)
         Jyz = np.linalg.inv(L)
         #
@@ -1030,11 +1039,11 @@ class Reliability(Correlation):
         #
         if iprint:
             print('Correlation Matrix after Nataf correction:')
-            print(self.Rz)
+            print(self.correlation.Rz_rectify)
         #
         # Cholesky decomposition of the correlation matrix
         #
-        L = scipy.linalg.cholesky(self.Rz, lower=True)
+        L = scipy.linalg.cholesky(self.correlation.Rz_rectify, lower=True)
         Jzy = np.copy(L)
         Jyz = np.linalg.inv(L)
         #
@@ -1457,7 +1466,7 @@ class Reliability(Correlation):
 
 
         # Get a sub-matrix only correlated variables
-        matrix = self.Rz[np.ix_(indexes_correlated_xvar, indexes_correlated_xvar)]
+        matrix = self.correlation.Rz_rectify[np.ix_(indexes_correlated_xvar, indexes_correlated_xvar)]
 
 
         # Step 1 - Determination of equivalent correlation coefficients and
@@ -1736,7 +1745,8 @@ class Reliability(Correlation):
         #
         # Cholesky decomposition of the correlation matrix
         #
-        L = scipy.linalg.cholesky(self.Rz, lower=True)
+
+        L = scipy.linalg.cholesky(self.correlation.Rz_rectify, lower=True)
         Jzy = np.copy(L)
 
         #
@@ -1960,7 +1970,7 @@ class Reliability(Correlation):
         #
         if iprint:
             print('Correlation Matrix after Nataf correction:')
-            print(self.Rz)
+            print(self.correlation.Rz_rectify)
         #
         # Standard deviation multiplier for MC-IS
         #
@@ -2095,7 +2105,7 @@ class Reliability(Correlation):
         #
         if iprint:
             print('Correlation Matrix after Nataf correction:')
-            print(self.Rz)
+            print(self.correlation.Rz_rectify)
 
         #
         #
@@ -2239,7 +2249,7 @@ class Reliability(Correlation):
         #
         if iprint:
             print('Correlation Matrix after Nataf correction:')
-            print(self.Rz)
+            print(self.correlation.Rz_rectify)
 
         #
         #
@@ -2491,10 +2501,10 @@ class Reliability(Correlation):
             ns = int(ns)
             
             # Correlation matrix is self.Rz
-            correlation_matrix = self.Rz
+            correlation_matrix = self.correlation.Rz_rectify
 
             # Get index of correlated and uncorrelated variables
-            index_correlated, index_uncorrelated = self.correlation_summary(correlation_matrix)
+            index_correlated, index_uncorrelated = self.correlation.correlation_summary()
             total_index = len(index_correlated) + len(index_uncorrelated) 
 
             print('correlated', index_correlated)

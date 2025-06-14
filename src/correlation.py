@@ -2,7 +2,51 @@ import numpy as np
 
 class Correlation:
 
-  def correlation_summary(self, Rz, tol=1e-10):
+  def __init__(self, props):
+
+    """
+      Initializes an instance of the class.
+
+      Parameters
+      ----------
+      props : object
+          An object (such as a configuration class or a namespace) that must contain
+          the following attributes:
+
+          - Rz : array_like
+              Correlation matrix without nataf correction.
+          - Rz_rectify : array_like
+              Correlation matrix with nataf correction.  
+          - xvar : list or array_like
+              List or array of the random variables in the problem.
+          - nxvar : int
+              Number of random variables in xvar.
+
+      Notes
+      -----
+      The `props` object must provide all the required attributes listed above.
+      Otherwise, an `AttributeError` will be raised during initialization.
+
+      Internal Attributes
+      -------------------
+      tolerance : float
+          Numerical tolerance used internally (default value is 1e-10).
+      """
+
+    self.Rz = props['Rz']
+    self.xvar = props['xvar']
+    self.nxvar = props['nxvar']
+    self.tolerance = 1e-10
+
+    if self.is_identity_matrix():
+            self.Rz_rectify = self.Rz.copy()
+    else:
+        self.Rz_rectify = self.nataf()
+            
+    print('Rz retificado:', self.Rz_rectify)
+    print('Rz antigo', self.Rz)
+
+  def correlation_summary(self):
     """
     Returns two lists:
     - indices of variables that are correlated with at least one other variable
@@ -12,12 +56,12 @@ class Correlation:
     - R: Correlation matrix (must be square)
     - tol: Tolerance threshold to consider a correlation as nonzero
     """
-    n = Rz.shape[0]
+    n = self.Rz.shape[0]
     correlated = set()
 
     for i in range(n):
         for j in range(n):
-            if i != j and abs(Rz[i, j]) > tol:
+            if i != j and abs(self.Rz[i, j]) > self.tolerance:
                 correlated.add(i)
                 break  # i is correlated with at least one j
 
@@ -26,49 +70,54 @@ class Correlation:
 
     return sorted(correlated), sorted(uncorrelated)
   
-  #Nataf correction of the correlation matrix
-  def nataf(self, Rz, xvar, nxvar):
+  def is_identity_matrix(self):
+    # Creates an identity matrix
+    I = np.eye(self.Rz.shape[0])
+    # Compare with tolerance to deal with numerical errors
+    return np.allclose(self.Rz, I, atol=self.tolerance)
+
+  def nataf(self):
         """
         Nataf correction of the correlation matrix
         According to:
         Liu, P.-L. and Kiureghian, A.D. Multivariate distribution models with prescribed marginals and covariances
         Probabilistic Engineering Mechanics, 1986, Vol. 1, No.2, p. 105-112
         """
-        Rz1 = np.array(Rz)
-        for i in range(nxvar):
+        Rz1 = np.array(self.Rz)
+        for i in range(self.nxvar):
             for j in range(i):
                 # Variables parameters
                 f = 1.00
-                ro = Rz[i][j]
-                cvi = float(xvar[i]['varcov'])
-                cvj = float(xvar[j]['varcov'])
+                ro = self.Rz[i][j]
+                cvi = float(self.xvar[i]['varcov'])
+                cvj = float(self.xvar[j]['varcov'])
 
                 # Table 4: Xi is gauss and Xj belongs to group 1 - f is constant
 
                 # 1 Xi = gauss and Xj = gauss
 
-                if xvar[i]['vardist'] == 'gauss' and xvar[j]['vardist'] == 'gauss':
+                if self.xvar[i]['vardist'] == 'gauss' and self.xvar[j]['vardist'] == 'gauss':
                     f = 1.000
 
                 # 2 Xi = gauss and Xj = uniform
 
-                elif xvar[i]['vardist'] == 'gauss' and xvar[j]['vardist'] == 'uniform' \
-                        or xvar[i]['vardist'] == 'uniform' and xvar[j]['vardist'] == 'gauss':
+                elif self.xvar[i]['vardist'] == 'gauss' and self.xvar[j]['vardist'] == 'uniform' \
+                        or self.xvar[i]['vardist'] == 'uniform' and self.xvar[j]['vardist'] == 'gauss':
                     f = 1.023
 
                 # 3 Xi = gauss and Xj = gumbel
 
-                elif xvar[i]['vardist'] == 'gauss' and xvar[j]['vardist'] == 'gumbel' \
-                        or xvar[i]['vardist'] == 'gumbel' and xvar[j]['vardist'] == 'gauss':
+                elif self.xvar[i]['vardist'] == 'gauss' and self.xvar[j]['vardist'] == 'gumbel' \
+                        or self.xvar[i]['vardist'] == 'gumbel' and self.xvar[j]['vardist'] == 'gauss':
                     f = 1.031
 
                 # Table 5: Xi is gauss and Xj belongs to group 2 - f depends on cvj
 
                 # 4 Xi = gauss and Xj = lognorm
 
-                elif xvar[i]['vardist'] == 'gauss' and xvar[j]['vardist'] == 'lognorm' \
-                        or xvar[i]['vardist'] == 'lognorm' and xvar[j]['vardist'] == 'gauss':
-                    if xvar[i]['vardist'] == 'lognorm':
+                elif self.xvar[i]['vardist'] == 'gauss' and self.xvar[j]['vardist'] == 'lognorm' \
+                        or self.xvar[i]['vardist'] == 'lognorm' and self.xvar[j]['vardist'] == 'gauss':
+                    if self.xvar[i]['vardist'] == 'lognorm':
                         cv = cvi
                     else:
                         cv = cvj
@@ -76,9 +125,9 @@ class Correlation:
 
                 # 5 Xi = gauss and Xj = frechet
 
-                elif xvar[i]['vardist'] == 'gauss' and xvar[j]['vardist'] == 'frechet' \
-                        or xvar[i]['vardist'] == 'frechet' and xvar[j]['vardist'] == 'gauss':
-                    if xvar[i]['vardist'] == 'frechet':
+                elif self.xvar[i]['vardist'] == 'gauss' and self.xvar[j]['vardist'] == 'frechet' \
+                        or self.xvar[i]['vardist'] == 'frechet' and self.xvar[j]['vardist'] == 'gauss':
+                    if self.xvar[i]['vardist'] == 'frechet':
                         cv = cvi
                     else:
                         cv = cvj
@@ -86,9 +135,9 @@ class Correlation:
 
                 # 6 Xi = gauss and Xj = weibull - min
 
-                elif xvar[i]['vardist'] == 'gauss' and xvar[i]['vardist'] == 'weibull' \
-                        or xvar[i]['vardist'] == 'weibull' and xvar[j]['vardist'] == 'gauss':
-                    if xvar[i]['vardist'] == 'weibull':
+                elif self.xvar[i]['vardist'] == 'gauss' and self.xvar[i]['vardist'] == 'weibull' \
+                        or self.xvar[i]['vardist'] == 'weibull' and self.xvar[j]['vardist'] == 'gauss':
+                    if self.xvar[i]['vardist'] == 'weibull':
                         cv = cvi
                     else:
                         cv = cvj
@@ -98,27 +147,27 @@ class Correlation:
 
                 # 7 Xi = uniform and Xj = uniform
 
-                elif xvar[i]['vardist'] == 'uniform' and xvar[j]['vardist'] == 'uniform':
+                elif self.xvar[i]['vardist'] == 'uniform' and self.xvar[j]['vardist'] == 'uniform':
                     f = 1.047 - 0.047 * ro ** 2
 
                 # 8 Xi = gumbel and Xj = gumbel
 
-                elif xvar[i]['vardist'] == 'gumbel' and xvar[j]['vardist'] == 'gumbel':
+                elif self.xvar[i]['vardist'] == 'gumbel' and self.xvar[j]['vardist'] == 'gumbel':
                     f = 1.064 - 0.069 * ro + 0.005 * ro ** 2
 
                 # 9 Xi = uniform and Xj = gumbel
 
-                elif xvar[i]['vardist'] == 'uniform' and xvar[j]['vardist'] == 'gumbel' \
-                        or xvar[i]['vardist'] == 'gumbel' and xvar[j]['vardist'] == 'uniform':
+                elif self.xvar[i]['vardist'] == 'uniform' and self.xvar[j]['vardist'] == 'gumbel' \
+                        or self.xvar[i]['vardist'] == 'gumbel' and self.xvar[j]['vardist'] == 'uniform':
                     f = 1.055 + 0.015 * ro ** 2
 
                 # Table 7: Xi belongs to group 1 and Xj belongs to group 2 - f depends on ro and cvj
 
                 # 10 Xi = uniform and Xj = lognorm
 
-                elif xvar[i]['vardist'] == 'uniform' and xvar[j]['vardist'] == 'lognorm' \
-                        or xvar[i]['vardist'] == 'lognorm' and xvar[j]['vardist'] == 'uniform':
-                    if xvar[i]['vardist'] == 'lognorm':
+                elif self.xvar[i]['vardist'] == 'uniform' and self.xvar[j]['vardist'] == 'lognorm' \
+                        or self.xvar[i]['vardist'] == 'lognorm' and self.xvar[j]['vardist'] == 'uniform':
+                    if self.xvar[i]['vardist'] == 'lognorm':
                         cv = cvi
                     else:
                         cv = cvj
@@ -126,9 +175,9 @@ class Correlation:
 
                 # 11 Xi = uniform and Xj = frechet
 
-                elif xvar[i]['vardist'] == 'uniform' and xvar[j]['vardist'] == 'frechet' \
-                        or xvar[i]['vardist'] == 'frechet' and xvar[j]['vardist'] == 'uniform':
-                    if xvar[i]['vardist'] == 'frechet':
+                elif self.xvar[i]['vardist'] == 'uniform' and self.xvar[j]['vardist'] == 'frechet' \
+                        or self.xvar[i]['vardist'] == 'frechet' and self.xvar[j]['vardist'] == 'uniform':
+                    if self.xvar[i]['vardist'] == 'frechet':
                         cv = cvi
                     else:
                         cv = cvj
@@ -136,9 +185,9 @@ class Correlation:
 
                 # 12 Xi = uniform and Xj = weibull - min
 
-                elif xvar[i]['vardist'] == 'uniform' and xvar[j]['vardist'] == 'weibull' \
-                        or xvar[i]['vardist'] == 'weibull' and xvar[j]['vardist'] == 'uniform':
-                    if xvar[i]['vardist'] == 'weibull':
+                elif self.xvar[i]['vardist'] == 'uniform' and self.xvar[j]['vardist'] == 'weibull' \
+                        or self.xvar[i]['vardist'] == 'weibull' and self.xvar[j]['vardist'] == 'uniform':
+                    if self.xvar[i]['vardist'] == 'weibull':
                         cv = cvi
                     else:
                         cv = cvj
@@ -146,9 +195,9 @@ class Correlation:
 
                 # 13 Xi = gumbel and Xj = lognorm
 
-                elif xvar[i]['vardist'] == 'gumbel' and xvar[j]['vardist'] == 'lognorm' \
-                        or xvar[i]['vardist'] == 'lognorm' and xvar[j]['vardist'] == 'gumbel':
-                    if xvar[i]['vardist'] == 'lognorm':
+                elif self.xvar[i]['vardist'] == 'gumbel' and self.xvar[j]['vardist'] == 'lognorm' \
+                        or self.xvar[i]['vardist'] == 'lognorm' and self.xvar[j]['vardist'] == 'gumbel':
+                    if self.xvar[i]['vardist'] == 'lognorm':
                         cv = cvi
                     else:
                         cv = cvj
@@ -156,9 +205,9 @@ class Correlation:
 
                 # 14 Xi = gumbel and Xj = frechet
 
-                elif xvar[i]['vardist'] == 'gumbel' and xvar[j]['vardist'] == 'frechet' \
-                        or xvar[i]['vardist'] == 'frechet' and xvar[j]['vardist'] == 'gumbel':
-                    if xvar[i]['vardist'] == 'frechet':
+                elif self.xvar[i]['vardist'] == 'gumbel' and self.xvar[j]['vardist'] == 'frechet' \
+                        or self.xvar[i]['vardist'] == 'frechet' and self.xvar[j]['vardist'] == 'gumbel':
+                    if self.xvar[i]['vardist'] == 'frechet':
                         cv = cvi
                     else:
                         cv = cvj
@@ -166,9 +215,9 @@ class Correlation:
 
                 # 15 Xi = gumbel and Xj = weibull - min
 
-                elif xvar[i]['vardist'] == 'gumbel' and xvar[j]['vardist'] == 'weibull' \
-                        or xvar[i]['vardist'] == 'weibull' and xvar[j]['vardist'] == 'gumbel':
-                    if xvar[i]['vardist'] == 'weibull':
+                elif self.xvar[i]['vardist'] == 'gumbel' and self.xvar[j]['vardist'] == 'weibull' \
+                        or self.xvar[i]['vardist'] == 'weibull' and self.xvar[j]['vardist'] == 'gumbel':
+                    if self.xvar[i]['vardist'] == 'weibull':
                         cv = cvi
                     else:
                         cv = cvj
@@ -178,15 +227,15 @@ class Correlation:
 
                 # 16 Xi = lognorm and Xj = lognorm
 
-                elif xvar[i]['vardist'] == 'lognorm' and xvar[j]['vardist'] == 'lognorm':
+                elif self.xvar[i]['vardist'] == 'lognorm' and self.xvar[j]['vardist'] == 'lognorm':
                     f = np.log(1.00 + ro * cvi * cvj)/(ro * np.sqrt(np.log(1.00 + cvi ** 2) * np.log(1.00 + cvj ** 2)))
     
 
                 # 17 Xi = lognorm and Xj = frechet
 
-                elif xvar[i]['vardist'] == 'lognorm' and xvar[j]['vardist'] == 'frechet' \
-                        or xvar[i]['vardist'] == 'frechet' and xvar[j]['vardist'] == 'lognorm':
-                    if xvar[i]['vardist'] == 'frechet':
+                elif self.xvar[i]['vardist'] == 'lognorm' and self.xvar[j]['vardist'] == 'frechet' \
+                        or self.xvar[i]['vardist'] == 'frechet' and self.xvar[j]['vardist'] == 'lognorm':
+                    if self.xvar[i]['vardist'] == 'frechet':
                         cvf = cvi
                         cvl = cvj
                     else:
@@ -198,9 +247,9 @@ class Correlation:
 
                 # 18 Xi = lognorm and Xj = weibull - min
 
-                elif xvar[i]['vardist'] == 'lognorm' and xvar[j]['vardist'] == 'weibull' \
-                        or xvar[i]['vardist'] == 'weibull' and xvar[j]['vardist'] == 'lognorm':
-                    if xvar[i]['vardist'] == 'weibull':
+                elif self.xvar[i]['vardist'] == 'lognorm' and self.xvar[j]['vardist'] == 'weibull' \
+                        or self.xvar[i]['vardist'] == 'weibull' and self.xvar[j]['vardist'] == 'lognorm':
+                    if self.xvar[i]['vardist'] == 'weibull':
                         cvw = cvi
                         cvl = cvj
                     else:
@@ -212,7 +261,7 @@ class Correlation:
 
                 # 19 Xi = frechet and Xj = frechet
 
-                elif xvar[i]['vardist'] == 'frechet' and xvar[j]['vardist'] == 'frechet':
+                elif self.xvar[i]['vardist'] == 'frechet' and self.xvar[j]['vardist'] == 'frechet':
                     f = 1.086 + 0.054 * ro + 0.104 * (cvi + cvj) \
                         - 0.055 * ro ** 2 + 0.662 * (cvi ** 2 + cvj ** 2)  \
                         - 0.570 * ro * (cvi + cvj) + 0.203 * cvi * cvj \
@@ -222,9 +271,9 @@ class Correlation:
 
                 # 20 Xi = frechet and Xj = weibull min
 
-                elif xvar[i]['vardist'] == 'frechet' and xvar[j]['vardist'] == 'weibull' \
-                        or xvar[i]['vardist'] == 'weibull' and xvar[j]['vardist'] == 'frechet':
-                    if xvar[i]['vardist'] == 'frechet':
+                elif self.xvar[i]['vardist'] == 'frechet' and self.xvar[j]['vardist'] == 'weibull' \
+                        or self.xvar[i]['vardist'] == 'weibull' and self.xvar[j]['vardist'] == 'frechet':
+                    if self.xvar[i]['vardist'] == 'frechet':
                         cvf = cvi
                         cvw = cvj
                     else:
@@ -236,7 +285,7 @@ class Correlation:
 
                 # 20 Xi = weibull and Xj = weibull min
 
-                elif xvar[i]['vardist'] == 'weibull' and xvar[j]['vardist'] == 'weibull':
+                elif self.xvar[i]['vardist'] == 'weibull' and self.xvar[j]['vardist'] == 'weibull':
                     f = 1.063 - 0.004 * ro - 0.200 * (cvi + cvj) \
                         - 0.001 * ro ** 2 + 0.337 * (cvi ** 2 + cvj ** 2)  \
                         + 0.007 * ro * (cvi + cvj) - 0.007 * cvi * cvj
