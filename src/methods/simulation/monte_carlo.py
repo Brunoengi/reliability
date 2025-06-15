@@ -5,7 +5,7 @@ from scipy.stats import gamma as gamma_dist
 import time
 from scipy.optimize import curve_fit
 
-from visualize import DataVisualize
+from visualize import DataVisualizeSimulation
 from .generator import RandomVariablesGenerator
 
 
@@ -129,7 +129,7 @@ class MonteCarloMethods:
                 cov_pf[icycle] = 0.00
             delta_pf = cov_pf[icycle]
             # Probability of failure in this cycle
-            if iprint: DataVisualize.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
+            if iprint: DataVisualizeSimulation.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
             if delta_pf < delta_lim and kcycle > 3:
                 break
 
@@ -139,9 +139,9 @@ class MonteCarloMethods:
         ttotal = tf - ti
         
         # Results viewer   
-        if iprint: DataVisualize.print_results({'title':"Monte Carlo - Brute Force", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
+        if iprint: DataVisualizeSimulation.print_results({'title':"Monte Carlo - Brute Force", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
 
-        if igraph: DataVisualize.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
+        if igraph: DataVisualizeSimulation.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
 
         return {
             "beta": beta,
@@ -275,7 +275,7 @@ class MonteCarloMethods:
               cov_pf[icycle] = 0.00
           delta_pf = cov_pf[icycle]
           # Probability of failure in this cycle
-          if iprint: DataVisualize.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
+          if iprint: DataVisualizeSimulation.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
           if delta_pf < delta_lim and kcycle > 3:
             break
 
@@ -284,9 +284,9 @@ class MonteCarloMethods:
       tf = time.time()
       ttotal = tf - ti
       #
-      if iprint: DataVisualize.print_results({'title':"Monte Carlo – Adaptative Importance Sampling", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
+      if iprint: DataVisualizeSimulation.print_results({'title':"Monte Carlo – Adaptative Importance Sampling", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
 
-      if igraph: DataVisualize.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
+      if igraph: DataVisualizeSimulation.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
 
       return {
           "beta": beta,
@@ -417,7 +417,7 @@ class MonteCarloMethods:
           delta_pf = cov_pf[icycle]
           nc_final = icycle
           # Probability of failure in this cycle
-          if iprint: DataVisualize.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
+          if iprint: DataVisualizeSimulation.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
           if delta_pf < delta_lim and kcycle > 3:
             break
 
@@ -426,9 +426,9 @@ class MonteCarloMethods:
       tf = time.time()
       ttotal = tf - ti
       #
-      if iprint: DataVisualize.print_results({'title':"Monte Carlo – Bucher Importance Sampling", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
+      if iprint: DataVisualizeSimulation.print_results({'title':"Monte Carlo – Bucher Importance Sampling", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
 
-      if igraph: DataVisualize.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
+      if igraph: DataVisualizeSimulation.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
 
 
       return {
@@ -503,7 +503,7 @@ class MonteCarloMethods:
 
           delta_pf = cov_pf[icycle]
           # Plot probability of failure in this cycle
-          if iprint: DataVisualize.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
+          if iprint: DataVisualizeSimulation.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
           if delta_pf < delta_lim and kcycle > 3:
               break
 
@@ -514,8 +514,8 @@ class MonteCarloMethods:
 
         # Results viewer
         
-        if iprint: DataVisualize.print_results({'title':"Monte Carlo – Importance Sampling Based on the Design Point", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
-        if igraph: DataVisualize.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
+        if iprint: DataVisualizeSimulation.print_results({'title':"Monte Carlo – Importance Sampling Based on the Design Point", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
+        if igraph: DataVisualizeSimulation.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
 
         return {
               "beta": beta,
@@ -627,7 +627,7 @@ class MonteCarloMethods:
       delta_pf = cov_pf[icycle]
       
       # Plot probability of failure in this cycle
-      if iprint: DataVisualize.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
+      if iprint: DataVisualizeSimulation.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
       if delta_pf < delta_lim and kcycle > 3:
         break
 
@@ -637,9 +637,9 @@ class MonteCarloMethods:
     ttotal = tf - ti
 
     # Results viewer   
-    if iprint: DataVisualize.print_results({'title':"Monte Carlo – Enhanced Importance Sampling", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
+    if iprint: DataVisualizeSimulation.print_results({'title':"Monte Carlo – Enhanced Importance Sampling", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
 
-    if igraph: DataVisualize.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
+    if igraph: DataVisualizeSimulation.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
 
     return {
           "beta": beta,

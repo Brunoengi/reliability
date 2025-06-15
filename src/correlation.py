@@ -43,9 +43,6 @@ class Correlation:
     else:
         self.Rz_rectify = self.nataf()
             
-    print('Rz retificado:', self.Rz_rectify)
-    print('Rz antigo', self.Rz)
-
   def correlation_summary(self):
     """
     Returns two lists:
@@ -294,8 +291,6 @@ class Correlation:
                 ro = f * ro
                 Rz1[i, j] = ro
                 Rz1[j, i] = ro
-        print('Nataf correlation matrix:')
-        print(Rz1)
         return Rz1
   
 

@@ -12,6 +12,7 @@ from scipy import optimize
 import scipy.linalg
 from scipy.special import gamma
 import pandas as pd
+from visualize import DataVisualizeTransformation
 
 class TransformationBase:
 
@@ -29,7 +30,7 @@ class TransformationMethods(TransformationBase):
     
     def __init__(self, parent):
       ## Get all properties about main class: Reliability
-      self.parent = parent
+      self.reliability = parent
       
     def form(self, iHLRF, toler=1.e-3, iprint=True):
       """
@@ -174,8 +175,8 @@ class TransformationMethods(TransformationBase):
       # Number of variables of the problem
 
       # Equivalent normal mean and standard deviation of the variables
-      muxneqk = np.zeros(self.parent.nxvar)
-      sigmaxneqk = np.zeros(self.parent.nxvar)
+      muxneqk = np.zeros(self.reliability.nxvar)
+      sigmaxneqk = np.zeros(self.reliability.nxvar)
       namevar = []
       dist = []
       mux0 = []
@@ -189,7 +190,7 @@ class TransformationMethods(TransformationBase):
       #
 
       i = -1
-      for var in self.parent.xvar:
+      for var in self.reliability.xvar:
           i += 1
           # Names of the random variables x
           namevar.append(str(var['varname']))
@@ -240,17 +241,17 @@ class TransformationMethods(TransformationBase):
       # Step 1 - Determination of equivalent correlation coefficients and
       #          Jacobian matrices Jxz and Jzx
       #
-      Imatrix = np.eye(self.parent.nxvar)
+      Imatrix = np.eye(self.reliability.nxvar)
       #
       # Correlation matrix is self.corrmatrix
       #
       if iprint:
           print('Correlation Matrix after Nataf correction:')
-          print(self.parent.correlation.Rz_rectify)
+          print(self.reliability.correlation.Rz_rectify)
       #
       # Cholesky decomposition of the correlation matrix
       #
-      L = scipy.linalg.cholesky(self.parent.correlation.Rz_rectify, lower=True)
+      L = scipy.linalg.cholesky(self.reliability.correlation.Rz_rectify, lower=True)
       Jzy = np.copy(L)
       Jyz = np.linalg.inv(L)
       #
@@ -263,13 +264,13 @@ class TransformationMethods(TransformationBase):
       Jyx = np.dot(Jyz, Jzx)
       Jxz = np.copy(D)
       Jxy = np.dot(Jxz, Jzy)
-      yk1 = np.zeros(self.parent.nxvar)
+      yk1 = np.zeros(self.reliability.nxvar)
   #    xk1 = mux0 + Jxy.dot(yk1)
-      xk1 = np.copy(self.parent.x0)
+      xk1 = np.copy(self.reliability.x0)
       #
       # Error tolerance for yk and g(x)
       epsilon = toler
-      delta = toler * np.abs(self.parent.fel(xk1, self.parent.d))
+      delta = toler * np.abs(self.reliability.fel(xk1, self.reliability.d))
       # Initial values for errors and iteration counters
       erro1 = 1000.00
       erro2 = 1000.00
@@ -284,7 +285,7 @@ class TransformationMethods(TransformationBase):
           #
           # Calculation of the equivalent normal distribution parameters for xk
           #
-          for i in range(self.parent.nxvar):
+          for i in range(self.reliability.nxvar):
               xval = xk[i]
               mux = mux0[i]
               sigmax = sigmax0[i]
@@ -319,7 +320,7 @@ class TransformationMethods(TransformationBase):
           #
           #  Step 5 - Evaluation of g(xk)
           #
-          gxk = self.parent.fel(xk, self.parent.d)
+          gxk = self.reliability.fel(xk, self.reliability.d)
 
           #
           # Step 6 - Evaluation of the gradients of g(x) in relation to yk
@@ -327,7 +328,7 @@ class TransformationMethods(TransformationBase):
           #
           # a. Calculation of the partial derivatives of g(x) in relation to xk
           #
-          gradxk = optimize.approx_fprime(xk, self.parent.fel, eps, self.parent.d)
+          gradxk = optimize.approx_fprime(xk, self.reliability.fel, eps, self.reliability.d)
           #
           # b. Calculation of the partial derivatives of g(x) in relation to yk
           #
@@ -361,7 +362,7 @@ class TransformationMethods(TransformationBase):
               #
               if erro2 > delta:
                   c2 = 0.5 * normyk1 ** 2 / np.abs(gyk)
-                  ck = gamma0 * np.max([c1, c2])
+                  ck = gamma0 * np.max([c1, c2]) 
               else:
                   ck = gamma0 * c1
               #
@@ -373,7 +374,7 @@ class TransformationMethods(TransformationBase):
                   lambdak = b ** k
                   yk1 = yk + lambdak * dk
                   xk1 = muxneqk + Jxy.dot(yk1)
-                  gyk1 = self.parent.fel(xk1, self.parent.d)
+                  gyk1 = self.reliability.fel(xk1, self.reliability.d)
                   normyk1 = np.linalg.norm(yk1)
                   f1 = self.mfunc(normyk1, gyk1, ck) - self.mfunc(normyk, gyk, ck)
                   gradm = yk + ck * gradyk * np.sign(gyk)
@@ -403,17 +404,22 @@ class TransformationMethods(TransformationBase):
           erro2 = np.abs(gxk)
           # Printing of the updated values
           if iprint:
-              print('\nIteration number = {0:d} g(x) ={1:0.5e} erro1 ={2:0.5e} Beta ={3:0.4f}'
-                    .format(kiter, gxk, erro1, beta))
-              datadict = {'xvar': namevar, 'prob_dist': dist, 'mux': muxneqk, 'sigmax': sigmaxneqk,
-                          'xk': xk, 'yk': yk, 'alpha': alpha}
-              data = pd.DataFrame(datadict)
-              print(data)
+            DataVisualizeTransformation.one_cycle_print_results({
+              'kiter': kiter,
+              'gxk': gxk,
+              'erro1': erro1,
+              'beta': beta,
+              'namevar': namevar,
+              'dist': dist,
+              'muxneqk': muxneqk,
+              'sigmaxneqk': sigmaxneqk,
+              'xk': xk,
+              'yk': yk,
+              'alpha': alpha
+            })
       #
       pf = norm.cdf(-beta)
-      if iprint:
-          print('\nProbability of Failure Pf = {0:0.4e}'.format(pf))
-          print('\nBeta B = {0:0.4e}'.format(beta))
+      if iprint: DataVisualizeTransformation.print_results({'pf': pf, 'beta': beta})
 
       return {
         "beta": beta,
@@ -774,8 +780,8 @@ class TransformationMethods(TransformationBase):
         # Number of variables of the problem
 
         # Equivalent normal mean and standard deviation of the variables
-        muxneqk = np.zeros(self.parent.nxvar)
-        sigmaxneqk = np.zeros(self.parent.nxvar)
+        muxneqk = np.zeros(self.reliability.nxvar)
+        sigmaxneqk = np.zeros(self.reliability.nxvar)
         namevar = []
         dist = []
         mux0 = []
@@ -789,7 +795,7 @@ class TransformationMethods(TransformationBase):
         #
 
         i = -1
-        for var in self.parent.xvar:
+        for var in self.reliability.xvar:
             i += 1
             # Names of the random variables x
             namevar.append(str(var['varname']))
@@ -840,17 +846,17 @@ class TransformationMethods(TransformationBase):
         # Step 1 - Determination of equivalent correlation coefficients and
         #          Jacobian matrices Jxz and Jzx
         #
-        Imatrix = np.eye(self.parent.nxvar)
+        Imatrix = np.eye(self.reliability.nxvar)
         #
         # Correlation matrix is self.corrmatrix
         #
         if iprint:
             print('Correlation Matrix after Nataf correction:')
-            print(self.parent.correlation.Rz_rectify)
+            print(self.reliability.correlation.Rz_rectify)
         #
         # Cholesky decomposition of the correlation matrix
         #
-        L = scipy.linalg.cholesky(self.parent.correlation.Rz_rectify, lower=True)
+        L = scipy.linalg.cholesky(self.reliability.correlation.Rz_rectify, lower=True)
         Jzy = np.copy(L)
         Jyz = np.linalg.inv(L)
         #
@@ -863,16 +869,16 @@ class TransformationMethods(TransformationBase):
         Jyx = np.dot(Jyz, Jzx)
         Jxz = np.copy(D)
         Jxy = np.dot(Jxz, Jzy)
-        yk1 = np.zeros(self.parent.nxvar)
-        zk = np.zeros(self.parent.nxvar)
-        zk1 = np.zeros(self.parent.nxvar)
-        uk = np.zeros(self.parent.nxvar)
-        uk1 = np.zeros(self.parent.nxvar)
-        xk1 = np.copy(self.parent.x0)
+        yk1 = np.zeros(self.reliability.nxvar)
+        zk = np.zeros(self.reliability.nxvar)
+        zk1 = np.zeros(self.reliability.nxvar)
+        uk = np.zeros(self.reliability.nxvar)
+        uk1 = np.zeros(self.reliability.nxvar)
+        xk1 = np.copy(self.reliability.x0)
         #
         # Error tolerance for yk and g(x)
         epsilon = toler
-        delta = toler * np.abs(self.parent.fel(xk1, self.parent.d))
+        delta = toler * np.abs(self.reliability.fel(xk1, self.reliability.d))
         # Initial values for errors and iteration counters
         erro1 = 1000.00
         erro2 = 1000.00
@@ -887,7 +893,7 @@ class TransformationMethods(TransformationBase):
             #
             # Step 2 - Calculation of equivalent normal variables by direct mapping to standard normal space (correlated)
             #
-            for i in range(self.parent.nxvar):
+            for i in range(self.reliability.nxvar):
                 xval = xk[i]
                 mux = mux0[i]
                 sigmax = sigmax0[i]
@@ -929,7 +935,7 @@ class TransformationMethods(TransformationBase):
             #
             #  Step 5 - Evaluation of g(xk)
             #
-            gxk = self.parent.fel(xk, self.parent.d)
+            gxk = self.reliability.fel(xk, self.reliability.d)
 
             #
             # Step 6 - Evaluation of the gradients of g(x) in relation to yk
@@ -937,7 +943,7 @@ class TransformationMethods(TransformationBase):
             #
             # a. Calculation of the partial derivatives of g(x) in relation to xk
             #
-            gradxk = optimize.approx_fprime(xk, self.parent.fel, eps, self.parent.d)
+            gradxk = optimize.approx_fprime(xk, self.reliability.fel, eps, self.reliability.d)
             #
             # b. Calculation of the partial derivatives of g(x) in relation to yk
             #
@@ -987,7 +993,7 @@ class TransformationMethods(TransformationBase):
                     #
                     zk1 = Jzy.dot(yk1)
                     uk1 = norm.cdf(zk1)
-                    for i in range(self.parent.nxvar):
+                    for i in range(self.reliability.nxvar):
                         cdfx = uk1[i]
                         mux = mux0[i]
                         sigmax = sigmax0[i]
@@ -1005,7 +1011,7 @@ class TransformationMethods(TransformationBase):
 
                         xk1[i] = inverse_mapping(cdfx, xpar1, xpar2, xpar3, xpar4, namedist)
 
-                    gyk1 = self.parent.fel(xk1, self.parent.d)
+                    gyk1 = self.reliability.fel(xk1, self.reliability.d)
                     normyk1 = np.linalg.norm(yk1)
                     f1 = self.mfunc(normyk1, gyk1, ck) - self.mfunc(normyk, gyk, ck)
                     gradm = yk + ck * gradyk * np.sign(gyk)
@@ -1020,7 +1026,7 @@ class TransformationMethods(TransformationBase):
             #
             zk1 = Jzy.dot(yk1)
             uk1 = norm.cdf(zk1)
-            for i in range(self.parent.nxvar):
+            for i in range(self.reliability.nxvar):
                 cdfx = uk1[i]
                 mux = mux0[i]
                 sigmax = sigmax0[i]
@@ -1051,17 +1057,23 @@ class TransformationMethods(TransformationBase):
             erro2 = np.abs(gxk)
             # Printing of the updated values
             if iprint:
-                print('\nIteration number = {0:d} g(x) ={1:0.5e} erro1 ={2:0.5e} Beta ={3:0.4f}'
-                      .format(kiter, gxk, erro1, beta))
-                datadict = {'xvar': namevar, 'prob_dist': dist, 'mux': muxneqk, 'sigmax': sigmaxneqk,
-                            'xk': xk, 'yk': yk, 'alpha': alpha}
-                data = pd.DataFrame(datadict)
-                print(data)
+              DataVisualizeTransformation.one_cycle_print_results({
+                'kiter': kiter,
+                'gxk': gxk,
+                'erro1': erro1,
+                'beta': beta,
+                'namevar': namevar,
+                'dist': dist,
+                'muxneqk': muxneqk,
+                'sigmaxneqk': sigmaxneqk,
+                'xk': xk,
+                'yk': yk,
+                'alpha': alpha
+              })
         #
         pf = norm.cdf(-beta)
-        if iprint:
-            print('\nProbability of Failure Pf = {0:0.4e}'.format(pf))
-            print('\nBeta B = {0:0.4e}'.format(beta))
+
+        if iprint: DataVisualizeTransformation.print_results({'pf': pf, 'beta': beta})
    
         return {
             "beta": beta,
@@ -1120,26 +1132,26 @@ class TransformationMethods(TransformationBase):
             if i == j:
                 x0 = np.copy(x)
                 x0[i] = a - h
-                g10 = self.parent.fel(x0, self.parent.d)
+                g10 = self.reliability.fel(x0, self.reliability.d)
                 x0[i] = a
-                g00 = self.parent.fel(x0, self.parent.d)
+                g00 = self.reliability.fel(x0, self.reliability.d)
                 x0[i] = a + h
-                g20 = self.parent.fel(x0, self.parent.d)
+                g20 = self.reliability.fel(x0, self.reliability.d)
                 d2g = (g10 - 2. * g00 + g20) / h ** 2  # second order derivative: d2g/dxi2
             else:
                 x0 = np.copy(x)
                 x0[i] = a + h1
                 x0[j] = b + h2
-                g22 = self.parent.fel(x0, self.parent.d)
+                g22 = self.reliability.fel(x0, self.reliability.d)
                 x0[i] = a + h1
                 x0[j] = b - h2
-                g21 = self.parent.fel(x0, self.parent.d)
+                g21 = self.reliability.fel(x0, self.reliability.d)
                 x0[i] = a - h1
                 x0[j] = b + h2
-                g12 = self.parent.fel(x0, self.parent.d)
+                g12 = self.reliability.fel(x0, self.reliability.d)
                 x0[i] = a - h1
                 x0[j] = b - h2
-                g11 = self.parent.fel(x0, self.parent.d)
+                g11 = self.reliability.fel(x0, self.reliability.d)
                 d2g = (g22 - g21 - g12 + g11) / (4. * h1 * h2)  # second order derivative: d2g/dxidxj
             #
             return d2g
@@ -1147,7 +1159,7 @@ class TransformationMethods(TransformationBase):
         #
         # First run FORM-iHLRF algorithm
         #
-        n = self.parent.nxvar
+        n = self.reliability.nxvar
         xk = np.zeros(n)
         yk = np.zeros(n)
         gradxk = np.zeros(n)

@@ -8,14 +8,11 @@ from scipy.stats import weibull_min
 from scipy.stats import multivariate_normal
 from scipy.stats import beta as beta_dist
 from scipy.stats import gamma as gamma_dist
-import scipy.optimize
 from scipy.optimize import fsolve
 from scipy.optimize import curve_fit
 import scipy.linalg
 from scipy.special import gamma
-import time
 from utils.distribution import createDistribution
-from visualize import DataVisualize
 from utils.validate.domain_types.validate_dvar import ValidateDvar
 from utils.validate.domain_types.validate_gx import ValidateGx
 from utils.validate.domain_types.validate_corrmatrix import ValidateCorrelationMatrix
