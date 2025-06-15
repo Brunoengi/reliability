@@ -6,6 +6,7 @@ import time
 from scipy.optimize import curve_fit
 
 from visualize import DataVisualize
+from .generator import RandomVariablesGenerator
 
 
 
@@ -14,6 +15,10 @@ class MonteCarloMethods:
   def __init__(self, parent):
       ## Get all properties about main class: Reliability
       self.parent = parent
+
+      ## All generator methods to random variables
+      self.generator = RandomVariablesGenerator(self)
+
 
   def mc(self, nc, ns, delta_lim, nsigma=1.00, igraph=True, iprint=True):
         """
@@ -92,7 +97,7 @@ class MonteCarloMethods:
             # Step 1 - Generation of the random numbers according to their appropriate distribution
             #
 
-            xp, wp, fx = self.parent.generator(ns)
+            xp, wp, fx = self.generator.main(ns)
             
             #
             #
@@ -212,7 +217,7 @@ class MonteCarloMethods:
           # Step 1 - Generation of the random numbers according to their appropriate distribution
           #
 
-          xp, wp, fx = self.parent.generator(ns)
+          xp, wp, fx = self.generator.main(ns)
           #
           #
           # Step 2 - Evaluation of the limit state function g(x)
@@ -352,7 +357,7 @@ class MonteCarloMethods:
           # Step 1 - Generation of the random numbers according to their appropriate distribution
           #
 
-          xp, wp, fx = self.parent.generator(ns)
+          xp, wp, fx = self.generator.main(ns)
           #
           #
           # Step 2 - Evaluation of the limit state function g(x)
@@ -474,7 +479,7 @@ class MonteCarloMethods:
               uk_cycle = 1.00 - uk_cycle
 
           # Step 1 - Generation of the random numbers according to their appropriate distribution
-          xp, wp, fx = self.parent.generator(ns)
+          xp, wp, fx = self.generator.main(ns)
 
           # Step 2 - Evaluation of the limit state function g(x)
           gx = list(map(self.parent.fel, xp, dmatrix))
@@ -594,7 +599,7 @@ class MonteCarloMethods:
           uk_cycle = 1.00 - uk_cycle
 
       # Step 1 - Generation of the random numbers according to their appropriate distribution
-      xp, wp, fx = self.parent.generator(ns)
+      xp, wp, fx = self.generator.main(ns)
 
       # Step 2 - Evaluation of the limit state function g(x)
       gx = list(map(self.parent.fel, xp, dmatrix))
