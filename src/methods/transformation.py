@@ -413,6 +413,7 @@ class TransformationMethods(TransformationBase):
       pf = norm.cdf(-beta)
       if iprint:
           print('\nProbability of Failure Pf = {0:0.4e}'.format(pf))
+          print('\nBeta B = {0:0.4e}'.format(beta))
 
       return {
         "beta": beta,
@@ -1060,6 +1061,7 @@ class TransformationMethods(TransformationBase):
         pf = norm.cdf(-beta)
         if iprint:
             print('\nProbability of Failure Pf = {0:0.4e}'.format(pf))
+            print('\nBeta B = {0:0.4e}'.format(beta))
    
         return {
             "beta": beta,

@@ -21,7 +21,7 @@ class RandomVariablesGenerator:
       self.parent = parent
 
       ## Get all properties about Reliability
-      self.reliability = parent.parent
+      self.reliability = parent.reliability
 
   def main(self, ns, nsigma=1.00, iprint=False):
         """

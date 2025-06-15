@@ -40,5 +40,5 @@ dvar = [
 # MC-IS adaptative method
 #
 beam = Reliability(xvar, dvar, gfunction)
-beam.adaptive(100, 5000, 0.03, 1.50)
+beam.adaptive(100, 5000, 0.01, 1.50)
 #

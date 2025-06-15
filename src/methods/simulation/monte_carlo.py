@@ -14,7 +14,7 @@ class MonteCarloMethods:
 
   def __init__(self, parent):
       ## Get all properties about main class: Reliability
-      self.parent = parent
+      self.reliability = parent
 
       ## All generator methods to random variables
       self.generator = RandomVariablesGenerator(self)
@@ -42,13 +42,13 @@ class MonteCarloMethods:
         sum1 = 0.00
         sum2 = 0.00
         fxmax_cycle = np.zeros(nc)
-        uk_cycle = np.zeros((ns, self.parent.nxvar))
+        uk_cycle = np.zeros((ns, self.reliability.nxvar))
         #
-        # Correlation matrix is self.parent.Rz
+        # Correlation matrix is self.reliability.Rz
         #
-        if iprint:
-            print('Correlation Matrix after Nataf correction:')
-            print(self.parent.correlation.Rz_rectify)
+        # if iprint:
+        #     print('Correlation Matrix after Nataf correction:')
+        #     print(self.reliability.correlation.Rz_rectify)
         #
         # Standard deviation multiplier for MC-IS
         #
@@ -60,17 +60,17 @@ class MonteCarloMethods:
         # Number of Monte Carlo simulations
         #
         #
-        # Matrix xp(ns, self.parent.nxvar) for ns Monte Carlo simulations and self.parent.nxvar random variables
+        # Matrix xp(ns, self.reliability.nxvar) for ns Monte Carlo simulations and self.reliability.nxvar random variables
         #
-        xp = np.zeros((ns, self.parent.nxvar))
+        xp = np.zeros((ns, self.reliability.nxvar))
         wp = np.ones(ns)
         fx = np.ones(ns)
-        zf = np.zeros((ns, self.parent.nxvar))
-        zh = np.zeros((ns, self.parent.nxvar))
+        zf = np.zeros((ns, self.reliability.nxvar))
+        zh = np.zeros((ns, self.reliability.nxvar))
 
-        # Matrix dmatrix(ns, self.parent.ndvar) for ns Monte Carlo simulations and self.parent.ndvar design variables
+        # Matrix dmatrix(ns, self.reliability.ndvar) for ns Monte Carlo simulations and self.reliability.ndvar design variables
 
-        dmatrix = np.array([self.parent.d.T] * ns)
+        dmatrix = np.array([self.reliability.d.T] * ns)
 
         #
         # Adaptive cycles
@@ -86,7 +86,7 @@ class MonteCarloMethods:
             # Generation of uniform random numbers
             #
             index = icycle % 2
-            uk_new = np.random.rand(ns, self.parent.nxvar)
+            uk_new = np.random.rand(ns, self.reliability.nxvar)
             if index == 0:
                 uk_cycle = uk_new.copy()
             else:
@@ -103,7 +103,7 @@ class MonteCarloMethods:
             #
             # Step 2 - Evaluation of the limit state function g(x)
             #
-            gx = list(map(self.parent.fel, xp, dmatrix))
+            gx = list(map(self.reliability.fel, xp, dmatrix))
             gx = np.array(gx)
 
             #
@@ -176,32 +176,32 @@ class MonteCarloMethods:
       sum2 = 0.00
       fxmax = 0.00
       fxmax_cycle = np.zeros(nc)
-      uk_cycle = np.zeros((ns, self.parent.nxvar))
+      uk_cycle = np.zeros((ns, self.reliability.nxvar))
 
       #
-      # Correlation matrix is self.parent.Rz
+      # Correlation matrix is self.reliability.Rz
       #
-      if iprint:
-          print('Correlation Matrix after Nataf correction:')
-          print(self.parent.correlation.Rz_rectify)
+      # if iprint:
+      #     print('Correlation Matrix after Nataf correction:')
+      #     print(self.reliability.correlation.Rz_rectify)
 
       #
       #
       # Number of Monte Carlo simulations
       #
       #
-      # Matrix xp(ns, self.parent.nxvar) for ns Monte Carlo simulations and self.parent.nxvar random variables
+      # Matrix xp(ns, self.reliability.nxvar) for ns Monte Carlo simulations and self.reliability.nxvar random variables
       #
-      xp = np.zeros((ns, self.parent.nxvar))
+      xp = np.zeros((ns, self.reliability.nxvar))
       wp = np.ones(ns)
       fx = np.ones(ns)
-      zf = np.zeros((ns, self.parent.nxvar))
-      zh = np.zeros((ns, self.parent.nxvar))
+      zf = np.zeros((ns, self.reliability.nxvar))
+      zh = np.zeros((ns, self.reliability.nxvar))
 
 
-      # Matrix dmatrix(ns, self.parent.ndvar) for ns Monte Carlo simulations and self.parent.ndvar design variables
+      # Matrix dmatrix(ns, self.reliability.ndvar) for ns Monte Carlo simulations and self.reliability.ndvar design variables
 
-      dmatrix = np.array([self.parent.d.T] * ns)
+      dmatrix = np.array([self.reliability.d.T] * ns)
 
       #
       # Adaptive cycles
@@ -222,7 +222,7 @@ class MonteCarloMethods:
           #
           # Step 2 - Evaluation of the limit state function g(x)
           #
-          gx = list(map(self.parent.fel, xp, dmatrix))
+          gx = list(map(self.reliability.fel, xp, dmatrix))
           gx = np.array(gx)
 
           #
@@ -246,7 +246,7 @@ class MonteCarloMethods:
               imin = np.argmin(gx)
               #
               i = -1
-              for var in self.parent.xvar:
+              for var in self.reliability.xvar:
                   i += 1
                   var['varhmean'] = xp[imin, i]
 
@@ -259,7 +259,7 @@ class MonteCarloMethods:
                   imax = np.argmax(fx)
                   #
                   i = -1
-                  for var in self.parent.xvar:
+                  for var in self.reliability.xvar:
                       i += 1
                       var['varhmean'] = xp[imax, i]
 
@@ -312,37 +312,37 @@ class MonteCarloMethods:
       #
       nc = int(nc)
       ns = int(ns)
-      xm = np.zeros(self.parent.nxvar)
-      sum_xwig = np.zeros(self.parent.nxvar)
+      xm = np.zeros(self.reliability.nxvar)
+      sum_xwig = np.zeros(self.reliability.nxvar)
       sum_wig = 0.00
       pfc = np.zeros(nc)
       cov_pf = np.zeros(nc)
       pf_mean = np.zeros(nc)
       sum1 = 0.00
       sum2 = 0.00
-      uk_cycle = np.zeros((ns, self.parent.nxvar))
+      uk_cycle = np.zeros((ns, self.reliability.nxvar))
 
       #
-      # Correlation matrix is self.parent.Rz
+      # Correlation matrix is self.reliability.Rz
       #
-      if iprint:
-          print('Correlation Matrix after Nataf correction:')
-          print(self.parent.correlation.Rz_rectify)
+      # if iprint:
+      #     print('Correlation Matrix after Nataf correction:')
+      #     print(self.reliability.correlation.Rz_rectify)
 
       #
       #
       # Number of Monte Carlo simulations
       #
       #
-      # Matrix xp(ns, self.parent.nxvar) for ns Monte Carlo simulations and self.parent.nxvar random variables
+      # Matrix xp(ns, self.reliability.nxvar) for ns Monte Carlo simulations and self.reliability.nxvar random variables
       #
-      xp = np.zeros((ns, self.parent.nxvar))
+      xp = np.zeros((ns, self.reliability.nxvar))
       wp = np.ones(ns)
       fx = np.ones(ns)
 
-      # Matrix dmatrix(ns, self.parent.ndvar) for ns Monte Carlo simulations and self.parent.ndvar design variables
+      # Matrix dmatrix(ns, self.reliability.ndvar) for ns Monte Carlo simulations and self.reliability.ndvar design variables
 
-      dmatrix = np.array([self.parent.d.T] * ns)
+      dmatrix = np.array([self.reliability.d.T] * ns)
 
       #
       # Adaptive cycles
@@ -362,7 +362,7 @@ class MonteCarloMethods:
           #
           # Step 2 - Evaluation of the limit state function g(x)
           #
-          gx = list(map(self.parent.fel, xp, dmatrix))
+          gx = list(map(self.reliability.fel, xp, dmatrix))
           gx = np.array(gx)
 
           #
@@ -386,7 +386,7 @@ class MonteCarloMethods:
               imin = np.argmin(gx)
               #
               i = -1
-              for var in self.parent.xvar:
+              for var in self.reliability.xvar:
                   i += 1
                   xm[i] = xp[imin, i]
                   var['varhmean'] = xm[i]
@@ -399,7 +399,7 @@ class MonteCarloMethods:
               sum_wig += sum(wig)
               #
               i = -1
-              for var in self.parent.xvar:
+              for var in self.reliability.xvar:
                   i += 1
                   xm[i] = sum_xwig[i] / sum_wig
                   var['varhmean'] = xm[i]
@@ -451,18 +451,18 @@ class MonteCarloMethods:
         cov_pf = np.zeros(nc)
 
         ## Apriori Results
-        formResults = self.parent.form(iHLRF=True, toler=1.e-3, iprint=False)
+        formResults = self.reliability.form(iHLRF=True, toler=1.e-3, iprint=False)
 
         ## Project Point
         xk = formResults['xk']
-        self.parent.x0 = xk
+        self.reliability.x0 = xk
 
         ## Using varhmean calculate based on x0
-        for var, mean_value in zip(self.parent.xvar, self.parent.x0):
+        for var, mean_value in zip(self.reliability.xvar, self.reliability.x0):
           var['varhmean'] = mean_value
 
-        # Matrix dmatrix(ns, self.parent.ndvar) for ns Monte Carlo simulations and self.parent.ndvar design variables
-        dmatrix = np.array([self.parent.d.T] * ns)
+        # Matrix dmatrix(ns, self.reliability.ndvar) for ns Monte Carlo simulations and self.reliability.ndvar design variables
+        dmatrix = np.array([self.reliability.d.T] * ns)
 
         for icycle in range(nc):
           kcycle = icycle + 1
@@ -472,7 +472,7 @@ class MonteCarloMethods:
           # Generation of uniform random numbers - Antithetic Sampling
           #
           index = icycle % 2
-          uk_new = np.random.rand(ns, self.parent.nxvar)
+          uk_new = np.random.rand(ns, self.reliability.nxvar)
           if index == 0:
               uk_cycle = uk_new.copy()
           else:
@@ -482,7 +482,7 @@ class MonteCarloMethods:
           xp, wp, fx = self.generator.main(ns)
 
           # Step 2 - Evaluation of the limit state function g(x)
-          gx = list(map(self.parent.fel, xp, dmatrix))
+          gx = list(map(self.reliability.fel, xp, dmatrix))
           gx = np.array(gx)
 
           # Step 3 - Evaluation of the indicator function I[g(x)]
@@ -504,7 +504,6 @@ class MonteCarloMethods:
           delta_pf = cov_pf[icycle]
           # Plot probability of failure in this cycle
           if iprint: DataVisualize.one_cycle_print_results({'kcycle':kcycle, 'pf':pf, 'delta_pf':delta_pf})
-          print('delta_pf',delta_pf)
           if delta_pf < delta_lim and kcycle > 3:
               break
 
@@ -574,16 +573,16 @@ class MonteCarloMethods:
     sum1 = 0.00
     sum2 = 0.00
 
-    varhmean_array = [var['varhmean'] for var in self.parent.xvar]
-    dvar_array = [var['varvalue'] for var in self.parent.dvar]
+    varhmean_array = [var['varhmean'] for var in self.reliability.xvar]
+    dvar_array = [var['varvalue'] for var in self.reliability.dvar]
 
-    gx_based_varhmean = self.parent.fel(varhmean_array, dvar_array)
+    gx_based_varhmean = self.reliability.fel(varhmean_array, dvar_array)
 
     deduction = (1 - lambdas) * gx_based_varhmean
     deductions = np.tile(deduction[:, None], (1, ns))
 
-    # Matrix dmatrix(ns, self.parent.ndvar) for ns Monte Carlo simulations and self.parent.ndvar design variables
-    dmatrix = np.array([self.parent.d.T] * ns)
+    # Matrix dmatrix(ns, self.reliability.ndvar) for ns Monte Carlo simulations and self.reliability.ndvar design variables
+    dmatrix = np.array([self.reliability.d.T] * ns)
 
     for icycle in range(nc):
       kcycle = icycle + 1
@@ -592,7 +591,7 @@ class MonteCarloMethods:
       # Generation of uniform random numbers - Antithetic Sampling
       #
       index = icycle % 2
-      uk_new = np.random.rand(ns, self.parent.nxvar)
+      uk_new = np.random.rand(ns, self.reliability.nxvar)
       if index == 0:
           uk_cycle = uk_new.copy()
       else:
@@ -602,7 +601,7 @@ class MonteCarloMethods:
       xp, wp, fx = self.generator.main(ns)
 
       # Step 2 - Evaluation of the limit state function g(x)
-      gx = list(map(self.parent.fel, xp, dmatrix))
+      gx = list(map(self.reliability.fel, xp, dmatrix))
       gx = np.array(gx)
 
       # Step 3 - Evaluation of the new limit state function m(x)
