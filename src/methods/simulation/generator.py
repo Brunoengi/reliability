@@ -82,9 +82,7 @@ class RandomVariablesGenerator:
 
   def var_gen(self, ns, indexes_correlated_xvar, nsigma=1.00, iprint=False):
     """
-
         Random variables generator for the Monte Carlo Simulation methods
-
     """
 
     #Get only correlated variables
@@ -95,25 +93,7 @@ class RandomVariablesGenerator:
     # Generation of uniform random numbers
     uk_cycle = np.random.rand(ns, nxvar_correlated)
     #
-
-
-    def fkapa(kapa, deltax, gsignal):
-        fk = 1.00 + deltax ** 2 - gamma(1.00 + gsignal * 2.00 / kapa) / gamma(1.00 + gsignal * 1.00 / kapa) ** 2
-        return fk
     
-    def beta_limits(vars, mux, sigmax, q, r):
-        a, b = vars
-        eq1 = a + q / (q + r) * (b - a) - mux
-        eq2 = ((q * r) / ((q + r) ** 2 * (q + r + 1))) ** (0.50) * (b - a) - sigmax
-        return [eq1, eq2]
-    
-    def uniform_limits(vars, mux, sigmax):
-        a, b = vars
-        eq1 = (a + b) / 2 - mux
-        eq2 = (b - a) / np.sqrt(12.) - sigmax
-        return [eq1, eq2]
-
-
     x = np.zeros((ns, nxvar_correlated))
     weight = np.ones(ns)
     fx = np.zeros(ns)
@@ -139,7 +119,6 @@ class RandomVariablesGenerator:
     #
     # Generation of Gaussian correlated random numbers
     #
-
     yk = norm.ppf(uk_cycle)
     zf = np.zeros((ns, nxvar_correlated))
     zk = np.dot(Jzy, yk.T).T
@@ -166,13 +145,17 @@ class RandomVariablesGenerator:
             fx = norm.pdf(x[:, i], mufx, sigmafx)
             hx = norm.pdf(x[:, i], muhx, sigmahx)
             zf[:, i] = (x[:, i]-mufx)/sigmafx
-            weight = weight * ((fx/norm.pdf(zf[:, i], 0, 1)) / (hx/norm.pdf(zk[:, i], 0, 1)))
-            fxixj = fxixj * fx / norm.pdf(zf[:, i], 0, 1)
+            weight, fxixj = self.calculate_weights(fx, hx, zf, zk, weight, fxixj, i)
         #
         # Uniform or constant distribution
         #
         
         elif namedist.lower() == 'uniform':
+            def uniform_limits(vars, mux, sigmax):
+              a, b = vars
+              eq1 = (a + b) / 2 - mux
+              eq2 = (b - a) / np.sqrt(12.) - sigmax
+              return [eq1, eq2]
             a = float(var['parameter1'])
             b = float(var['parameter2'])
             
@@ -188,8 +171,7 @@ class RandomVariablesGenerator:
             zf[:, i] = norm.ppf(uk)
             fx = uniform.pdf(x[:, i], a, b-a)
             hx = uniform.pdf(x[:, i], ah, bh-ah)
-            weight = weight * ((fx/norm.pdf(zf[:, i], 0, 1)) / (hx/norm.pdf(zk[:, i], 0, 1)))
-            fxixj = fxixj * fx / norm.pdf(zf[:, i], 0, 1)
+            weight, fxixj = self.calculate_weights(fx, hx, zf, zk, weight, fxixj, i)
         #
         # Lognormal distribution
         #
@@ -206,8 +188,7 @@ class RandomVariablesGenerator:
             zf[:, i] = (np.log(x[:, i])-lambdafx) / zetafx
             fx = norm.pdf(np.log(x[:, i]), lambdafx, zetafx)
             hx = norm.pdf(np.log(x[:, i]), lambdahx, zetahx)
-            weight = weight * ((fx/norm.pdf(zf[:, i], 0, 1)) / (hx/norm.pdf(zk[:, i], 0, 1)))
-            fxixj = fxixj * fx / norm.pdf(zf[:, i], 0, 1)
+            weight, fxixj = self.calculate_weights(fx, hx, zf, zk, weight, fxixj, i)
 
         #
         # Gumbel distribution
@@ -229,13 +210,15 @@ class RandomVariablesGenerator:
             zf[:, i] = norm.ppf(cdfx, 0, 1)
             fx = gumbel_r.pdf(x[:, i], ufn, betafn)
             hx = gumbel_r.pdf(x[:, i], uhn, betahn)
-            weight = weight * ((fx/norm.pdf(zf[:, i], 0, 1)) / (hx/norm.pdf(zk[:, i], 0, 1)))
-            fxixj = fxixj * fx / norm.pdf(zf[:, i], 0, 1)
+            weight, fxixj = self.calculate_weights(fx, hx, zf, zk, weight, fxixj, i)
 
         #
         # Frechet distribution
         #
         elif namedist.lower() == 'frechet':
+            def fkapa(kapa, deltax, gsignal):
+              fk = 1.00 + deltax ** 2 - gamma(1.00 + gsignal * 2.00 / kapa) / gamma(1.00 + gsignal * 1.00 / kapa) ** 2
+              return fk
             mufx = float(var['varmean'])
             sigmafx = float(var['varstd'])
             muhx = float(var['varhmean'])
@@ -258,8 +241,7 @@ class RandomVariablesGenerator:
             zf[:, i] = norm.ppf(cdfx, 0, 1)
             fx = invweibull.pdf(ynf, kapaf) / vfn
             hx = invweibull.pdf(ynh, kapah) / vhn
-            weight = weight * ((fx/norm.pdf(zf[:, i], 0, 1)) / (hx/norm.pdf(zk[:, i], 0, 1)))
-            fxixj = fxixj * fx / norm.pdf(zf[:, i], 0, 1)
+            weight, fxixj = self.calculate_weights(fx, hx, zf, zk, weight, fxixj, i)
 
         #
         #
@@ -289,14 +271,18 @@ class RandomVariablesGenerator:
             zf[:, i] = norm.ppf(cdfx, 0, 1)
             fx = weibull_min.pdf(ynf, kapaf) / (w1f - epsilon)
             hx = weibull_min.pdf(ynh, kapah) / (w1h - epsilon)
-            weight = weight * ((fx/norm.pdf(zf[:, i], 0, 1)) / (hx/norm.pdf(zk[:, i], 0, 1)))
-            fxixj = fxixj * fx / norm.pdf(zf[:, i], 0, 1)
+            weight, fxixj = self.calculate_weights(fx, hx, zf, zk, weight, fxixj, i)
 
         #
         #
         # Beta distribution
         #
         elif namedist.lower() == 'beta':
+            def beta_limits(vars, mux, sigmax, q, r):
+              a, b = vars
+              eq1 = a + q / (q + r) * (b - a) - mux
+              eq2 = ((q * r) / ((q + r) ** 2 * (q + r + 1))) ** (0.50) * (b - a) - sigmax
+              return [eq1, eq2]
             a = float(var['parameter1'])
             b = float(var['parameter2'])
             q = float(var['parameter3'])
@@ -316,8 +302,7 @@ class RandomVariablesGenerator:
             hx = beta_dist.pdf(x[:, i], q, r, loch, scaleh)
             cdfx = beta_dist.cdf(x[:, i], q, r, loc, scale)
             zf[:, i] = norm.ppf(cdfx, 0, 1)
-            weight = weight * ((fx/norm.pdf(zf[:, i], 0, 1)) / (hx/norm.pdf(zk[:, i], 0, 1)))
-            fxixj = fxixj * fx / norm.pdf(zf[:, i], 0, 1)
+            weight, fxixj = self.calculate_weights(fx, hx, zf, zk, weight, fxixj, i)
 
         #
         #
@@ -346,8 +331,7 @@ class RandomVariablesGenerator:
             hx = gamma_dist.pdf(x[:, i], ah, loch, scaleh)
             cdfx = gamma_dist.cdf(x[:, i], a, loc, scale)
             zf[:, i] = norm.ppf(cdfx, 0, 1)
-            weight = weight * ((fx/norm.pdf(zf[:, i], 0, 1)) / (hx/norm.pdf(zk[:, i], 0, 1)))
-            fxixj = fxixj * fx / norm.pdf(zf[:, i], 0, 1)
+            weight, fxixj = self.calculate_weights(fx, hx, zf, zk, weight, fxixj, i)
             
     
     norm_multivarf = multivariate_normal(mean=None, cov=matrix)
@@ -599,3 +583,11 @@ class RandomVariablesGenerator:
             
 
     return x, weight, fxixj
+  
+  def calculate_weights(self, fx, hx, zf, zk, weight, fxixj, i):
+    normal_std = norm.pdf(zf[:, i], 0, 1)
+    normal_corr = norm.pdf(zk[:, i], 0, 1)
+    weight *= (fx / normal_std) / (hx / normal_corr)
+    fxixj *= fx / normal_std
+    
+    return weight, fxixj
