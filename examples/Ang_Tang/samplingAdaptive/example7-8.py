@@ -36,8 +36,8 @@ dvar = [
     {'varname': 'gamma2', 'varvalue': 1.00}
 ]
 #
-# FORM method
+# MCS method
 #
 beam = Reliability(xvar, dvar, gfunction)
-beam.form(iHLRF=True, toler=1.e-3)
+beam.adaptive(100, 5000, 0.01, 1.50)
 #

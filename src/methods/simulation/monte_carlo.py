@@ -564,7 +564,7 @@ class MonteCarloMethods:
     nc = int(nc)
     ns = int(ns)
 
-    lambdas = linspace_between_0_and_1(1000)
+    lambdas = linspace_between_0_and_1(100)
     nlambdas = len(lambdas)
 
     pfc = np.zeros((nc, nlambdas))
@@ -612,7 +612,15 @@ class MonteCarloMethods:
       imx_lambdas = np.where(mx_lambdas <= 0.00, wp, 0)
       nfail = np.sum(imx_lambdas, axis=1)
       pfc[icycle] = nfail / ns       
-      pf_cycle = calculate_pf(pfc[icycle], lambdas)
+
+      # Does not add the point lambda = 0 and Pf = 0.5
+      # pf_cycle = calculate_pf(pfc[icycle], lambdas)
+
+      #Add the point lambda = 0 and PF = 0.5
+      arr_lambda = np.insert(lambdas, 0, 0.0)
+      arr_pf = np.insert(pfc[icycle], 0, 0.5)
+      pf_cycle = calculate_pf(arr_pf, arr_lambda)
+
       sum1 += pf_cycle
       sum2 += pf_cycle ** 2
 

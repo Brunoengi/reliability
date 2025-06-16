@@ -10,7 +10,7 @@ from .methods import *
 # Validation of inputs and other data structures required in the application
 from .utils import *
 
-#Correlation 
+#Correlation, include Nataf correction
 from .correlation import *
 
 # Data visualization: display graphs and print on the terminal
