@@ -451,7 +451,7 @@ class MonteCarloMethods:
         cov_pf = np.zeros(nc)
 
         ## Apriori Results
-        formResults = self.reliability.form(iHLRF=True, toler=1.e-3, iprint=False)
+        formResults = self.reliability.form(iHLRF=True, toler=1.e-6)
 
         ## Project Point
         xk = formResults['xk']
@@ -468,15 +468,6 @@ class MonteCarloMethods:
           kcycle = icycle + 1
 
           # Monte Carlo Simulations
-
-          # Generation of uniform random numbers - Antithetic Sampling
-          #
-          index = icycle % 2
-          uk_new = np.random.rand(ns, self.reliability.nxvar)
-          if index == 0:
-              uk_cycle = uk_new.copy()
-          else:
-              uk_cycle = 1.00 - uk_cycle
 
           # Step 1 - Generation of the random numbers according to their appropriate distribution
           xp, wp, fx = self.generator.main(ns)

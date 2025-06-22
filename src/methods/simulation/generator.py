@@ -297,8 +297,8 @@ class RandomVariablesGenerator:
     # Cholesky decomposition of the correlation matrix
     #
 
-    L = scipy.linalg.cholesky(self.reliability.correlation.Rz_rectify, lower=True)
-    Jzy = np.copy(L)
+    #L = scipy.linalg.cholesky(self.reliability.correlation.Rz_rectify, lower=True)
+    #Jzy = np.copy(L)
 
     #
     # Generation of Gaussian random numbers
