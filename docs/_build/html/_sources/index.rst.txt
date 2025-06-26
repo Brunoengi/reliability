@@ -8,6 +8,11 @@ Reliability Documentation
 
 This documentation provides information about reliability design. Here, you can find installation guides, usage, and details about features.
 
+.. toctree::
+  :maxdepth: 1
+  :caption: Instalation
+
+  guide/instalation
 
 .. toctree::
   :maxdepth: 1
@@ -17,22 +22,14 @@ This documentation provides information about reliability design. Here, you can 
   guide/create
 
 .. toctree::
-  :maxdepth: 2
-  :caption: Variable Types
+  :maxdepth: 1
+  :caption: Create a new Reliability Problem
 
   guide/variables
-  
-.. toctree::
-  :maxdepth: 2
-  :caption: Instalation
-
-  guide/instalacao
-
-.. toctree::
-  :maxdepth: 5
-  :hidden:
-
   guide/design
   guide/limit
+  guide/correlation
+  guide/methods
+  
 
 

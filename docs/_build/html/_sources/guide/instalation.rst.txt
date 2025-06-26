@@ -1,4 +1,4 @@
-Project Installation
+Install Dependencies
 ======================
 
 This guide will walk you through how to install the library.

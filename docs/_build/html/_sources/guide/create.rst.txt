@@ -1,4 +1,4 @@
-Simple Examples
+Examples
 =========================
 
 Example 1 - Reliability in columns
