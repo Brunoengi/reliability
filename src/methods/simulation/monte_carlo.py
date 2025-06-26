@@ -604,10 +604,7 @@ class MonteCarloMethods:
       nfail = np.sum(imx_lambdas, axis=1)
       pfc[icycle] = nfail / ns       
 
-      # Does not add the point lambda = 0 and Pf = 0.5
-      # pf_cycle = calculate_pf(pfc[icycle], lambdas)
-
-      #Add the point lambda = 0 and PF = 0.5
+      #Add the point lambda = 0 and Pf = 0.5
       arr_lambda = np.insert(lambdas, 0, 0.0)
       arr_pf = np.insert(pfc[icycle], 0, 0.5)
       pf_cycle = calculate_pf(arr_pf, arr_lambda)
@@ -637,7 +634,6 @@ class MonteCarloMethods:
 
     # Results viewer   
     if iprint: DataVisualizeSimulation.print_results({'title':"Monte Carlo – Enhanced Importance Sampling", 'beta': beta, 'pf':pf, 'delta_pf': delta_pf, 'nsimul': nsimul, 'gx': gx, 'ttotal': ttotal})
-
     if igraph: DataVisualizeSimulation.plot_results({'pf_mean':pf_mean, 'cov_pf':cov_pf, 'kcycle':kcycle})
 
     return {
