@@ -20,7 +20,7 @@ Installation
 
 .. code-block:: bash
 
-  git clone https://github.com/Brunoengi/Reliability.git
+  git clone https://github.com/Brunoengi/reliability.git
 
 
 
@@ -28,7 +28,7 @@ Installation
 
 .. code-block:: bash
 
-  cd Reliability
+  cd reliability
 
 3 - Install the dependencies:
 
