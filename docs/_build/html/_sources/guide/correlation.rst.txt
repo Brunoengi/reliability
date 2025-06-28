@@ -1,5 +1,5 @@
 Correlation between variables
-=========================
+=====================================
 
 
 To solve problems in which there are correlated variables, it is possible to insert an correlation matrix containing the correlation coefficients between pairs of pairs of analyzed variables.

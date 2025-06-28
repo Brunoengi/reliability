@@ -23,6 +23,7 @@ How to create a variable set
 --------------------------------------------------
 
 Variables must be entered in the form of a list where each position in the list will be a dictionary. In the following example, we have a problem involving three variables.
+
   .. code-block:: bash
 
     xvar = [
@@ -44,7 +45,7 @@ List of all valid attributes and their expected data types
 Key                         Type (Value)
 =========================  =========================
 varname                       string
-vardist                       'normal' | 'lognormal' | 'frechet' | 'gumbel'
+vardist                       'normal' | 'lognormal' | 'uniform' | 'gumbel' | 'frechet' | 'weibull' | 'beta' | 'gama'  
 varmean                       number | float
 varcov                        number | float
 varstd                        number | float

@@ -23,9 +23,33 @@ p {
   font-size: 12px;
 }
 
+div.footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+div.footer a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+div.footer a img {
+  width: 12px;
+} 
+
 div.sphinxsidebar{
   background-color: #e3eef3;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)
+}
+
+div.sphinxsidebar h3{
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 2em;
 }
 
 div.sphinxsidebar ul li.toctree-l1 > a {
