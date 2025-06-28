@@ -1,6 +1,3 @@
-
-__version__ = "0.1.0"
-
 # All possible distributions
 from .distribution import *
 

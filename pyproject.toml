@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "reliability"
-dynamic = ["version"]
+version = "0.1.0"
 description = "Python Structural Reliability Analysis"
 authors = [
     { name = "Bruno Teixeira Santos", email = "bruno.if@hotmail.com" }
@@ -19,6 +19,3 @@ dependencies = [
     "pandas",
     "matplotlib"
 ]
-
-[tool.setuptools.dynamic]
-version = {attr = "Reliability.__version__"}
