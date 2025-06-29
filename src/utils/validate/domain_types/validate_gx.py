@@ -4,20 +4,18 @@ import numpy as np
 
 class ValidateGx():
 
-  def __init__(self, gx):
+  def __init__(self, gx, nxvar: int, ndvar: int):
 
     ValidateFunction.is_function(gx)
     ValidateFunction.has_at_least_n_args(gx, 2)
     ValidateFunction.first_n_args_are_lists(gx, 2)
-    self.validate_return(gx)
+    self.validate_return(gx, nxvar, ndvar)
 
- 
-  def validate_return(self, gx):
+  def validate_return(self, gx, nxvar, ndvar):
     try:
-      # Tentamos inferir quantos elementos a função espera acessar
-      # como fallback, usamos listas genéricas com tamanho 4
-      x = [1.0] * 4
-      d = [1.0] * 4
+      # Cria vetores com o número correto de entradas
+      x = [1.0] * nxvar
+      d = [1.0] * ndvar
       result = gx(x, d)
 
       if not isinstance(result, (int, float)):
@@ -28,7 +26,7 @@ class ValidateGx():
     except IndexError as e:
       raise RuntimeError(
         f"The function raised an IndexError, likely due to accessing x[i] or d[i] "
-        f"with lists of insufficient length: {e}"
+        f"with lengths nxvar={nxvar} and ndvar={ndvar}: {e}"
       )
     except Exception as e:
       raise RuntimeError(f"The function raised an error when called: {e}")

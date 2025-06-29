@@ -88,7 +88,7 @@ class Reliability():
 
     @gx.setter
     def gx(self, gx): 
-      ValidateGx(gx)
+      ValidateGx(gx, self.nxvar, self.ndvar)
       self._gx = gx
 
     @Rz.setter
