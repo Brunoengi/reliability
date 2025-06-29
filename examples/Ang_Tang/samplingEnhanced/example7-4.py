@@ -40,6 +40,6 @@ dvar = [
 # FORM method
 #
 beam = Reliability(xvar, dvar, gfunction)
-beam.sampling_enhanced(300, 10000, 0.01)
+beam.sampling_enhanced(100, 5000, 0.01)
 
 #

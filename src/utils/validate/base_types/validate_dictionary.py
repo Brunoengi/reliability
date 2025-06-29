@@ -32,6 +32,11 @@ class ValidateDictionary:
   def is_greater_than(dictionary, key, value): 
     if(float(dictionary[key]) <= value):
         raise ValueError(f"Error: The value of '{key}' must be greater than {value}. Current value is {dictionary[key]}.")
+    
+  @staticmethod
+  def is_greater_or_equal_than(dictionary, key, value): 
+    if(float(dictionary[key]) < value):
+        raise ValueError(f"Error: The value of '{key}' must be greater or equal than {value}. Current value is {dictionary[key]}.")
       
   @staticmethod
   def check_keys_count(dictionary, n, *possible_keys):
@@ -64,3 +69,15 @@ class ValidateDictionary:
                 f"Invalid keys found: {invalid_keys}. "
                 f"Valid keys are: {list(all_valid_keys)}."
             )
+
+  @staticmethod
+  def is_string(dictionary, *keys):
+    for key in keys:
+      value = dictionary.get(key)
+      if not isinstance(value, str):
+        raise TypeError(f"Error: The key '{key}' must be associated with a string type value, but got {type(value).__name__} with value {value}")
+
+  @staticmethod 
+  def check_if_exists(dictionary, key, check_function):
+        if key in dictionary:
+            check_function(dictionary, key)

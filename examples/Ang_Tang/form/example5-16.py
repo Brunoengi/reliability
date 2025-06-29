@@ -33,5 +33,3 @@ corrmatrix = [[1.00, 0.75],
 #
 column = Reliability(xvar, dvar, gfunction, None, corrmatrix)
 column.form(iHLRF=True, toler=1.e-6)
-
-#

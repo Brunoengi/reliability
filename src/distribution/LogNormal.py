@@ -3,9 +3,13 @@ from utils.validate.base_types.validate_dictionary import ValidateDictionary
 from utils.validate.base_types.validate_class import ValidateClass 
 
 class LogNormal(AbstractDistribution):
-  def __init__(self, dictionaryInfo):
+  def __init__(self, props: dict):
 
-    ValidateDictionary.is_dictionary(dictionaryInfo)
-    ValidateDictionary.check_possible_arrays_keys(dictionaryInfo,['varmean','varstd'], ['varmean','varcov'])
-    super().__init__(dictionaryInfo)
+    self.validate_specific_parameters(props)
+    super().__init__(props)
     ValidateClass.has_invalid_key(self, 'varname', 'vardist', 'varmean', 'varstd', 'varcov', 'varhmean')
+
+  def validate_specific_parameters(self, props):
+    ValidateDictionary.is_dictionary(props)
+    ValidateDictionary.check_possible_arrays_keys(props,['varmean','varstd'], ['varmean','varcov'])
+    ValidateDictionary.check_if_exists(props, 'varcov', lambda d, k: ValidateDictionary.is_greater_or_equal_than(d, k, 0))

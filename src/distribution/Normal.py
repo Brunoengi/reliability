@@ -10,14 +10,18 @@ from utils.validate.base_types.validate_class import ValidateClass
 from utils.validate.base_types.validate_dictionary import ValidateDictionary 
 
 class Normal(AbstractDistribution):
-  def __init__(self, dictionaryInfo):
+  def __init__(self, props: dict):
       
-    ValidateDictionary.is_dictionary(dictionaryInfo)
-    ValidateDictionary.has_keys(dictionaryInfo,'varmean')
-    ValidateDictionary.is_float(dictionaryInfo, 'varmean')
-    ValidateDictionary.check_keys_count(dictionaryInfo, 1, 'varcov', 'varstd')
-    super().__init__(dictionaryInfo)
+    self.validate_specific_parameters(props)
+    super().__init__(props)
     ValidateClass.has_invalid_key(self,'varname','vardist','varmean','varcov','varstd','varhmean')
+
+  def validate_specific_parameters(self, props):
+    ValidateDictionary.is_dictionary(props)
+    ValidateDictionary.has_keys(props,'varmean')
+    ValidateDictionary.is_float(props, 'varmean')
+    ValidateDictionary.check_keys_count(props, 1, 'varcov', 'varstd')
+    ValidateDictionary.check_if_exists(props, 'varcov', lambda d, k: ValidateDictionary.is_greater_or_equal_than(d, k, 0))
       
 
 # teste1 = Normal({'varname': 'fc', 'vardist': 'normal', 'varmean': 23.00, 'varcov': 0.15})
