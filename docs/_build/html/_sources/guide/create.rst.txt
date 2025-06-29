@@ -132,11 +132,11 @@ Computational development
       {'varname': 'gamma2', 'varvalue': 1.00}
   ]
   #
-  # FORM method
+  # MC - IS based on project point
   #
   beam = Reliability(xvar, dvar, gfunction)
-  beam.form(iHLRF=True, toler=1.e-3)
-  #
+  beam.sampling_project_point(100, 10000, 0.01)
+  
 
 Example 3 - Load capacity in beams: correlated variables with distribution different from normal
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -203,8 +203,8 @@ Computational development
                 [0.00, 0.30, 1.00, 0.00],
                 [0.00, 0.00, 0.00, 1.00]]
 
-  # FORM adaptative method
+  # Monte Carlo Method
   #
   column = Reliability(xvar, dvar, gfunction, None, corrmatrix)
-  column.form(iHLRF=True, toler=1e-6)
-  #
+  column.mc(100, 10000, 0.01)
+  

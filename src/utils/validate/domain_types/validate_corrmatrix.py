@@ -10,6 +10,7 @@ class ValidateCorrelationMatrix():
     self.is_valid()
     ValidateList.same_type_elements(matrix)
     self.validate_diagonal_is_ones()
+    self.validate_symmetry()
 
   def validate_diagonal_is_ones(self):
     size = len(self.matrix)
@@ -24,7 +25,7 @@ class ValidateCorrelationMatrix():
           f"Invalid correlation matrix: diagonal element at position ({i},{i}) is {value}, expected 1.0."
         )
       
-  def _validate_symmetry(self):
+  def validate_symmetry(self):
     size = len(self.matrix)
     for i in range(size):
       for j in range(i + 1, size):

@@ -157,4 +157,5 @@ Parameter                        Type                      Recomendation
 nc                            integer                       50 ≥ nc ≥ 200                  
 ns                            integer                     2000 ≥ ns ≥ 10000 
 delta_lim                     float                       0.005 ≥ delta_lim ≥0.05
+tolerance                     float                       1e-6
 =========================  =========================  =========================
