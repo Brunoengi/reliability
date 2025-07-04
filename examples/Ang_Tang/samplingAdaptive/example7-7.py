@@ -39,8 +39,8 @@ dvar = [
     {'varname': 'factor4', 'varvalue': 1.00}
 ]
 #
-# MC-IS adaptative method
+# MC-IS adaptive method
 #
 column = Reliability(xvar, dvar, gfunction)
-column.adaptive(100, 5000, 0.03, 1.5)
+column.adaptive(100, 5000, 0.03)
 #

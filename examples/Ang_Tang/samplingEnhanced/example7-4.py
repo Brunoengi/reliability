@@ -37,9 +37,7 @@ dvar = [
 ]
 
 #
-# FORM method
+# MCS method
 #
 beam = Reliability(xvar, dvar, gfunction)
 beam.sampling_enhanced(100, 5000, 0.01)
-
-#

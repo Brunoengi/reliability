@@ -59,16 +59,16 @@ class ValidateDictionary:
     
   @staticmethod
   def has_invalid_keys(dictionary, *all_valid_keys):
-        if not isinstance(dictionary, dict):
-            raise TypeError(f"Expected a dictionary but received '{type(dictionary).__name__}'.")
+    if not isinstance(dictionary, dict):
+      raise TypeError(f"Expected a dictionary but received '{type(dictionary).__name__}'.")
 
-        invalid_keys = [key for key in dictionary if key not in all_valid_keys]
+    invalid_keys = [key for key in dictionary if key not in all_valid_keys]
 
-        if invalid_keys:
-            raise ValueError(
-                f"Invalid keys found: {invalid_keys}. "
-                f"Valid keys are: {list(all_valid_keys)}."
-            )
+    if invalid_keys:
+      raise ValueError(
+        f"Invalid keys found: {invalid_keys}. "
+        f"Valid keys are: {list(all_valid_keys)}."
+      )
 
   @staticmethod
   def is_string(dictionary, *keys):
@@ -79,5 +79,5 @@ class ValidateDictionary:
 
   @staticmethod 
   def check_if_exists(dictionary, key, check_function):
-        if key in dictionary:
-            check_function(dictionary, key)
+    if key in dictionary:
+      check_function(dictionary, key)

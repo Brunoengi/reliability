@@ -43,7 +43,7 @@ corrmatrix = [[1.00, 0.80, 0.00, 0.00],
               [0.00, 0.30, 1.00, 0.00],
               [0.00, 0.00, 0.00, 1.00]]
 
-# FORM adaptative method
+# MCS method
 #
 column = Reliability(xvar, dvar, gfunction, None, corrmatrix)
 column.sampling_enhanced(100, 5000, 0.03)

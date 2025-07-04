@@ -46,10 +46,10 @@ corrmatrix = [[1.00, 0.80, 0.00, 0.00],
               [0.80, 1.00, 0.30, 0.00],
               [0.00, 0.30, 1.00, 0.00],
               [0.00, 0.00, 0.00, 1.00]]
-
-# MC-IS adaptative method
+#
+# MC-IS adaptive method
 #
 column = Reliability(xvar, dvar, gfunction, None, corrmatrix)
-column.adaptive(20, 5000, 0.01, 1.50)
+column.adaptive(20, 5000, 0.01)
 
 #

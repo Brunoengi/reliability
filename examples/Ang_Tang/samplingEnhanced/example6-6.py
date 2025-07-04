@@ -37,7 +37,7 @@ dvar = [
 # Correlation matrix
 
 #
-# FORM method
+# MCS method
 #
 beam = Reliability(xvar, dvar, gfunction, None, None)
 beam.sampling_enhanced(50, 5000, 0.03)

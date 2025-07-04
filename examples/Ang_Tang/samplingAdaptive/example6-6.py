@@ -37,8 +37,8 @@ dvar = [
 # Correlation matrix
 
 #
-# FORM method
+# MC-IS adaptive method
 #
 beam = Reliability(xvar, dvar, gfunction, None, None)
-beam.adaptive(50, 10000, 0.02, 1.50)
+beam.adaptive(50, 10000, 0.02)
 #

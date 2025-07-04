@@ -40,8 +40,8 @@ dvar = [
 ]
 
 #
-# MC-IS adaptative method
+# MC-IS adaptive method
 #
 column = Reliability(xvar, dvar, gfunction, None, None)
-column.adaptive(50, 10000, 0.01, 1.50)
+column.adaptive(50, 10000, 0.01)
 #

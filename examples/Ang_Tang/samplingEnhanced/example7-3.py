@@ -39,7 +39,7 @@ dvar = [
 ]
 
 #
-# FORM method
+# MCS method
 #
 column = Reliability(xvar, dvar, gfunction, None, None)
 column.sampling_enhanced(100, 5000, 0.01)

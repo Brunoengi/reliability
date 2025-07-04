@@ -13,7 +13,6 @@ class ValidateGx():
 
   def validate_return(self, gx, nxvar, ndvar):
     try:
-      # Cria vetores com o número correto de entradas
       x = [1.0] * nxvar
       d = [1.0] * ndvar
       result = gx(x, d)
