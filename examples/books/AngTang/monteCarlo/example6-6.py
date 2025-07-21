@@ -34,10 +34,8 @@ dvar = [
     {'varname': 'gamma2', 'varvalue': 1.00}
 ]
 
-# Correlation matrix
-
 #
-# FORM method
+# MCS method
 #
 beam = Reliability(xvar, dvar, gfunction, None, None)
 beam.mc(100, 5000, 0.05)

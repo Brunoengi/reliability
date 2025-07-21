@@ -1,9 +1,4 @@
-"""
-Created on Mon Feb 08 17:12:00 2021
-Reliabilty Analysis
-Example 7.8 - Nonlinear limit state function with non-normal independent variables
-@author: MVREAL
-"""
+## Expected β = 2.745
 from main import *
 
 #

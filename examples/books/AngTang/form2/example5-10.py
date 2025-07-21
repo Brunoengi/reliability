@@ -28,9 +28,7 @@ dvar = [
     {'varname': 'factor3', 'varvalue': 1.00},
 ]
 
+# FORM method
 
-
-# MCS method
-#
 storm = Reliability(xvar, dvar, gfunction)
 storm.form2(iHLRF=True, toler=1.e-6)

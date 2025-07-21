@@ -555,7 +555,7 @@ class MonteCarloMethods:
     nc = int(nc)
     ns = int(ns)
 
-    lambdas = linspace_between_0_and_1(100)
+    lambdas = linspace_between_0_and_1(4)
     nlambdas = len(lambdas)
 
     pfc = np.zeros((nc, nlambdas))

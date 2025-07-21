@@ -30,7 +30,7 @@ dvar = [
 
 
 
-# MCS method
+# FORM method
 #
 storm = Reliability(xvar, dvar, gfunction)
 storm.form(iHLRF=True, toler=1.e-6)

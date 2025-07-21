@@ -1,12 +1,7 @@
 """
-Created on Mon Feb 08 17:12:00 2021
-Reliabilty Analysis
-Example 7.3 - Linear limit state function with normal independent variables
-@author: MVREAL
-
 ANG, Alfredo H.-S.; TANG, Wilson H. Probability concepts in engineering: emphasis on applications in civil and environmental engineering. 2. ed. New York: Wiley, 2007.
 Example 4-11, page 163 - Adapted
-Expected pf = 0.0174
+Expected pf = 0.0174 and β = 2.1075
 """
 import numpy as np
 from main import *

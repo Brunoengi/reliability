@@ -1,3 +1,4 @@
+## Expected β = 2.862
 from main import *
 
 def gfunction(x, d):

@@ -43,7 +43,7 @@ corrmatrix = [[1.00, 0.80, 0.00, 0.00],
               [0.00, 0.30, 1.00, 0.00],
               [0.00, 0.00, 0.00, 1.00]]
 
-# FORM adaptative method
+# FORM method
 #
 column = Reliability(xvar, dvar, gfunction, None, corrmatrix)
 column.form(iHLRF=True, toler=1e-6)

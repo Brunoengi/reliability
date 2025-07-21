@@ -1,9 +1,5 @@
-"""
-Created on Mon Feb 08 17:12:00 2021
-Reliabilty Analysis
-Example 7.4 - Nonlinear limit state function with  normal independent variables
-@author: MVREAL
-"""
+## Expected β = 3.049
+
 from main import *
 
 #
@@ -36,7 +32,7 @@ dvar = [
     {'varname': 'gamma2', 'varvalue': 1.00}
 ]
 
-# MC-IS adaptative method
+# MCS method
 #
 beam = Reliability(xvar, dvar, gfunction)
 beam.mc(100, 10000, 0.01)

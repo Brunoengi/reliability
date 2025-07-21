@@ -39,7 +39,7 @@ dvar = [
     {'varname': 'factor4', 'varvalue': 1.00}
 ]
 #
-# FORM adaptative method
+# FORM method
 #
 column = Reliability(xvar, dvar, gfunction)
 column.form2(iHLRF=True, toler=1.e-6)
