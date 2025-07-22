@@ -16,4 +16,4 @@ dvar = [
 ]
 
 example = Reliability(xvar, dvar, gfunction)
-example.mc(1000, 5000, 0.01)
+example.mc(100000, 5000, 0.01)

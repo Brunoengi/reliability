@@ -24,4 +24,4 @@ corrmatrix = [[1.00, 0.20, 0.20],
 
 
 beam = Reliability(xvar, dvar, gfunction, None, corrmatrix)
-beam.mc(10000, 5000, 0.01)
+beam.sampling_enhanced(10000, 5000, 0.01)
