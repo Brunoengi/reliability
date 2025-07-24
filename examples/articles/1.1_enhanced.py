@@ -24,4 +24,4 @@ dvar = [
 ]
 
 example = Reliability(xvar, dvar, gfunction)
-example.sampling_enhanced(100, 5000, 0.005)
+example.sampling_enhanced(100, 5000, 0.01)

@@ -519,44 +519,49 @@ class MonteCarloMethods:
   def sampling_enhanced(self, nc, ns, delta_lim, igraph=True, iprint=True):
 
     def calculate_pf(arr_pf, arr_lambda):
-          def pf_model(lam, a, b, c, q):
-              base = np.maximum(lam - b, 0)
-              return q * np.exp(-a * base**c)
 
-          # Initial parameters and limits
-          initial_guess = [5.0, 0.1, 1.0, max(arr_pf)]
-          bounds = ([0.001, -1.0, 0.1, 0.001], [100.0, 1.5, 5.0, 1.0])
+      def pf_model(lam, a, b, c, q):
+        base = np.maximum(lam - b, 0)
+        return q * np.exp(-a * base**c)
 
-          try:
-              params, _ = curve_fit(pf_model, arr_lambda, arr_pf, p0=initial_guess, bounds=bounds, maxfev=20000)
-              pf_at_cycle = pf_model(1.0, *params)
-              return pf_at_cycle
-          
-          except Exception as e:
-              print("Error in adjustment:", e)
-              return np.nan 
+      # Corrige valor inicial de q para respeitar os limites
+      q0 = max(0.001, min(1.0, max(arr_pf)))
+      initial_guess = [5.0, 0.1, 1.0, q0]
+      bounds = ([0.001, -1.0, 0.1, 0.001], [100.0, 1.5, 5.0, 1.0])
+
+      try:
+          params, _ = curve_fit(
+              pf_model, arr_lambda, arr_pf,
+              p0=initial_guess, bounds=bounds, maxfev=20000
+          )
+          pf_at_cycle = pf_model(1.0, *params)
+          return pf_at_cycle
+
+      except Exception as e:
+        print("Error in adjustment:", e)
+        return np.nan
                     
-    def linspace_between_0_and_1(n):
+    def linspace_between_0_5_and_1(n):
       """
-      Returns a NumPy array with n equally spaced values between 0 and 1,
-      excluding 0 and 1.
+      Returns a NumPy array with n equally spaced values in the interval [0.5, 1),
+      including 0.5 and excluding 1.0.
 
       Parameters:
-
-      n: int, the number of desired subdivisions in the interval (0, 1)
+      n: int
+        Number of desired values.
 
       Returns:
-
-      numpy.ndarray of floats between 0 and 1, excluding the endpoints.
+      numpy.ndarray of floats between 0.5 (inclusive) and 1.0 (exclusive).
       """
-      return np.linspace(0, 1, n + 2)[1:-1]
-    
+      return np.linspace(0.5, 1, n, endpoint=False)
+
     ti = time.time()
     nc = int(nc)
     ns = int(ns)
 
-    lambdas = linspace_between_0_and_1(4)
+    lambdas = np.array([0.55, 0.70, 0.85, 0.90, 0.95])
     nlambdas = len(lambdas)
+    print(lambdas)
 
     pfc = np.zeros((nc, nlambdas))
     pf_mean = np.zeros(nc)
@@ -579,8 +584,6 @@ class MonteCarloMethods:
       kcycle = icycle + 1
 
       # Monte Carlo Simulations
-      # Generation of uniform random numbers - Antithetic Sampling
-      #
       index = icycle % 2
       uk_new = np.random.rand(ns, self.reliability.nxvar)
       if index == 0:
@@ -604,10 +607,13 @@ class MonteCarloMethods:
       nfail = np.sum(imx_lambdas, axis=1)
       pfc[icycle] = nfail / ns       
 
-      #Add the point lambda = 0 and Pf = 0.5
+      #Add the point lambda = 0 and Pf = 0.5 or not
       arr_lambda = np.insert(lambdas, 0, 0.0)
       arr_pf = np.insert(pfc[icycle], 0, 0.5)
-      pf_cycle = calculate_pf(arr_pf, arr_lambda)
+      
+
+      #Use arr_pf and arr_lambda to add lambda = 0 and Pf = 0.5 or use pfc[icycle] and lambdas to not add
+      pf_cycle = calculate_pf(pfc[icycle], lambdas)
 
       sum1 += pf_cycle
       sum2 += pf_cycle ** 2
