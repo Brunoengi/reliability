@@ -35,3 +35,11 @@ Installation
 .. code-block:: bash
 
   pip install -r requirements.txt
+
+4 - Install the realibity package:
+
+.. code-block:: bash
+
+  pip install -e .
+
+  
