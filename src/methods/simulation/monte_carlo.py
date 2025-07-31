@@ -521,13 +521,15 @@ class MonteCarloMethods:
     def calculate_pf(arr_pf, arr_lambda):
 
       def pf_model(lam, a, b, c, q):
+        print('a', a,'b',b,'c',c,'q',q)
+        
         base = np.maximum(lam - b, 0)
         return q * np.exp(-a * base**c)
 
       # Corrige valor inicial de q para respeitar os limites
-      q0 = max(0.001, min(1.0, max(arr_pf)))
-      initial_guess = [5.0, 0.1, 1.0, q0]
-      bounds = ([0.001, -1.0, 0.1, 0.001], [100.0, 1.5, 5.0, 1.0])
+      q0 = max(0.001, max(arr_pf))
+      initial_guess = [0.2, 0.2, 1.0, q0]
+      bounds = ([0.001, 0, 0.01, 0.001], [20, 1, 30, 1.0])
 
       try:
           params, _ = curve_fit(
@@ -559,7 +561,7 @@ class MonteCarloMethods:
     nc = int(nc)
     ns = int(ns)
 
-    lambdas = np.array([0.5, 0.65, 0.7, 0.8, 0.9])
+    lambdas = np.array([ 0.6, 0,625, 0.65, 0.675, 0.7, 0.725, 0.75, 0.775, 0.8, 0.825, 0.85, 0.9, 0.95])
     nlambdas = len(lambdas)
     print(lambdas)
 
