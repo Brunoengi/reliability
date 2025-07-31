@@ -543,20 +543,6 @@ class MonteCarloMethods:
         print("Error in adjustment:", e)
         return np.nan
                     
-    def linspace_between_0_and_1(n):
-      """
-      Returns a NumPy array with n equally spaced values in the interval [0.5, 1),
-      including 0.5 and excluding 1.0.
-
-      Parameters:
-      n: int
-        Number of desired values.
-
-      Returns:
-      numpy.ndarray of floats between 0.5 (inclusive) and 1.0 (exclusive).
-      """
-      return np.linspace(0, 1, n, endpoint=False)
-
     ti = time.time()
     nc = int(nc)
     ns = int(ns)
