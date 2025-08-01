@@ -521,7 +521,7 @@ class MonteCarloMethods:
     def calculate_pf(arr_pf, arr_lambda):
 
       def pf_model(lam, a, b, c, q):
-        print('a', a,'b',b,'c',c,'q',q)
+        #print('a', a,'b',b,'c',c,'q',q)
         
         base = np.maximum(lam - b, 0)
         return q * np.exp(-a * base**c)
@@ -547,7 +547,7 @@ class MonteCarloMethods:
     nc = int(nc)
     ns = int(ns)
 
-    lambdas = np.array([ 0.6, 0,625, 0.65, 0.675, 0.7, 0.725, 0.75, 0.775, 0.8, 0.825, 0.85, 0.9, 0.95])
+    lambdas = np.array([0.65, 0.675, 0.7, 0.725, 0.75, 0.775, 0.8, 0.825, 0.85, 0.9, 0.95])
     nlambdas = len(lambdas)
     print(lambdas)
 
@@ -595,12 +595,7 @@ class MonteCarloMethods:
       nfail = np.sum(imx_lambdas, axis=1)
       pfc[icycle] = nfail / ns       
 
-      #Add the point lambda = 0 and Pf = 0.5 or not
-      arr_lambda = np.insert(lambdas, 0, 0.0)
-      arr_pf = np.insert(pfc[icycle], 0, 0.5)
-      
 
-      #Use arr_pf and arr_lambda to add lambda = 0 and Pf = 0.5 or use pfc[icycle] and lambdas to not add
       pf_cycle = calculate_pf(pfc[icycle], lambdas)
 
       sum1 += pf_cycle
