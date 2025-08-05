@@ -126,6 +126,10 @@ class Reliability():
                 i += 1
                 # Mean value of the random variables x
                 var['varhmean'] = x0[i]
+                
+      self.xvarClass = [createDistribution(var) for var in xvar]
+                
+             
 
       return xvar
 

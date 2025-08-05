@@ -18,7 +18,7 @@ class AbstractDistribution(ABC):
     for key, value in props.items():
       setattr(self, key, value)
   
-  def set_initial_values(self):
+  def set_initial_values(self, nsigma = 1):
       # Checks whether 'varhmean' was provided; if not, use 'varmean'
       self.varhmean = float(getattr(self, 'varhmean', self.varmean))
   
@@ -27,3 +27,9 @@ class AbstractDistribution(ABC):
         self.varcov = float(self.varstd / self.varmean) if self.varmean > 0 else 1.00
       else:
         self.varstd = float(self.varcov * self.varmean)
+      
+      self.nsigma = nsigma
+      self.mufx = self.varmean
+      self.muhx = self.varhmean
+      self.sigmafx = self.varstd
+      self.sigmahx = nsigma * self.sigmafx

@@ -100,23 +100,24 @@ class RandomVariablesGenerator:
           return w, fx / standard_norm_pdf_zf
 
       for i, var in enumerate(xvar_correlated):
+          print(self.reliability.xvarClass)
           # Adjust std if needed
           if var['varstd'] == 0.0:
               var['varstd'] = float(var['varcov']) * float(var['varmean'])
 
           namedist = var['vardist'].lower()
-          mufx = float(var['varmean'])
-          sigmafx = float(var['varstd'])
-          muhx = float(var['varhmean'])
-          sigmahx = nsigma * sigmafx
+          mufx = self.reliability.xvarClass[i].mufx
+          sigmafx = self.reliability.xvarClass[i].sigmafx
+          muhx = self.reliability.xvarClass[i].muhx
+          sigmahx = self.reliability.xvarClass[i].nsigma * sigmafx
 
           zk_col = zk[:, i]
 
           if namedist == 'gauss':
-              x[:, i] = muhx + sigmahx * zk_col
-              fx = norm.pdf(x[:, i], mufx, sigmafx)
-              hx = norm.pdf(x[:, i], muhx, sigmahx)
-              zf[:, i] = (x[:, i] - mufx) / sigmafx
+              x[:, i] = self.reliability.xvarClass[i].x_correlated(zk_col)
+              fx = self.reliability.xvarClass[i].fx(x)
+              hx = self.reliability.xvarClass[i].hx(x)
+              zf[:, i] = self.reliability.xvarClass[i].zf(x)
 
           elif namedist == 'uniform':
               a = float(var['parameter1'])
@@ -310,6 +311,7 @@ class RandomVariablesGenerator:
     #
     i = -1
     for var in xvar_uncorrelated:
+        print(var)
         i += 1
         if var['varstd'] == 0.00:
             var['varstd'] = float(var['varcov']) * float(var['varmean'])
@@ -318,16 +320,21 @@ class RandomVariablesGenerator:
         #
         #
         # Normal distribution
+        
+        namedist = var['vardist'].lower()
+        mufx = self.reliability.xvarClass[i].mufx
+        sigmafx = self.reliability.xvarClass[i].sigmafx
+        muhx = self.reliability.xvarClass[i].muhx
+        sigmahx = self.reliability.xvarClass[i].nsigma * sigmafx
+        
+        
         #
         namedist = var['vardist']
         if namedist.lower() == 'gauss':
-            mufx = float(var['varmean'])
-            sigmafx = float(var['varstd'])
-            muhx = float(var['varhmean'])
-            sigmahx = nsigma * sigmafx
-            x[:, i] = norm.rvs(loc=muhx, scale=sigmahx, size=ns)
-            fx = norm.pdf(x[:, i], mufx, sigmafx)
-            hx = norm.pdf(x[:, i], muhx, sigmahx)
+                
+            x[:, i] = self.reliability.xvarClass[i].x_uncorrelated(ns)
+            fx = self.reliability.xvarClass[i].fx(x[:, i])
+            hx = self.reliability.xvarClass[i].hx(x[:, i])
             weight = weight * (fx / hx)
             fxixj = fxixj * fx 
         #
