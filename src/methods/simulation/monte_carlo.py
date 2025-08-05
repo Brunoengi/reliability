@@ -547,7 +547,7 @@ class MonteCarloMethods:
     nc = int(nc)
     ns = int(ns)
 
-    lambdas = np.array([0.65, 0.675, 0.7, 0.725, 0.75, 0.775, 0.8, 0.825, 0.85, 0.9, 0.95])
+    lambdas = np.array([0.6, 0.625, 0.65, 0.675, 0.7, 0.725, 0.75, 0.775, 0.8, 0,825, 0.85, 0.9, 0.95])
     nlambdas = len(lambdas)
     print(lambdas)
 
