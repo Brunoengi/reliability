@@ -46,3 +46,21 @@ class Weibull(AbstractDistribution):
   
   def hx_uncorrelated(self, x):
     return weibull_min.pdf(x, c=self.kapah, loc=self.epsilon, scale=self.w1h-self.epsilon)
+  
+  def x_correlated(self, zk_col):
+    uk = norm.cdf(zk_col)
+    return (self.w1h - self.epsilon) * (np.log(1 / (1 - uk))) ** (1 / self.kapah) + self.epsilon
+  
+  def fx_correlated(self, x):
+    ynf = (x - self.epsilon) / (self.w1f - self.epsilon)
+    return weibull_min.pdf(ynf, self.kapaf) / (self.w1f - self.epsilon)
+  
+  def hx_correlated(self, x):
+    ynh = (x - self.epsilon) / (self.w1h - self.epsilon)
+    return weibull_min.pdf(ynh, self.kapah) / (self.w1h - self.epsilon)
+    
+  def zf_correlated(self, x):
+    ynf = (x - self.epsilon) / (self.w1f - self.epsilon)
+    cdfx = weibull_min.cdf(ynf, self.kapaf)
+    return norm.ppf(cdfx)
+    

@@ -192,23 +192,25 @@ class RandomVariablesGenerator:
               hx = self.reliability.xvarClassCorrelated[i].hx_correlated(x[:, i])
 
           elif namedist == 'weibull':
-              def fkapa(kapa, delta, gsignal):
-                  return 1 + delta**2 - gamma(1 + 2 * gsignal / kapa) / (gamma(1 + gsignal / kapa) ** 2)
-              epsilon = float(var['varinf'])
-              deltafx = sigmafx / (mufx - epsilon)
-              kapaf = newton(fkapa, 2.5, args=(deltafx, 1))
-              w1f = (mufx - epsilon) / gamma(1 + 1 / kapaf) + epsilon
-              deltahx = sigmahx / (muhx - epsilon)
-              kapah = newton(fkapa, 2.5, args=(deltahx, 1))
-              w1h = (muhx - epsilon) / gamma(1 + 1 / kapah) + epsilon
-              uk = norm.cdf(zk_col)
-              x[:, i] = (w1h - epsilon) * (np.log(1 / (1 - uk))) ** (1 / kapah) + epsilon
-              ynf = (x[:, i] - epsilon) / (w1f - epsilon)
-              ynh = (x[:, i] - epsilon) / (w1h - epsilon)
-              cdfx = weibull_min.cdf(ynf, kapaf)
-              zf[:, i] = norm.ppf(cdfx)
-              fx = weibull_min.pdf(ynf, kapaf) / (w1f - epsilon)
-              hx = weibull_min.pdf(ynh, kapah) / (w1h - epsilon)
+            #   def fkapa(kapa, delta, gsignal):
+            #       return 1 + delta**2 - gamma(1 + 2 * gsignal / kapa) / (gamma(1 + gsignal / kapa) ** 2)
+            #   epsilon = float(var['varinf'])
+            #   deltafx = sigmafx / (mufx - epsilon)
+            #   kapaf = newton(fkapa, 2.5, args=(deltafx, 1))
+            #   w1f = (mufx - epsilon) / gamma(1 + 1 / kapaf) + epsilon
+            #   deltahx = sigmahx / (muhx - epsilon)
+            #   kapah = newton(fkapa, 2.5, args=(deltahx, 1))
+            #   w1h = (muhx - epsilon) / gamma(1 + 1 / kapah) + epsilon
+              
+            #   uk = norm.cdf(zk_col)
+              
+              x[:, i] = self.reliability.xvarClassCorrelated[i].x_correlated(zk_col)
+            #   ynf = (x[:, i] - epsilon) / (w1f - epsilon)
+            #   ynh = (x[:, i] - epsilon) / (w1h - epsilon)
+            #   cdfx = weibull_min.cdf(ynf, kapaf)
+              zf[:, i] = self.reliability.xvarClassCorrelated[i].zf_correlated(x[:, i])
+              fx = self.reliability.xvarClassCorrelated[i].fx_correlated(x[:, i])
+              hx = self.reliability.xvarClassCorrelated[i].hx_correlated(x[:, i])
 
           elif namedist == 'beta':
               a = float(var['parameter1'])
