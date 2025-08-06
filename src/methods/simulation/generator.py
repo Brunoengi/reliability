@@ -75,7 +75,6 @@ class RandomVariablesGenerator:
       """
 
       xvar_correlated = [self.reliability.xvar[i] for i in indexes_correlated_xvar]
-      xvarClass_correlated = [self.reliability.xvar[i] for i in indexes_correlated_xvar]
       nxvar_correlated = len(xvar_correlated)
 
       # Generate initial matrices and variables
@@ -132,17 +131,7 @@ class RandomVariablesGenerator:
               hx = self.reliability.xvarClassCorrelated[i].hx(x[:, i]) 
 
           elif namedist == 'lognorm':
-              
-            mufx = float(var['varmean'])
-            sigmafx = float(var['varstd'])
-            muhx = float(var['varhmean'])
-            sigmahx = nsigma * sigmafx
-            zetafx = np.sqrt(np.log(1.00 + (sigmafx / mufx) ** 2))
-            lambdafx = np.log(mufx) - 0.5 * zetafx ** 2
-            zetahx = np.sqrt(np.log(1.00 + (sigmahx / muhx) ** 2))
-            lambdahx = np.log(muhx) - 0.5 * zetahx ** 2
-            
-            distribution = self.reliability.xvarClass[i]
+            #distribution = self.reliability.xvarClass[i]
             
             
             # print('mufx     ', mufx,      distribution.mufx)
@@ -382,24 +371,10 @@ class RandomVariablesGenerator:
         # Gumbel distribution
         #
         elif namedist.lower() == 'gumbel':
-            mufx = float(var['varmean'])
-            sigmafx = float(var['varstd'])
-            muhx = float(var['varhmean'])
-            sigmahx = nsigma * sigmafx
-            alphafn = np.pi / np.sqrt(6.00) / sigmafx
-            ufn = mufx - np.euler_gamma / alphafn
-            betafn = 1.00 / alphafn
-            alphahn = np.pi / np.sqrt(6.00) / sigmahx
-            uhn = muhx - np.euler_gamma / alphahn
-            betahn = 1.00 / alphahn
             
-           
-            
-            
-            x[:, i] = gumbel_r.rvs( loc=uhn, scale=betahn, size=ns)
-            
-            fx = gumbel_r.pdf(x[:, i], ufn, betafn)
-            hx = gumbel_r.pdf(x[:, i], uhn, betahn)
+            x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
+            fx = self.reliability.xvarClassUncorrelated[i].fx(x[:, i])
+            hx = self.reliability.xvarClassUncorrelated[i].hx(x[:, i])
             weight = weight * (fx / hx)
             fxixj = fxixj * fx 
 
