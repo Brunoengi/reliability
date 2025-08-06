@@ -174,25 +174,26 @@ class RandomVariablesGenerator:
               hx = self.reliability.xvarClassCorrelated[i].hx(x[:, i])
 
           elif namedist == 'frechet':
-              deltafx = sigmafx / mufx
+            #   deltafx = sigmafx / mufx
               def fkapa(kapa, delta, gsignal):
                   return 1 + delta**2 - gamma(1 + 2 * gsignal / kapa) / (gamma(1 + gsignal / kapa) ** 2)
 
-              kapaf = newton(fkapa, 2.5, args=(deltafx, -1))
-              vfn = mufx / gamma(1 - 1 / kapaf)
-              deltahx = sigmahx / muhx
-              kapah = newton(fkapa, 2.5, args=(deltahx, -1))
-              vhn = muhx / gamma(1 - 1 / kapah)
-              uk = norm.cdf(zk_col)
-              x[:, i] = vhn / (np.log(1 / uk)) ** (1 / kapah)
-              ynf = x[:, i] / vfn
-              ynh = x[:, i] / vhn
-              cdfx = invweibull.cdf(ynf, kapaf)
-              zf[:, i] = norm.ppf(cdfx)
-              fx = invweibull.pdf(ynf, kapaf) / vfn
-              hx = invweibull.pdf(ynh, kapah) / vhn
+            #   kapaf = newton(fkapa, 2.5, args=(deltafx, -1))
+            #   vfn = mufx / gamma(1 - 1 / kapaf)
+            #   deltahx = sigmahx / muhx
+            #   kapah = newton(fkapa, 2.5, args=(deltahx, -1))
+            #   vhn = muhx / gamma(1 - 1 / kapah)
+              
+              
+              
+              x[:, i] = self.reliability.xvarClassCorrelated[i].x_correlated(zk_col)
+              zf[:, i] = self.reliability.xvarClassCorrelated[i].zf_correlated(x[:, i])
+              fx = self.reliability.xvarClassCorrelated[i].fx_correlated(x[:, i])
+              hx = self.reliability.xvarClassCorrelated[i].hx_correlated(x[:, i])
 
           elif namedist == 'weibull':
+              def fkapa(kapa, delta, gsignal):
+                  return 1 + delta**2 - gamma(1 + 2 * gsignal / kapa) / (gamma(1 + gsignal / kapa) ** 2)
               epsilon = float(var['varinf'])
               deltafx = sigmafx / (mufx - epsilon)
               kapaf = newton(fkapa, 2.5, args=(deltafx, 1))
@@ -382,23 +383,22 @@ class RandomVariablesGenerator:
         # Frechet distribution
         #
         elif namedist.lower() == 'frechet':
-            mufx = float(var['varmean'])
-            sigmafx = float(var['varstd'])
-            muhx = float(var['varhmean'])
-            sigmahx = nsigma * sigmafx
-            deltafx = sigmafx / mufx
-            kapa0 = 2.50
-            gsinal = -1.00
-            kapaf = scipy.optimize.newton(fkapa, kapa0, args=(deltafx, gsinal))
-            vfn = mufx / gamma(1.00 - 1.00 / kapaf)
-            deltahx = sigmahx / muhx
-            kapa0 = 2.50
-            gsinal = -1.00
-            kapah = scipy.optimize.newton(fkapa, kapa0, args=(deltahx, gsinal))
-            vhn = muhx / gamma(1.00 - 1.00 / kapah)
-            x[:, i] = invweibull.rvs(c=kapah, loc=0.00, scale=vhn, size=ns)
-            fx = invweibull.pdf(x[:, i], c=kapaf, loc=0.00, scale=vfn)
-            hx = invweibull.pdf(x[:, i], c=kapah, loc=0.00, scale=vhn)
+            
+            # deltafx = sigmafx / mufx
+            # kapa0 = 2.50
+            # gsinal = -1.00
+            # kapaf = scipy.optimize.newton(fkapa, kapa0, args=(deltafx, gsinal))
+            # vfn = mufx / gamma(1.00 - 1.00 / kapaf)
+            # deltahx = sigmahx / muhx
+            # kapa0 = 2.50
+            # gsinal = -1.00
+            # kapah = scipy.optimize.newton(fkapa, kapa0, args=(deltahx, gsinal))
+            # vhn = muhx / gamma(1.00 - 1.00 / kapah)
+            
+            
+            x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
+            fx = self.reliability.xvarClassUncorrelated[i].fx_uncorrelated(x[:, i])
+            hx = self.reliability.xvarClassUncorrelated[i].hx_uncorrelated(x[:, i])
             weight = weight * (fx / hx)
             fxixj = fxixj * fx 
 
@@ -407,24 +407,28 @@ class RandomVariablesGenerator:
         # Weibull distribution - minimum
         #
         elif namedist.lower() == 'weibull':
-            mufx = float(var['varmean'])
-            sigmafx = float(var['varstd'])
-            epsilon = float(var['varinf'])
-            muhx = float(var['varhmean'])
-            sigmahx = nsigma * sigmafx
-            deltafx = sigmafx / (mufx - epsilon)
-            kapa0 = 2.50
-            gsinal = 1.00
-            kapaf = scipy.optimize.newton(fkapa, kapa0, args=(deltafx, gsinal))
-            w1f = (mufx - epsilon) / gamma(1.00 + 1.00 / kapaf) + epsilon
-            deltahx = sigmahx / (muhx - epsilon)
-            kapa0 = 2.50
-            gsinal = 1.00
-            kapah = scipy.optimize.newton(fkapa, kapa0, args=(deltahx, gsinal))
-            w1h = (muhx - epsilon) / gamma(1.00 + 1.00 / kapah) + epsilon
-            x[:, i] = weibull_min.rvs(c=kapah, loc=epsilon, scale=w1h-epsilon, size=ns)
-            fx = weibull_min.pdf(x[:, i], c=kapaf, loc=epsilon, scale=w1f-epsilon)
-            hx = weibull_min.pdf(x[:, i], c=kapah, loc=epsilon, scale=w1h-epsilon)
+            # mufx = float(var['varmean'])
+            # sigmafx = float(var['varstd'])
+            # epsilon = float(var['varinf'])
+            # muhx = float(var['varhmean'])
+            # sigmahx = nsigma * sigmafx
+            
+            # deltafx = sigmafx / (mufx - epsilon)
+            # kapa0 = 2.50
+            # gsinal = 1.00
+            # kapaf = scipy.optimize.newton(fkapa, kapa0, args=(deltafx, gsinal))
+            # w1f = (mufx - epsilon) / gamma(1.00 + 1.00 / kapaf) + epsilon
+            # deltahx = sigmahx / (muhx - epsilon)
+            # kapa0 = 2.50
+            # gsinal = 1.00
+            
+            # kapah = scipy.optimize.newton(fkapa, kapa0, args=(deltahx, gsinal))
+            # w1h = (muhx - epsilon) / gamma(1.00 + 1.00 / kapah) + epsilon
+            
+            
+            x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
+            fx = self.reliability.xvarClassUncorrelated[i].fx_uncorrelated(x[:, i])
+            hx = self.reliability.xvarClassUncorrelated[i].hx_uncorrelated(x[:, i])
             weight = weight * (fx / hx)
             fxixj = fxixj * fx 
 
