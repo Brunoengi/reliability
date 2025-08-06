@@ -28,7 +28,7 @@ class Gumbel(AbstractDistribution):
     ValidateDictionary.check_if_exists(props, 'varcov', lambda d, k: ValidateDictionary.is_greater_or_equal_than(d, k, 0))
     
   def x_uncorrelated(self, ns):
-    return gumbel_r.rvs( loc=self.uhn, scale=self.betahn, size=ns)
+    return gumbel_r.rvs(loc=self.uhn, scale=self.betahn, size=ns)
   
   def fx(self, x):
     return gumbel_r.pdf(x, self.ufn, self.betafn)

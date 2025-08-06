@@ -36,10 +36,12 @@ class Reliability():
         self._Rz = self.set_Rz(Rz)
         self._d = self.set_d(self.dvar, self.ndvar)
         self._x0 = self.set_x0(x0, self.nxvar, self.xvar)
+        
 
         self._correlation = Correlation({'Rz': self._Rz, 'xvar': self._xvar, 'nxvar': self.nxvar})
         self._transformation =  TransformationMethods(self)
         self._simulation = MonteCarloMethods(self)
+        self.index_correlated, self.index_uncorrelated = self.avaliableRz(self._correlation.correlation_summary())
         
         print("self._xvar:")
         for i, var in enumerate(self._xvar):
@@ -48,7 +50,31 @@ class Reliability():
         print("\nself.xvarClass:")
         for i, obj in enumerate(self.xvarClass):
             print(f"Obj {i}: {vars(obj)}")
-           
+        
+    def avaliableRz(self, index_correlated_and_uncorrelated):
+      # print('aaa',index_correlated_and_uncorrelated)
+      index_correlated = index_correlated_and_uncorrelated[0]
+      index_uncorrelated = index_correlated_and_uncorrelated[1]
+      # print(index_correlated, index_uncorrelated)
+      
+      self.xvarCorrelated   = [self.xvar[i] for i in index_correlated]
+      # print('correlated',self.xvarCorrelated)
+      self.xvarUncorrelated = [self.xvar[i] for i in index_uncorrelated]
+      # print('uncorrelated',self.xvarUncorrelated)
+      
+      self.xvarClassCorrelated = [self.xvarClass[i] for i in index_correlated]
+      self.xvarClassUncorrelated = [self.xvarClass[i] for i in index_uncorrelated]
+    
+      # print("\nself.xvarClassCorrelated:")
+      # for i, obj in enumerate(self.xvarClassCorrelated):
+      #   print(f"Obj {i}: {vars(obj)}")
+      # print("\nself.xvarClassUncorrelated:")
+      # for i, obj in enumerate(self.xvarClassUncorrelated):
+      #   print(f"Obj {i}: {vars(obj)}")   
+        
+      
+      return index_correlated, index_uncorrelated
+       
     @property
     def xvar(self):
       return self._xvar
