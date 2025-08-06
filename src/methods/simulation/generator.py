@@ -125,21 +125,10 @@ class RandomVariablesGenerator:
               zf[:, i] = self.reliability.xvarClass[i].zf(x[:, i])
 
           elif namedist == 'uniform':
-              a = float(var['parameter1'])
-              b = float(var['parameter2'])
-
-              def uniform_limits(vars, mux, sigmax):
-                  a_, b_ = vars
-                  eq1 = (a_ + b_) / 2 - mux
-                  eq2 = (b_ - a_) / np.sqrt(12) - sigmax
-                  return [eq1, eq2]
-
-              ah, bh = fsolve(uniform_limits, (a, b), args=(muhx, sigmahx))
-              uk = norm.cdf(zk_col)
-              x[:, i] = ah + (bh - ah) * uk
-              zf[:, i] = norm.ppf(uk)
-              fx = uniform.pdf(x[:, i], a, b - a)
-              hx = uniform.pdf(x[:, i], ah, bh - ah)
+              x[:, i] = self.reliability.xvarClass[i].x_correlated(zk_col)
+              zf[:, i] = self.reliability.xvarClass[i].zf()
+              fx = self.reliability.xvarClass[i].fx(x[:, i])
+              hx = self.reliability.xvarClass[i].hx(x[:, i]) 
 
           elif namedist == 'lognorm':
               zetafx = sqrt(log(1 + (sigmafx / mufx) ** 2))
@@ -281,13 +270,6 @@ class RandomVariablesGenerator:
         eq2 = ((q * r) / ((q + r) ** 2 * (q + r + 1))) ** (0.50) * (b - a) - sigmax
         return [eq1, eq2]
     
-    def uniform_limits(vars, mux, sigmax):
-        a, b = vars
-        eq1 = (a + b) / 2 - mux
-        eq2 = (b - a) / np.sqrt(12.) - sigmax
-        return [eq1, eq2]
-
-    
 
     x = np.zeros((ns, nxvar_uncorrelated))
     weight = np.ones(ns)
@@ -350,21 +332,10 @@ class RandomVariablesGenerator:
         # Uniform or constant distribution
         #
         
-        elif namedist.lower() == 'uniform':
-            a = float(var['parameter1'])
-            b = float(var['parameter2'])
-            
-            mufx = float(var['varmean'])
-            sigmafx = float(var['varstd'])
-            
-            muhx = float(var['varhmean'])
-            sigmahx = nsigma * sigmafx
-            ah, bh =  fsolve(uniform_limits, (1, 1), args= (muhx, sigmahx))  
-                            
-            
-            x[:, i] = uniform.rvs(loc=ah, scale= (bh-ah), size = ns)
-            fx = uniform.pdf(x[:, i], a, b-a)
-            hx = uniform.pdf(x[:, i], ah, bh-ah)
+        elif namedist.lower() == 'uniform':    
+            x[:, i] = self.reliability.xvarClass[i].x_uncorrelated(ns)
+            fx = self.reliability.xvarClass[i].fx(x[:, i])
+            hx = self.reliability.xvarClass[i].hx(x[:, i])
             weight = weight * (fx / hx)
             fxixj = fxixj * fx 
         #

@@ -107,35 +107,26 @@ class Reliability():
     def x0(self, x0):
         self._x0 = x0 
 
-    def set_xvar(self, xvar, x0): 
+    def set_xvar(self, xvar, x0):
       nxvar = len(xvar)
-      for var in xvar:              
-        #
-        # Setting standard variable distribution names, create distribution and update the `var` dictionary with all distribution attributes
-        #
-        var.update(vars(createDistribution(var)))
-        #
-        # Initial values of the aleatory variables
-        #
-        if x0 is None:
-            #
-            # Original mean of the variables x
-            #
-            i = -1
-            x0 = np.zeros(nxvar)
-            for var in xvar:
-                i += 1
-                # Mean value of the random variables x
-                x0[i] = float(var['varmean'])
-                var['varhmean'] = float(var['varmean'])
-        else:
-            i = -1
-            for var in xvar:
-                i += 1
-                # Mean value of the random variables x
-                var['varhmean'] = x0[i]
-      
-        self.xvarClass = [createDistribution(var) for var in xvar]
+
+      # Cria objetos de distribuição e atualiza o dicionário var
+      for var in xvar:
+        dist = createDistribution(var)
+        var.update(vars(dist))  # Atualiza o dicionário com os atributos do objeto
+
+      # Cria os objetos da classe de distribuição para uso posterior
+      self.xvarClass = [createDistribution(var) for var in xvar]
+
+      # Inicializa x0
+      if x0 is None:
+        x0 = np.zeros(nxvar)
+        for i in range(nxvar):
+          x0[i] = self.xvarClass[i].varmean  # Acessa varmean do objeto
+          xvar[i]['varhmean'] = self.xvarClass[i].varmean
+      else:
+          for i in range(nxvar):
+            xvar[i]['varhmean'] = x0[i]
 
       return xvar
 
