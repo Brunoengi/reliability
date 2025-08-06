@@ -1,7 +1,7 @@
 from distribution.AbstractDistribution import AbstractDistribution 
 from utils.validate.base_types.validate_dictionary import ValidateDictionary
 from utils.validate.base_types.validate_class import ValidateClass 
-from scipy.stats import lognorm
+from scipy.stats import lognorm, norm
 import numpy as np
 
 class LogNormal(AbstractDistribution):
@@ -23,14 +23,20 @@ class LogNormal(AbstractDistribution):
   def x_uncorrelated(self, ns):
     return lognorm.rvs(s=self.zetahx, loc=0.00, scale=np.exp(self.lambdahx), size=ns)
   
+  def fx_uncorrelated(self, x):
+    return lognorm.pdf(x, s=self.zetafx, loc=0.00, scale=np.exp(self.lambdafx))
+  
+  def hx_uncorrelated(self, x):
+    return lognorm.pdf(x, s=self.zetahx, loc=0.00, scale=np.exp(self.lambdahx))
+  
   def x_correlated(self, zk_col):
     return np.exp(self.lambdahx + zk_col * self.zetahx)
   
-  def fx(self, x):
-    return lognorm.pdf(x, s=self.zetafx, loc=0.00, scale=np.exp(self.lambdafx))
+  def fx_correlated(self, x):
+    return norm.pdf(np.log(x), self.lambdafx, self.zetafx)
   
-  def hx(self, x):
-    return lognorm.pdf(x, s=self.zetahx, loc=0.00, scale=np.exp(self.lambdahx))
+  def hx_correlated(self, x):
+    return norm.pdf(np.log(x), self.lambdahx, self.zetahx)
   
-  def zf(self, x):
+  def zf_correlated(self, x):
     return (np.log(x) - self.lambdafx) / self.zetafx
