@@ -28,8 +28,14 @@ class Normal(AbstractDistribution):
   def x_uncorrelated(self, ns):
     return norm.rvs(loc=self.muhx, scale=self.sigmahx, size=ns)
   
+  def x_correlated(self, zk_col):
+    return self.muhx + self.sigmahx * zk_col
+  
   def fx(self, x):
     return norm.pdf(x, loc=self.mufx, scale=self.sigmafx)
     
   def hx(self, x):
     return norm.pdf(x, loc=self.muhx, scale=self.sigmahx)
+  
+  def zf(self, x):
+    return (x - self.mufx) / self.sigmafx

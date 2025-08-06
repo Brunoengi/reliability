@@ -109,14 +109,20 @@ class RandomVariablesGenerator:
           sigmafx = float(var['varstd'])
           muhx = float(var['varhmean'])
           sigmahx = nsigma * sigmafx
+          
+          ##Tem que arrumar no método de Bucher e Adaptive
+          print('mufx', float(var['varmean']), self.reliability.xvarClass[i].mufx)
+          print('sigmafx', float(var['varstd']), self.reliability.xvarClass[i].sigmafx)
+          print('muhx', float(var['varhmean']), self.reliability.xvarClass[i].muhx)
+          print('sigmahx', nsigma * sigmafx, self.reliability.xvarClass[i].sigmahx)
 
           zk_col = zk[:, i]
 
           if namedist == 'gauss':
-              x[:, i] = muhx + sigmahx * zk_col
-              fx = norm.pdf(x[:, i], mufx, sigmafx)
-              hx = norm.pdf(x[:, i], muhx, sigmahx)
-              zf[:, i] = (x[:, i] - mufx) / sigmafx
+              x[:, i] = self.reliability.xvarClass[i].x_correlated(zk_col)
+              fx = self.reliability.xvarClass[i].fx(x[:, i])
+              hx = self.reliability.xvarClass[i].hx(x[:, i]) 
+              zf[:, i] = self.reliability.xvarClass[i].zf(x[:, i])
 
           elif namedist == 'uniform':
               a = float(var['parameter1'])
