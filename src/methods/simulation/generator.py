@@ -159,6 +159,7 @@ class RandomVariablesGenerator:
             hx = self.reliability.xvarClass[i].hx_correlated(x[:, i])
             zf[:, i] = self.reliability.xvarClass[i].zf_correlated(x[:, i])
             
+
           elif namedist == 'gumbel':
               alphafn = pi / sqrt(6) / sigmafx
               euler_gamma = 0.5772156649015329
@@ -167,12 +168,20 @@ class RandomVariablesGenerator:
               alphahn = pi / sqrt(6) / sigmahx
               uhn = muhx - euler_gamma / alphahn
               betahn = 1 / alphahn
+              
+              print('alphafn', alphafn, self.reliability.xvarClass[i].alphafn)
+              print('ufn', ufn, self.reliability.xvarClass[i].ufn)
+              print('betafn', betafn, self.reliability.xvarClass[i].betafn)
+              print('alphahn', alphahn, self.reliability.xvarClass[i].alphahn)
+              print('uhn', uhn, self.reliability.xvarClass[i].uhn)
+              print('betahn', betahn, self.reliability.xvarClass[i].betahn)
+              
+              
               uk = norm.cdf(zk_col)
-              x[:, i] = uhn - betahn * np.log(np.log(1 / uk))
-              cdfx = gumbel_r.cdf(x[:, i], ufn, betafn)
-              zf[:, i] = norm.ppf(cdfx)
-              fx = gumbel_r.pdf(x[:, i], ufn, betafn)
-              hx = gumbel_r.pdf(x[:, i], uhn, betahn)
+              x[:, i] = self.reliability.xvarClass[i].x_correlated(zk_col)
+              zf[:, i] = self.reliability.xvarClass[i].zf(x[:, i])
+              fx = self.reliability.xvarClass[i].fx(x[:, i])
+              hx = self.reliability.xvarClass[i].hx(x[:, i])
 
           elif namedist == 'frechet':
               deltafx = sigmafx / mufx
