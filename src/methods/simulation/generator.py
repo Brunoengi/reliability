@@ -131,14 +131,11 @@ class RandomVariablesGenerator:
               hx = self.reliability.xvarClass[i].hx(x[:, i]) 
 
           elif namedist == 'lognorm':
-              zetafx = sqrt(log(1 + (sigmafx / mufx) ** 2))
-              lambdafx = log(mufx) - 0.5 * zetafx ** 2
-              zetahx = sqrt(log(1 + (sigmahx / muhx) ** 2))
-              lambdahx = log(muhx) - 0.5 * zetahx ** 2
-              x[:, i] = np.exp(lambdahx + zk_col * zetahx)
-              zf[:, i] = (np.log(x[:, i]) - lambdafx) / zetafx
-              fx = norm.pdf(np.log(x[:, i]), lambdafx, zetafx)
-              hx = norm.pdf(np.log(x[:, i]), lambdahx, zetahx)
+   
+              x[:, i] = self.reliability.xvarClass[i].x_correlated(zk_col)
+              zf[:, i] = self.reliability.xvarClass[i].zf(x[:, i])
+              fx = self.reliability.xvarClass[i].fx(x[:, i])
+              hx = self.reliability.xvarClass[i].hx(x[:, i]) 
 
           elif namedist == 'gumbel':
               alphafn = pi / sqrt(6) / sigmafx
@@ -342,17 +339,10 @@ class RandomVariablesGenerator:
         # Lognormal distribution
         #
         elif namedist.lower() == 'lognorm':
-            mufx = float(var['varmean'])
-            sigmafx = float(var['varstd'])
-            muhx = float(var['varhmean'])
-            sigmahx = nsigma * sigmafx
-            zetafx = np.sqrt(np.log(1.00 + (sigmafx / mufx) ** 2))
-            lambdafx = np.log(mufx) - 0.5 * zetafx ** 2
-            zetahx = np.sqrt(np.log(1.00 + (sigmahx / muhx) ** 2))
-            lambdahx = np.log(muhx) - 0.5 * zetahx ** 2
-            x[:, i] = lognorm.rvs(s=zetahx, loc=0.00, scale=np.exp(lambdahx), size=ns)
-            fx = lognorm.pdf(x[:, i], s=zetafx, loc=0.00, scale=np.exp(lambdafx))
-            hx = lognorm.pdf(x[:, i], s=zetahx, loc=0.00, scale=np.exp(lambdahx))
+            
+            x[:, i] = self.reliability.xvarClass[i].x_uncorrelated(ns)
+            fx = self.reliability.xvarClass[i].fx(x[:, i])
+            hx = self.reliability.xvarClass[i].hx(x[:, i])
             weight = weight * (fx / hx)
             fxixj = fxixj * fx 
 
