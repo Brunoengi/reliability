@@ -40,6 +40,14 @@ class Reliability():
         self._correlation = Correlation({'Rz': self._Rz, 'xvar': self._xvar, 'nxvar': self.nxvar})
         self._transformation =  TransformationMethods(self)
         self._simulation = MonteCarloMethods(self)
+        
+        print("self._xvar:")
+        for i, var in enumerate(self._xvar):
+          print(f"Var {i}: {var}")
+
+        print("\nself.xvarClass:")
+        for i, obj in enumerate(self.xvarClass):
+            print(f"Obj {i}: {vars(obj)}")
            
     @property
     def xvar(self):
@@ -126,6 +134,8 @@ class Reliability():
                 i += 1
                 # Mean value of the random variables x
                 var['varhmean'] = x0[i]
+      
+        self.xvarClass = [createDistribution(var) for var in xvar]
 
       return xvar
 

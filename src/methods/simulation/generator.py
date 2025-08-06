@@ -321,13 +321,23 @@ class RandomVariablesGenerator:
         #
         namedist = var['vardist']
         if namedist.lower() == 'gauss':
+            
+            
+            
             mufx = float(var['varmean'])
             sigmafx = float(var['varstd'])
             muhx = float(var['varhmean'])
             sigmahx = nsigma * sigmafx
-            x[:, i] = norm.rvs(loc=muhx, scale=sigmahx, size=ns)
-            fx = norm.pdf(x[:, i], mufx, sigmafx)
-            hx = norm.pdf(x[:, i], muhx, sigmahx)
+            
+            ##Tem que arrumar no método de Bucher e Adaptive
+            print('mufx', float(var['varmean']), self.reliability.xvarClass[i].mufx)
+            print('sigmafx', float(var['varstd']), self.reliability.xvarClass[i].sigmafx)
+            print('muhx', float(var['varhmean']), self.reliability.xvarClass[i].muhx)
+            print('sigmahx', nsigma * sigmafx, self.reliability.xvarClass[i].sigmahx)
+            
+            x[:, i] = self.reliability.xvarClass[i].x_uncorrelated(ns)
+            fx = self.reliability.xvarClass[i].fx(x[:, i])
+            hx = self.reliability.xvarClass[i].hx(x[:, i])
             weight = weight * (fx / hx)
             fxixj = fxixj * fx 
         #

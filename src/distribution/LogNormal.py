@@ -5,9 +5,9 @@ from utils.validate.base_types.validate_class import ValidateClass
 class LogNormal(AbstractDistribution):
   def __init__(self, props: dict):
 
-    self.validate_specific_parameters(props)
+    ##self.validate_specific_parameters(props)
     super().__init__(props)
-    ValidateClass.has_invalid_key(self, 'varname', 'vardist', 'varmean', 'varstd', 'varcov', 'varhmean')
+    ##ValidateClass.has_invalid_key(self, 'varname', 'vardist', 'varmean', 'varstd', 'varcov', 'varhmean')
 
   def validate_specific_parameters(self, props):
     ValidateDictionary.is_dictionary(props)
