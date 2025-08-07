@@ -213,44 +213,47 @@ class RandomVariablesGenerator:
               hx = self.reliability.xvarClassCorrelated[i].hx_correlated(x[:, i])
 
           elif namedist == 'beta':
-              a = float(var['parameter1'])
-              b = float(var['parameter2'])
-              q = float(var['parameter3'])
-              r = float(var['parameter4'])
+            #   a = float(var['parameter1'])
+            #   b = float(var['parameter2'])
+            #   q = float(var['parameter3'])
+            #   r = float(var['parameter4'])
 
-              def beta_limits(vars, mux, sigmax, q, r):
-                  a_, b_ = vars
-                  eq1 = a_ + q / (q + r) * (b_ - a_) - mux
-                  eq2 = sqrt((q * r) / (((q + r) ** 2) * (q + r + 1))) * (b_ - a_) - sigmax
-                  return [eq1, eq2]
+            #   def beta_limits(vars, mux, sigmax, q, r):
+            #       a_, b_ = vars
+            #       eq1 = a_ + q / (q + r) * (b_ - a_) - mux
+            #       eq2 = sqrt((q * r) / (((q + r) ** 2) * (q + r + 1))) * (b_ - a_) - sigmax
+            #       return [eq1, eq2]
 
-              ah, bh = fsolve(beta_limits, (a, b), args=(muhx, sigmahx, q, r))
-              loc, scale = a, b - a
-              loch, scaleh = ah, bh - ah
-              uk = norm.cdf(zk_col)
-              x[:, i] = beta_dist.ppf(uk, q, r, loc=loc, scale=scale)
-              fx = beta_dist.pdf(x[:, i], q, r, loc=loc, scale=scale)
-              hx = beta_dist.pdf(x[:, i], q, r, loc=loch, scale=scaleh)
-              cdfx = beta_dist.cdf(x[:, i], q, r, loc=loc, scale=scale)
-              zf[:, i] = norm.ppf(cdfx)
+            #   ah, bh = fsolve(beta_limits, (a, b), args=(muhx, sigmahx, q, r))
+              
+            #   loc, scale = a, b - a
+            #   loch, scaleh = ah, bh - ah
+              
+            #   uk = norm.cdf(zk_col)
+              x[:, i] = self.reliability.xvarClassCorrelated[i].x_correlated(zk_col) 
+              fx = self.reliability.xvarClassCorrelated[i].fx_correlated(x[:, i])
+              hx = self.reliability.xvarClassCorrelated[i].hx_correlated(x[:, i])
+              zf[:, i] = self.reliability.xvarClassCorrelated[i].zf_correlated(x[:, i])
 
           elif namedist == 'gamma':
-              deltafx = sigmafx / mufx
-              k = 1 / deltafx ** 2
-              v = k / mufx
-              a, loc, scale = k, 0, 1 / v
+            #   deltafx = sigmafx / mufx
+              
+              
+            #   k = 1 / deltafx ** 2
+            #   v = k / mufx
+            #   a, loc, scale = k, 0, 1 / v
+            #   deltahx = sigmahx / muhx
+            #   kh = 1 / deltahx ** 2
+            #   vh = kh / muhx
+            #   ah, loch, scaleh = kh, 0, 1 / vh
 
-              deltahx = sigmahx / muhx
-              kh = 1 / deltahx ** 2
-              vh = kh / muhx
-              ah, loch, scaleh = kh, 0, 1 / vh
-
-              uk = norm.cdf(zk_col)
-              x[:, i] = gamma_dist.ppf(uk, ah, loc=loch, scale=scaleh)
-              fx = gamma_dist.pdf(x[:, i], a, loc=loc, scale=scale)
-              hx = gamma_dist.pdf(x[:, i], ah, loc=loch, scale=scaleh)
-              cdfx = gamma_dist.cdf(x[:, i], a, loc=loc, scale=scale)
-              zf[:, i] = norm.ppf(cdfx)
+            #   uk = norm.cdf(zk_col)
+              x[:, i] = self.reliability.xvarClassCorrelated[i].x_correlated(zk_col) 
+              fx = self.reliability.xvarClassCorrelated[i].fx_correlated(x[:, i])
+              hx = self.reliability.xvarClassCorrelated[i].hx_correlated(x[:, i])
+              
+            #   cdfx = gamma_dist.cdf(x[:, i], a, loc=loc, scale=scale)
+              zf[:, i] = self.reliability.xvarClassCorrelated[i].zf_correlated(x[:, i])
 
           else:
               raise ValueError(f"Distribution '{namedist}' not supported.")
@@ -439,22 +442,27 @@ class RandomVariablesGenerator:
         # Beta distribution
         #
         elif namedist.lower() == 'beta':
-            a = float(var['parameter1'])
-            b = float(var['parameter2'])
-            q = float(var['parameter3'])
-            r = float(var['parameter4'])
-            mufx = float(var['varmean'])
-            sigmafx = float(var['varstd'])
-            loc = a
-            scale = (b - a)
-            muhx = float(var['varhmean'])
-            sigmahx = nsigma * sigmafx
-            ah, bh =  fsolve(beta_limits, (1, 1), args= ( muhx, sigmahx, q, r))  
-            loch = ah
-            scaleh = (bh - ah)        
-            x[:, i] = beta_dist.rvs(q, r, loch, scaleh, size=ns)
-            fx = beta_dist.pdf(x[:, i], q, r, loc, scale)
-            hx = beta_dist.pdf(x[:, i], q, r, loch, scaleh)
+            # a = float(var['parameter1'])
+            # b = float(var['parameter2'])
+            # q = float(var['parameter3'])
+            # r = float(var['parameter4'])
+            # mufx = float(var['varmean'])
+            # sigmafx = float(var['varstd'])
+            # muhx = float(var['varhmean'])
+            # sigmahx = nsigma * sigmafx
+            # loc = a
+            # scale = (b - a)
+            
+            
+            # ah, bh =  fsolve(beta_limits, (1, 1), args= ( muhx, sigmahx, q, r))  
+            # loch = ah
+            # scaleh = (bh - ah)  
+            
+            
+                  
+            x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
+            fx = self.reliability.xvarClassUncorrelated[i].fx_uncorrelated(x[:, i])
+            hx = self.reliability.xvarClassUncorrelated[i].hx_uncorrelated(x[:, i])
             weight = weight * (fx / hx)
             fxixj = fxixj * fx 
 
@@ -463,25 +471,26 @@ class RandomVariablesGenerator:
         # Gamma distribution
         #
         elif namedist.lower() == 'gamma':
-            mufx = float(var['varmean'])
-            sigmafx = float(var['varstd'])
-            deltafx = sigmafx / mufx
-            k = 1. / deltafx ** 2
-            v = k / mufx
-            a = k
-            loc = 0.00
-            scale = 1. / v
-            muhx = float(var['varhmean'])
-            sigmahx = nsigma * sigmafx
-            deltahx = sigmahx / muhx
-            kh = 1. / deltahx ** 2
-            vh = kh / muhx
-            ah = kh
-            loch = 0.00
-            scaleh = 1. / vh
-            x[:, i] = gamma_dist.rvs(ah, loch, scaleh, size=ns)
-            fx = gamma_dist.pdf(x[:, i], a, loc, scale)
-            hx = gamma_dist.pdf(x[:, i], ah, loch, scaleh)
+            
+            # mufx = float(var['varmean'])
+            # sigmafx = float(var['varstd'])
+            # deltafx = sigmafx / mufx
+            # k = 1. / deltafx ** 2
+            # v = k / mufx
+            # a = k
+            # loc = 0.00
+            # scale = 1. / v
+            # muhx = float(var['varhmean'])
+            # sigmahx = nsigma * sigmafx
+            # deltahx = sigmahx / muhx
+            # kh = 1. / deltahx ** 2
+            # vh = kh / muhx
+            # ah = kh
+            # loch = 0.00
+            # scaleh = 1. / vh
+            x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
+            fx = self.reliability.xvarClassUncorrelated[i].fx_uncorrelated(x[:, i])
+            hx = self.reliability.xvarClassUncorrelated[i].hx_uncorrelated(x[:, i])
             weight = weight * (fx / hx)
             fxixj = fxixj * fx 
             
