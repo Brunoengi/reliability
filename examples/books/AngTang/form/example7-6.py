@@ -3,6 +3,7 @@ Created on Mon Feb 08 17:12:00 2021
 Reliabilty Analysis
 Example 7.6 - Nonlinear limit state function with normal correlated variables
 @author: MVREAL
+expected β = 2.862
 """
 from main import *
 

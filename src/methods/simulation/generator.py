@@ -127,9 +127,9 @@ class RandomVariablesGenerator:
 
           if namedist == 'gauss':
               x[:, i] = self.reliability.xvarClassCorrelated[i].x_correlated(zk_col)
-              fx = self.reliability.xvarClassCorrelated[i].fx(x[:, i])
-              hx = self.reliability.xvarClassCorrelated[i].hx(x[:, i]) 
-              zf[:, i] = self.reliability.xvarClassCorrelated[i].zf(x[:, i])
+              fx = self.reliability.xvarClassCorrelated[i].fx_correlated(x[:, i])
+              hx = self.reliability.xvarClassCorrelated[i].hx_correlated(x[:, i]) 
+              zf[:, i] = self.reliability.xvarClassCorrelated[i].zf_correlated(x[:, i])
 
           elif namedist == 'uniform':
               x[:, i] = self.reliability.xvarClassCorrelated[i].x_correlated(zk_col)
@@ -355,8 +355,8 @@ class RandomVariablesGenerator:
             print('sigmahx', nsigma * sigmafx, self.reliability.xvarClassUncorrelated[i].sigmahx)
             
             x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
-            fx = self.reliability.xvarClassUncorrelated[i].fx(x[:, i])
-            hx = self.reliability.xvarClassUncorrelated[i].hx(x[:, i])
+            fx = self.reliability.xvarClassUncorrelated[i].fx_uncorrelated(x[:, i])
+            hx = self.reliability.xvarClassUncorrelated[i].hx_uncorrelated(x[:, i])
             weight = weight * (fx / hx)
             fxixj = fxixj * fx 
         #
