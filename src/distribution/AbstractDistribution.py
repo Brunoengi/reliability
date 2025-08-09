@@ -9,14 +9,19 @@ class AbstractDistribution(ABC):
   
     self.set_properties(props)
     self.set_initial_values()
+    
 
   @abstractmethod
   def validate_specific_parameters(self, props):
-      pass
+    pass
 
   def set_properties(self, props):
     for key, value in props.items():
       setattr(self, key, value)
+      
+  # @abstractmethod   
+  # def instrumental_properties(self, varhmean):
+  #   pass
   
   def set_initial_values(self, nsigma = 1):
       # Checks whether 'varhmean' was provided; if not, use 'varmean'

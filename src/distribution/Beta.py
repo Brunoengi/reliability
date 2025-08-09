@@ -25,6 +25,7 @@ class Beta(AbstractDistribution):
     self.loc = self.a
     self.scale = (self.b - self.a)
     self.ah, self.bh =  fsolve(self.beta_limits, (1, 1), args= ( self.muhx, self.sigmahx, self.q, self.r)) 
+    
     self.loch = self.ah
     self.scaleh = (self.bh - self.ah)  
     
@@ -35,6 +36,18 @@ class Beta(AbstractDistribution):
   def validate_specific_parameters(self, props):
     ValidateDictionary.is_dictionary(props)
     ValidateDictionary.check_possible_arrays_keys(props, ['parameter1', 'parameter2', 'parameter3', 'parameter4'])
+    
+  def instrumental_properties(self, varhmean):
+    self.varhmean = varhmean
+    self.muhx = self.varhmean
+    self.ah, self.bh = fsolve(self.beta_limits, (1, 1), args=(self.muhx, self.sigmahx, self.q, self.r))
+    # Ensure that the instrumental support function covers the original function
+    if self.ah > self.loc:
+        self.ah = self.loc
+    if self.bh < self.loc + self.scale:
+        self.bh = self.loc + self.scale
+    self.loch = self.ah
+    self.scaleh = self.bh - self.ah 
     
   @staticmethod  
   def beta_limits(vars, mux, sigmax, q, r):

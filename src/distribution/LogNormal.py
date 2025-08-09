@@ -20,6 +20,12 @@ class LogNormal(AbstractDistribution):
     ValidateDictionary.check_possible_arrays_keys(props,['varmean','varstd'], ['varmean','varcov'])
     ValidateDictionary.check_if_exists(props, 'varcov', lambda d, k: ValidateDictionary.is_greater_or_equal_than(d, k, 0))
     
+  def instrumental_properties(self, varhmean):
+    self.varhmean = varhmean
+    self.muhx = self.varhmean
+    self.zetahx = np.sqrt(np.log(1.00 + (self.sigmahx / self.muhx) ** 2))
+    self.lambdahx = np.log(self.muhx) - 0.5 * self.zetahx ** 2
+    
   def x_uncorrelated(self, ns):
     return lognorm.rvs(s=self.zetahx, loc=0.00, scale=np.exp(self.lambdahx), size=ns)
   

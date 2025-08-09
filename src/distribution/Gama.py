@@ -30,6 +30,14 @@ class Gama(AbstractDistribution):
     ValidateDictionary.check_possible_arrays_keys(props, ['varmean', 'varcov'], ['varmean', 'varstd'])
     ValidateDictionary.check_if_exists(props, 'varcov', lambda d, k: ValidateDictionary.is_greater_or_equal_than(d, k, 0))
     
+  def instrumental_properties(self, varhmean):
+    self.varhmean = varhmean
+    self.muhx = self.varhmean
+    self.deltahx = self.sigmahx / self.muhx
+    self.kh = 1 / self.deltahx ** 2
+    self.vh = self.kh / self.muhx
+    self.ah, self.loch, self.scaleh = self.kh, 0, 1 / self.vh
+  
   def x_correlated(self, zk_col):
     uk = norm.cdf(zk_col)
     return gamma_dist.ppf(uk, self.ah, loc=self.loch, scale=self.scaleh)

@@ -151,7 +151,7 @@ class MonteCarloMethods:
             "ttotal": ttotal
             }
       
-  def adaptive(self, nc, ns, delta_lim, nsigma=1.50, igraph=True, iprint=True):
+  def adaptive(self, nc, ns, delta_lim, nsigma=1.00, igraph=True, iprint=True):
       """
       Monte Carlo Simulations with Importance Sampling (MC-IS)
       Importance sampling with adaptative technique
@@ -217,7 +217,7 @@ class MonteCarloMethods:
           # Step 1 - Generation of the random numbers according to their appropriate distribution
           #
 
-          xp, wp, fx = self.generator.main(ns)
+          xp, wp, fx = self.generator.main(ns, nsigma)
           #
           #
           # Step 2 - Evaluation of the limit state function g(x)
@@ -249,6 +249,8 @@ class MonteCarloMethods:
               for var in self.reliability.xvar:
                   i += 1
                   var['varhmean'] = xp[imin, i]
+                  #tentando mudar
+                  self.reliability.xvarClass[i].instrumental_properties(xp[imin, i])
 
           else:
               #
@@ -262,6 +264,9 @@ class MonteCarloMethods:
                   for var in self.reliability.xvar:
                       i += 1
                       var['varhmean'] = xp[imax, i]
+                      self.reliability.xvarClass[i].instrumental_properties(xp[imax, i])
+                      
+                    
 
           #
           #  Step 6 - Evaluation of the error in the estimation of Pf
@@ -296,7 +301,7 @@ class MonteCarloMethods:
           "ttotal": ttotal
       }
 
-  def bucher(self, nc, ns, delta_lim, nsigma=1.50, igraph=True, iprint=True):
+  def bucher(self, nc, ns, delta_lim, nsigma=1.00, igraph=True, iprint=True):
       """
       Monte Carlo Simulations with Importance Sampling (MC-IS)
       Importance sampling with adaptive technique
@@ -357,7 +362,7 @@ class MonteCarloMethods:
           # Step 1 - Generation of the random numbers according to their appropriate distribution
           #
 
-          xp, wp, fx = self.generator.main(ns)
+          xp, wp, fx = self.generator.main(ns, nsigma)
           #
           #
           # Step 2 - Evaluation of the limit state function g(x)
@@ -375,6 +380,7 @@ class MonteCarloMethods:
           sum1 += pfc[icycle]
           sum2 += pfc[icycle] ** 2
           wig = np.copy(igx)
+          print('wig',wig)
 
           #
           #  Step 4 - Select adaptive mean
@@ -390,19 +396,26 @@ class MonteCarloMethods:
                   i += 1
                   xm[i] = xp[imin, i]
                   var['varhmean'] = xm[i]
+                  self.reliability.xvarClass[i].instrumental_properties(xm[i])
 
           else:
               #
               # Ocurrence of nfail failures in ns simulations
               #
               sum_xwig += np.dot(wig.T, xp)
+              print(xp)
               sum_wig += sum(wig)
               #
               i = -1
               for var in self.reliability.xvar:
                   i += 1
+                  print('i',i)
+                  print('sum_xwig[i]', sum_xwig[i])
+                  print('sum_wig',sum_wig)
+                  print('xm[i]',xm[i])
                   xm[i] = sum_xwig[i] / sum_wig
                   var['varhmean'] = xm[i]
+                  self.reliability.xvarClass[i].instrumental_properties(xm[i])
 
           #
           #  Step 6 - Evaluation of the error in the estimation of Pf

@@ -19,7 +19,7 @@ class RandomVariablesGenerator:
 
   def main(self, ns, nsigma=1.00, iprint=False):
         """
-        Method to generate random variables, check correlation matrix to use var_gen (correlated variables) or var_rvs (uncorrelated variables )
+        Method to generate random variables, check correlation matrix to use var_gen (correlated variables) or var_rvs (uncorrelated variables)
 
         """
         # Number of variables of the problem
@@ -97,6 +97,13 @@ class RandomVariablesGenerator:
           standard_norm_pdf_zf = norm.pdf(zf_col)
           standard_norm_pdf_zk = norm.pdf(zk_col)
           w = (fx / standard_norm_pdf_zf) / (hx / standard_norm_pdf_zk)
+          
+          print('standard_norm_pdf_zf',standard_norm_pdf_zf)
+          print('standard_norm_pdf_zk', standard_norm_pdf_zk)
+          print('fx', fx)
+          print('hx', hx)
+          print('w', w)
+          
           return w, fx / standard_norm_pdf_zf
 
       for i, var in enumerate(xvar_correlated):
@@ -111,10 +118,10 @@ class RandomVariablesGenerator:
           sigmahx = nsigma * sigmafx
           
           ##Tem que arrumar no método de Bucher e Adaptive
-        #   print('mufx', float(var['varmean']), self.reliability.xvarClass[i].mufx)
-        #   print('sigmafx', float(var['varstd']), self.reliability.xvarClass[i].sigmafx)
-        #   print('muhx', float(var['varhmean']), self.reliability.xvarClass[i].muhx)
-        #   print('sigmahx', nsigma * sigmafx, self.reliability.xvarClass[i].sigmahx)
+          print('mufx', float(var['varmean']), self.reliability.xvarClassCorrelated[i].mufx)
+          print('sigmafx', float(var['varstd']), self.reliability.xvarClassCorrelated[i].sigmafx)
+          print('muhx', float(var['varhmean']), self.reliability.xvarClassCorrelated[i].muhx)
+          print('sigmahx', nsigma * sigmafx, self.reliability.xvarClassCorrelated[i].sigmahx)
 
           zk_col = zk[:, i]
 
@@ -342,10 +349,10 @@ class RandomVariablesGenerator:
             sigmahx = nsigma * sigmafx
             
             ##Tem que arrumar no método de Bucher e Adaptive
-            # print('mufx', float(var['varmean']), self.reliability.xvarClass[i].mufx)
-            # print('sigmafx', float(var['varstd']), self.reliability.xvarClass[i].sigmafx)
-            # print('muhx', float(var['varhmean']), self.reliability.xvarClass[i].muhx)
-            # print('sigmahx', nsigma * sigmafx, self.reliability.xvarClass[i].sigmahx)
+            print('mufx', float(var['varmean']), self.reliability.xvarClassUncorrelated[i].mufx)
+            print('sigmafx', float(var['varstd']), self.reliability.xvarClassUncorrelated[i].sigmafx)
+            print('muhx', float(var['varhmean']), self.reliability.xvarClassUncorrelated[i].muhx)
+            print('sigmahx', nsigma * sigmafx, self.reliability.xvarClassUncorrelated[i].sigmahx)
             
             x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
             fx = self.reliability.xvarClassUncorrelated[i].fx(x[:, i])
@@ -442,16 +449,25 @@ class RandomVariablesGenerator:
         # Beta distribution
         #
         elif namedist.lower() == 'beta':
-            # a = float(var['parameter1'])
-            # b = float(var['parameter2'])
-            # q = float(var['parameter3'])
-            # r = float(var['parameter4'])
-            # mufx = float(var['varmean'])
-            # sigmafx = float(var['varstd'])
-            # muhx = float(var['varhmean'])
-            # sigmahx = nsigma * sigmafx
-            # loc = a
-            # scale = (b - a)
+          
+            a = float(var['parameter1'])
+            b = float(var['parameter2'])
+            q = float(var['parameter3'])
+            r = float(var['parameter4'])
+            mufx = float(var['varmean'])
+            sigmafx = float(var['varstd'])
+            muhx = float(var['varhmean'])
+            sigmahx = nsigma * sigmafx
+            loc = a
+            scale = (b - a)
+          
+          ##Tem que arrumar no método de Bucher e Adaptive
+            print('mufx', float(var['varmean']), self.reliability.xvarClassUncorrelated[i].mufx)
+            print('sigmafx', float(var['varstd']), self.reliability.xvarClassUncorrelated[i].sigmafx)
+            print('muhx', float(var['varhmean']), self.reliability.xvarClassUncorrelated[i].muhx)
+            print('sigmahx', nsigma * sigmafx, self.reliability.xvarClassUncorrelated[i].sigmahx)
+            
+            
             
             
             # ah, bh =  fsolve(beta_limits, (1, 1), args= ( muhx, sigmahx, q, r))  

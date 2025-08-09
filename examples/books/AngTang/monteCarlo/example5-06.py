@@ -43,8 +43,16 @@ dvar = [
     {'varname': 'factor5', 'varvalue': 1.00}
 ]
 
+corrmatrix = [[1.00, 0.01, 0.01, 0.01, 0.01],
+              [0.01, 1.00, 0.01, 0.01, 0.01],
+              [0.01, 0.01, 1.00, 0.01, 0.01],
+              [0.01, 0.01, 0.01, 1.00, 0.01],
+              [0.01, 0.01, 0.01, 0.01, 1.00],
+              ]
+
+
 #
 # MCS method
 #
-construction = Reliability(xvar, dvar, gfunction, None, None)
+construction = Reliability(xvar, dvar, gfunction, None, corrmatrix)
 construction.mc(100, 5000, 0.005)

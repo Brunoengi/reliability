@@ -27,8 +27,13 @@ dvar = [
     {'varname': 'factor2', 'varvalue': 1.00},
     {'varname': 'factor3', 'varvalue': 1.00},
 ]
+
+corrmatrix = [[1.00, 0.01, 0.01],
+              [0.01, 1.00, 0.01],
+              [0.01, 0.01, 1.00]]
+
 #
 # MC-IS adaptive method
 #
-storm = Reliability(xvar, dvar, gfunction)
+storm = Reliability(xvar, dvar, gfunction, None, corrmatrix)
 storm.adaptive(100, 5000, 0.005)

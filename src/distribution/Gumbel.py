@@ -12,11 +12,11 @@ class Gumbel(AbstractDistribution):
     super().__init__(props)
     
     self.alphafn = pi / sqrt(6) / self.sigmafx
-    euler_gamma = 0.5772156649015329
-    self.ufn = self.mufx - euler_gamma / self.alphafn
+    self.euler_gamma = 0.5772156649015329
+    self.ufn = self.mufx - self.euler_gamma / self.alphafn
     self.betafn = 1 / self.alphafn
     self.alphahn = pi / sqrt(6) / self.sigmahx
-    self.uhn = self.muhx - euler_gamma / self.alphahn
+    self.uhn = self.muhx - self.euler_gamma / self.alphahn
     self.betahn = 1 / self.alphahn
     
     
@@ -26,6 +26,12 @@ class Gumbel(AbstractDistribution):
     ValidateDictionary.is_dictionary(props)
     ValidateDictionary.check_possible_arrays_keys(props, ['varmean', 'varstd'], ['varmean', 'varcov'])
     ValidateDictionary.check_if_exists(props, 'varcov', lambda d, k: ValidateDictionary.is_greater_or_equal_than(d, k, 0))
+    
+  def instrumental_properties(self, varhmean):
+    self.varhmean = varhmean
+    self.muhx = self.varhmean
+    self.uhn = self.muhx - self.euler_gamma / self.alphahn
+    
     
   def x_uncorrelated(self, ns):
     return gumbel_r.rvs(loc=self.uhn, scale=self.betahn, size=ns)

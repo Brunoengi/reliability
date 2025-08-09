@@ -16,6 +16,7 @@ class Normal(AbstractDistribution):
       
     ##self.validate_specific_parameters(props)
     super().__init__(props)
+    
     ##ValidateClass.has_invalid_key(self,'varname','vardist','varmean','varcov','varstd','varhmean')
 
   def validate_specific_parameters(self, props):
@@ -25,6 +26,10 @@ class Normal(AbstractDistribution):
     ValidateDictionary.check_keys_count(props, 1, 'varcov', 'varstd')
     ValidateDictionary.check_if_exists(props, 'varcov', lambda d, k: ValidateDictionary.is_greater_or_equal_than(d, k, 0))
       
+  def instrumental_properties(self, varhmean):
+    self.varhmean = varhmean
+    self.muhx = self.varhmean
+  
   def x_uncorrelated(self, ns):
     return norm.rvs(loc=self.muhx, scale=self.sigmahx, size=ns)
   

@@ -20,7 +20,6 @@ from correlation import Correlation
 from methods.transformation import TransformationMethods
 from methods.simulation.monte_carlo import MonteCarloMethods
 
-
 class Reliability():
 
     def __init__(self, xvar, dvar, gx, x0=None, Rz=None):

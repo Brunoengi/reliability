@@ -29,13 +29,17 @@ class Uniform(AbstractDistribution):
     else:
       raise ValueError("Uniform distribution requires either (parameter1, parameter2) or (varmean, varstd)")
     
-      
     super().__init__(props)
     self.ah, self.bh = fsolve(self.uniform_limits, (1, 1), args= (self.muhx, self.sigmahx)) 
     ##ValidateClass.has_invalid_key(self, 'varname', 'vardist', 'varmean', 'varcov', 'varstd', 'varhmean', 'parameter1', 'parameter2')
 
   def validate_specific_parameters(self, props):
     ValidateDictionary.check_possible_arrays_keys(props, ['varmean','varstd'], ['parameter1', 'parameter2'])
+    
+  def instrumental_properties(self, varhmean):
+    self.varhmean = varhmean
+    self.muhx = self.varhmean
+    self.ah, self.bh = fsolve(self.uniform_limits, (1, 1), args= (self.muhx, self.sigmahx))
     
   def x_uncorrelated(self, ns):
     return uniform.rvs(loc=self.ah, scale= (self.bh-self.ah), size = ns)

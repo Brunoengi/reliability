@@ -35,10 +35,12 @@ dvar = [
 ]
 
 # Correlation matrix
-
+corrmatrix = [[1.00, 0.01, 0.01],
+              [0.01, 1.00, 0.01],
+              [0.01, 0.01, 1.00]]
 #
 # MC-IS adaptive method
 #
-beam = Reliability(xvar, dvar, gfunction, None, None)
+beam = Reliability(xvar, dvar, gfunction, None, corrmatrix)
 beam.adaptive(500, 10000, 0.02)
 #

@@ -41,6 +41,13 @@ class Frechet(AbstractDistribution):
         fk = 1.00 + deltax ** 2 - gamma(1.00 + gsignal * 2.00 / kapa) / gamma(1.00 + gsignal * 1.00 / kapa) ** 2
         return fk
   
+  def instrumental_properties(self,varhmean):
+    self.varhmean = varhmean
+    self.muhx = self.varhmean
+    self.deltahx = self.sigmahx / self.muhx
+    self.kapah = scipy.optimize.newton(self.fkapa, self.kapa0, args=(self.deltahx, self.gsinal))
+    self.vhn = self.muhx / gamma(1.00 - 1.00 / self.kapah)
+    
   def x_uncorrelated(self, ns):
     return invweibull.rvs(c=self.kapah, loc=0.00, scale=self.vhn, size=ns)
   

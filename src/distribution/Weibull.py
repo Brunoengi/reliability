@@ -33,6 +33,13 @@ class Weibull(AbstractDistribution):
     ValidateDictionary.has_keys(props, 'varmean', 'varstd', 'parameter3')
     ValidateDictionary.check_if_exists(props, 'varcov', lambda d, k: ValidateDictionary.is_greater_or_equal_than(d, k, 0))
    
+  def instrumental_properties(self, varhmean):
+    self.varhmean = varhmean
+    self.muhx = self.varhmean
+    self.deltahx = self.sigmahx / (self.muhx - self.epsilon)
+    self.kapah = scipy.optimize.newton(self.fkapa, self.kapa0, args=(self.deltahx, self.gsinal))
+    self.w1h = (self.muhx - self.epsilon) / gamma(1.00 + 1.00 / self.kapah) + self.epsilon
+  
   @staticmethod 
   def fkapa(kapa, deltax, gsignal):
         fk = 1.00 + deltax ** 2 - gamma(1.00 + gsignal * 2.00 / kapa) / gamma(1.00 + gsignal * 1.00 / kapa) ** 2
