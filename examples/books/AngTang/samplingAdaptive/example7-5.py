@@ -3,6 +3,7 @@ Created on Mon Feb 08 17:12:00 2021
 Reliabilty Analysis
 Example 7.5 - Linear limit state function with normal correlated variables
 @author: MVREAL
+expected β = 2.25
 """
 from main import *
 
@@ -49,6 +50,6 @@ corrmatrix = [[1.00, 0.80, 0.00, 0.00],
 # MC-IS adaptive method
 #
 column = Reliability(xvar, dvar, gfunction, None, corrmatrix)
-column.adaptive(20, 5000, 0.01)
+column.adaptive(1000, 5000, 0.01)
 
 #
