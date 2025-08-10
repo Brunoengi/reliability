@@ -97,13 +97,7 @@ class RandomVariablesGenerator:
           standard_norm_pdf_zf = norm.pdf(zf_col)
           standard_norm_pdf_zk = norm.pdf(zk_col)
           w = (fx / standard_norm_pdf_zf) / (hx / standard_norm_pdf_zk)
-          
-          print('standard_norm_pdf_zf',standard_norm_pdf_zf)
-          print('standard_norm_pdf_zk', standard_norm_pdf_zk)
-          print('fx', fx)
-          print('hx', hx)
-          print('w', w)
-          
+                
           return w, fx / standard_norm_pdf_zf
 
       for i, var in enumerate(xvar_correlated):
@@ -111,160 +105,11 @@ class RandomVariablesGenerator:
           if var['varstd'] == 0.0:
               var['varstd'] = float(var['varcov']) * float(var['varmean'])
 
-          namedist = var['vardist'].lower()
-          mufx = float(var['varmean'])
-          sigmafx = float(var['varstd'])
-          muhx = float(var['varhmean'])
-          sigmahx = nsigma * sigmafx
-          
-          ##Tem que arrumar no método de Bucher e Adaptive
-          print('mufx', float(var['varmean']), self.reliability.xvarClassCorrelated[i].mufx)
-          print('sigmafx', float(var['varstd']), self.reliability.xvarClassCorrelated[i].sigmafx)
-          print('muhx', float(var['varhmean']), self.reliability.xvarClassCorrelated[i].muhx)
-          print('sigmahx', nsigma * sigmafx, self.reliability.xvarClassCorrelated[i].sigmahx)
-
           zk_col = zk[:, i]
-
-          if namedist == 'gauss':
-              x[:, i] = self.reliability.xvarClassCorrelated[i].x_correlated(zk_col)
-              fx = self.reliability.xvarClassCorrelated[i].fx_correlated(x[:, i])
-              hx = self.reliability.xvarClassCorrelated[i].hx_correlated(x[:, i]) 
-              zf[:, i] = self.reliability.xvarClassCorrelated[i].zf_correlated(x[:, i])
-
-          elif namedist == 'uniform':
-              x[:, i] = self.reliability.xvarClassCorrelated[i].x_correlated(zk_col)
-              zf[:, i] = self.reliability.xvarClassCorrelated[i].zf()
-              fx = self.reliability.xvarClassCorrelated[i].fx(x[:, i])
-              hx = self.reliability.xvarClassCorrelated[i].hx(x[:, i]) 
-
-          elif namedist == 'lognorm':
-            #distribution = self.reliability.xvarClass[i]
-            
-            
-            # print('mufx     ', mufx,      distribution.mufx)
-            # print('sigmafx  ', sigmafx,   distribution.sigmafx)
-            # print('muhx     ', muhx,      distribution.muhx)
-            # print('sigmahx  ', sigmahx,   distribution.sigmahx)
-            # print('zetafx   ', zetafx,    distribution.zetafx)
-            # print('lambdafx ', lambdafx,  distribution.lambdafx)
-            # print('zetahx   ', zetahx,    distribution.zetahx)
-            # print('lambdahx ', lambdahx,  distribution.lambdahx)
-                    
-            
-            x[:, i] = self.reliability.xvarClassCorrelated[i].x_correlated(zk_col)
-            fx = self.reliability.xvarClassCorrelated[i].fx_correlated(x[:, i])
-            hx = self.reliability.xvarClassCorrelated[i].hx_correlated(x[:, i])
-            zf[:, i] = self.reliability.xvarClassCorrelated[i].zf_correlated(x[:, i])
-            
-
-          elif namedist == 'gumbel':
-              
-            #   alphafn = pi / sqrt(6) / sigmafx
-            #   euler_gamma = 0.5772156649015329
-            #   ufn = mufx - euler_gamma / alphafn
-            #   betafn = 1 / alphafn
-            #   alphahn = pi / sqrt(6) / sigmahx
-            #   uhn = muhx - euler_gamma / alphahn
-            #   betahn = 1 / alphahn
-            #   print('alphafn', alphafn, self.reliability.xvarClass[i].alphafn)
-            #   print('ufn', ufn, self.reliability.xvarClass[i].ufn)
-            #   print('betafn', betafn, self.reliability.xvarClass[i].betafn)
-            #   print('alphahn', alphahn, self.reliability.xvarClass[i].alphahn)
-            #   print('uhn', uhn, self.reliability.xvarClass[i].uhn)
-            #   print('betahn', betahn, self.reliability.xvarClass[i].betahn)
-              
-              
-              
-              x[:, i] = self.reliability.xvarClassCorrelated[i].x_correlated(zk_col)
-              zf[:, i] = self.reliability.xvarClassCorrelated[i].zf()
-              fx = self.reliability.xvarClassCorrelated[i].fx(x[:, i])
-              hx = self.reliability.xvarClassCorrelated[i].hx(x[:, i]) 
-
-
-          elif namedist == 'frechet':
-            #   deltafx = sigmafx / mufx
-              def fkapa(kapa, delta, gsignal):
-                  return 1 + delta**2 - gamma(1 + 2 * gsignal / kapa) / (gamma(1 + gsignal / kapa) ** 2)
-
-            #   kapaf = newton(fkapa, 2.5, args=(deltafx, -1))
-            #   vfn = mufx / gamma(1 - 1 / kapaf)
-            #   deltahx = sigmahx / muhx
-            #   kapah = newton(fkapa, 2.5, args=(deltahx, -1))
-            #   vhn = muhx / gamma(1 - 1 / kapah)
-              
-              
-              
-              x[:, i] = self.reliability.xvarClassCorrelated[i].x_correlated(zk_col)
-              zf[:, i] = self.reliability.xvarClassCorrelated[i].zf_correlated(x[:, i])
-              fx = self.reliability.xvarClassCorrelated[i].fx_correlated(x[:, i])
-              hx = self.reliability.xvarClassCorrelated[i].hx_correlated(x[:, i])
-
-          elif namedist == 'weibull':
-            #   def fkapa(kapa, delta, gsignal):
-            #       return 1 + delta**2 - gamma(1 + 2 * gsignal / kapa) / (gamma(1 + gsignal / kapa) ** 2)
-            #   epsilon = float(var['varinf'])
-            #   deltafx = sigmafx / (mufx - epsilon)
-            #   kapaf = newton(fkapa, 2.5, args=(deltafx, 1))
-            #   w1f = (mufx - epsilon) / gamma(1 + 1 / kapaf) + epsilon
-            #   deltahx = sigmahx / (muhx - epsilon)
-            #   kapah = newton(fkapa, 2.5, args=(deltahx, 1))
-            #   w1h = (muhx - epsilon) / gamma(1 + 1 / kapah) + epsilon
-              
-            #   uk = norm.cdf(zk_col)
-              
-              x[:, i] = self.reliability.xvarClassCorrelated[i].x_correlated(zk_col)
-            #   ynf = (x[:, i] - epsilon) / (w1f - epsilon)
-            #   ynh = (x[:, i] - epsilon) / (w1h - epsilon)
-            #   cdfx = weibull_min.cdf(ynf, kapaf)
-              zf[:, i] = self.reliability.xvarClassCorrelated[i].zf_correlated(x[:, i])
-              fx = self.reliability.xvarClassCorrelated[i].fx_correlated(x[:, i])
-              hx = self.reliability.xvarClassCorrelated[i].hx_correlated(x[:, i])
-
-          elif namedist == 'beta':
-            #   a = float(var['parameter1'])
-            #   b = float(var['parameter2'])
-            #   q = float(var['parameter3'])
-            #   r = float(var['parameter4'])
-
-            #   def beta_limits(vars, mux, sigmax, q, r):
-            #       a_, b_ = vars
-            #       eq1 = a_ + q / (q + r) * (b_ - a_) - mux
-            #       eq2 = sqrt((q * r) / (((q + r) ** 2) * (q + r + 1))) * (b_ - a_) - sigmax
-            #       return [eq1, eq2]
-
-            #   ah, bh = fsolve(beta_limits, (a, b), args=(muhx, sigmahx, q, r))
-              
-            #   loc, scale = a, b - a
-            #   loch, scaleh = ah, bh - ah
-              
-            #   uk = norm.cdf(zk_col)
-              x[:, i] = self.reliability.xvarClassCorrelated[i].x_correlated(zk_col) 
-              fx = self.reliability.xvarClassCorrelated[i].fx_correlated(x[:, i])
-              hx = self.reliability.xvarClassCorrelated[i].hx_correlated(x[:, i])
-              zf[:, i] = self.reliability.xvarClassCorrelated[i].zf_correlated(x[:, i])
-
-          elif namedist == 'gamma':
-            #   deltafx = sigmafx / mufx
-              
-              
-            #   k = 1 / deltafx ** 2
-            #   v = k / mufx
-            #   a, loc, scale = k, 0, 1 / v
-            #   deltahx = sigmahx / muhx
-            #   kh = 1 / deltahx ** 2
-            #   vh = kh / muhx
-            #   ah, loch, scaleh = kh, 0, 1 / vh
-
-            #   uk = norm.cdf(zk_col)
-              x[:, i] = self.reliability.xvarClassCorrelated[i].x_correlated(zk_col) 
-              fx = self.reliability.xvarClassCorrelated[i].fx_correlated(x[:, i])
-              hx = self.reliability.xvarClassCorrelated[i].hx_correlated(x[:, i])
-              
-            #   cdfx = gamma_dist.cdf(x[:, i], a, loc=loc, scale=scale)
-              zf[:, i] = self.reliability.xvarClassCorrelated[i].zf_correlated(x[:, i])
-
-          else:
-              raise ValueError(f"Distribution '{namedist}' not supported.")
+          x[:, i] = self.reliability.xvarClassCorrelated[i].x_correlated(zk_col)
+          fx = self.reliability.xvarClassCorrelated[i].fx_correlated(x[:, i])
+          hx = self.reliability.xvarClassCorrelated[i].hx_correlated(x[:, i]) 
+          zf[:, i] = self.reliability.xvarClassCorrelated[i].zf_correlated(x[:, i])
 
           # Update weights and fxixj for variable i
           w, fx_over_norm = update_weights(fx, hx, zf[:, i], zk_col)
@@ -283,25 +128,12 @@ class RandomVariablesGenerator:
   
   def var_rvs(self, ns, indexes_uncorrelated_xvar, nsigma=1.00, iprint=False):
     """
-
         Random variables generator for the Monte Carlo Simulation methods, only to uncorrelated variables
-
     """
 
     #Get only correlated variables
     xvar_uncorrelated = [self.reliability.xvar[i] for i in indexes_uncorrelated_xvar]
     nxvar_uncorrelated = len(xvar_uncorrelated)
-
-    def fkapa(kapa, deltax, gsignal):
-        fk = 1.00 + deltax ** 2 - gamma(1.00 + gsignal * 2.00 / kapa) / gamma(1.00 + gsignal * 1.00 / kapa) ** 2
-        return fk
-    
-    def beta_limits(vars, mux, sigmax, q, r):
-        a, b = vars
-        eq1 = a + q / (q + r) * (b - a) - mux
-        eq2 = ((q * r) / ((q + r) ** 2 * (q + r + 1))) ** (0.50) * (b - a) - sigmax
-        return [eq1, eq2]
-    
 
     x = np.zeros((ns, nxvar_uncorrelated))
     weight = np.ones(ns)
@@ -310,206 +142,14 @@ class RandomVariablesGenerator:
     fxixj = np.ones(ns)
     
     #
-    # Step 1 - Determination of equivalent correlation coefficients and
-    #          Jacobian matrix Jzy
-    #
-    #
-    # Cholesky decomposition of the correlation matrix
-    #
-
-    #L = scipy.linalg.cholesky(self.reliability.correlation.Rz_rectify, lower=True)
-    #Jzy = np.copy(L)
-
-    #
-    # Generation of Gaussian random numbers
-    #
-
-    
-    zf = np.zeros((ns, nxvar_uncorrelated))
-    
-    #
     i = -1
     for var in xvar_uncorrelated:
         i += 1
-        if var['varstd'] == 0.00:
-            var['varstd'] = float(var['varcov']) * float(var['varmean'])
-        if iprint:
-            print(self.reliability.xvar[i])
-        #
-        #
-        # Normal distribution
-        #
-        namedist = var['vardist']
-        if namedist.lower() == 'gauss':
-            
-            
-            
-            mufx = float(var['varmean'])
-            sigmafx = float(var['varstd'])
-            muhx = float(var['varhmean'])
-            sigmahx = nsigma * sigmafx
-            
-            ##Tem que arrumar no método de Bucher e Adaptive
-            print('mufx', float(var['varmean']), self.reliability.xvarClassUncorrelated[i].mufx)
-            print('sigmafx', float(var['varstd']), self.reliability.xvarClassUncorrelated[i].sigmafx)
-            print('muhx', float(var['varhmean']), self.reliability.xvarClassUncorrelated[i].muhx)
-            print('sigmahx', nsigma * sigmafx, self.reliability.xvarClassUncorrelated[i].sigmahx)
-            
-            x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
-            fx = self.reliability.xvarClassUncorrelated[i].fx_uncorrelated(x[:, i])
-            hx = self.reliability.xvarClassUncorrelated[i].hx_uncorrelated(x[:, i])
-            weight = weight * (fx / hx)
-            fxixj = fxixj * fx 
-        #
-        # Uniform or constant distribution
-        #
-        
-        elif namedist.lower() == 'uniform':    
-            x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
-            fx = self.reliability.xvarClassUncorrelated[i].fx_uncorrelated(x[:, i])
-            hx = self.reliability.xvarClassUncorrelated[i].hx_uncorrelated(x[:, i])
-            weight = weight * (fx / hx)
-            fxixj = fxixj * fx 
-        #
-        # Lognormal distribution
-        #
-        elif namedist.lower() == 'lognorm':
-            
-            x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
-            fx = self.reliability.xvarClassUncorrelated[i].fx_uncorrelated(x[:, i])
-            hx = self.reliability.xvarClassUncorrelated[i].hx_uncorrelated(x[:, i])
-            weight = weight * (fx / hx)
-            fxixj = fxixj * fx 
-
-        #
-        # Gumbel distribution
-        #
-        elif namedist.lower() == 'gumbel':
-            
-            x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
-            fx = self.reliability.xvarClassUncorrelated[i].fx_uncorrelated(x[:, i])
-            hx = self.reliability.xvarClassUncorrelated[i].hx_uncorrelated(x[:, i])
-            weight = weight * (fx / hx)
-            fxixj = fxixj * fx 
-
-        #
-        # Frechet distribution
-        #
-        elif namedist.lower() == 'frechet':
-            
-            # deltafx = sigmafx / mufx
-            # kapa0 = 2.50
-            # gsinal = -1.00
-            # kapaf = scipy.optimize.newton(fkapa, kapa0, args=(deltafx, gsinal))
-            # vfn = mufx / gamma(1.00 - 1.00 / kapaf)
-            # deltahx = sigmahx / muhx
-            # kapa0 = 2.50
-            # gsinal = -1.00
-            # kapah = scipy.optimize.newton(fkapa, kapa0, args=(deltahx, gsinal))
-            # vhn = muhx / gamma(1.00 - 1.00 / kapah)
-            
-            
-            x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
-            fx = self.reliability.xvarClassUncorrelated[i].fx_uncorrelated(x[:, i])
-            hx = self.reliability.xvarClassUncorrelated[i].hx_uncorrelated(x[:, i])
-            weight = weight * (fx / hx)
-            fxixj = fxixj * fx 
-
-        #
-        #
-        # Weibull distribution - minimum
-        #
-        elif namedist.lower() == 'weibull':
-            # mufx = float(var['varmean'])
-            # sigmafx = float(var['varstd'])
-            # epsilon = float(var['varinf'])
-            # muhx = float(var['varhmean'])
-            # sigmahx = nsigma * sigmafx
-            
-            # deltafx = sigmafx / (mufx - epsilon)
-            # kapa0 = 2.50
-            # gsinal = 1.00
-            # kapaf = scipy.optimize.newton(fkapa, kapa0, args=(deltafx, gsinal))
-            # w1f = (mufx - epsilon) / gamma(1.00 + 1.00 / kapaf) + epsilon
-            # deltahx = sigmahx / (muhx - epsilon)
-            # kapa0 = 2.50
-            # gsinal = 1.00
-            
-            # kapah = scipy.optimize.newton(fkapa, kapa0, args=(deltahx, gsinal))
-            # w1h = (muhx - epsilon) / gamma(1.00 + 1.00 / kapah) + epsilon
-            
-            
-            x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
-            fx = self.reliability.xvarClassUncorrelated[i].fx_uncorrelated(x[:, i])
-            hx = self.reliability.xvarClassUncorrelated[i].hx_uncorrelated(x[:, i])
-            weight = weight * (fx / hx)
-            fxixj = fxixj * fx 
-
-        #
-        #
-        # Beta distribution
-        #
-        elif namedist.lower() == 'beta':
-          
-            a = float(var['parameter1'])
-            b = float(var['parameter2'])
-            q = float(var['parameter3'])
-            r = float(var['parameter4'])
-            mufx = float(var['varmean'])
-            sigmafx = float(var['varstd'])
-            muhx = float(var['varhmean'])
-            sigmahx = nsigma * sigmafx
-            loc = a
-            scale = (b - a)
-          
-          ##Tem que arrumar no método de Bucher e Adaptive
-            print('mufx', float(var['varmean']), self.reliability.xvarClassUncorrelated[i].mufx)
-            print('sigmafx', float(var['varstd']), self.reliability.xvarClassUncorrelated[i].sigmafx)
-            print('muhx', float(var['varhmean']), self.reliability.xvarClassUncorrelated[i].muhx)
-            print('sigmahx', nsigma * sigmafx, self.reliability.xvarClassUncorrelated[i].sigmahx)
-            
-            
-            
-            
-            # ah, bh =  fsolve(beta_limits, (1, 1), args= ( muhx, sigmahx, q, r))  
-            # loch = ah
-            # scaleh = (bh - ah)  
-            
-            
-                  
-            x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
-            fx = self.reliability.xvarClassUncorrelated[i].fx_uncorrelated(x[:, i])
-            hx = self.reliability.xvarClassUncorrelated[i].hx_uncorrelated(x[:, i])
-            weight = weight * (fx / hx)
-            fxixj = fxixj * fx 
-
-        #
-        #
-        # Gamma distribution
-        #
-        elif namedist.lower() == 'gamma':
-            
-            # mufx = float(var['varmean'])
-            # sigmafx = float(var['varstd'])
-            # deltafx = sigmafx / mufx
-            # k = 1. / deltafx ** 2
-            # v = k / mufx
-            # a = k
-            # loc = 0.00
-            # scale = 1. / v
-            # muhx = float(var['varhmean'])
-            # sigmahx = nsigma * sigmafx
-            # deltahx = sigmahx / muhx
-            # kh = 1. / deltahx ** 2
-            # vh = kh / muhx
-            # ah = kh
-            # loch = 0.00
-            # scaleh = 1. / vh
-            x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
-            fx = self.reliability.xvarClassUncorrelated[i].fx_uncorrelated(x[:, i])
-            hx = self.reliability.xvarClassUncorrelated[i].hx_uncorrelated(x[:, i])
-            weight = weight * (fx / hx)
-            fxixj = fxixj * fx 
+        x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
+        fx = self.reliability.xvarClassUncorrelated[i].fx_uncorrelated(x[:, i])
+        hx = self.reliability.xvarClassUncorrelated[i].hx_uncorrelated(x[:, i])
+        weight = weight * (fx / hx)
+        fxixj = fxixj * fx 
             
 
     return x, weight, fxixj
