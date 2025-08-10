@@ -48,13 +48,19 @@ class Uniform(AbstractDistribution):
     self.uk = norm.cdf(zk_col)
     return self.ah + (self.bh - self.ah) * self.uk
   
-  def fx(self, x):
+  def fx_uncorrelated(self, x):
     return uniform.pdf(x, self.a, self.b-self.a)
   
-  def hx(self, x):
+  def fx_correlated(self, x):
+    return self.fx_uncorrelated(x)
+  
+  def hx_uncorrelated(self, x):
     return uniform.pdf(x, self.ah, self.bh-self.ah)
   
-  def zf(self):
+  def hx_correlated(self, x):
+    return self.hx_uncorrelated(x)
+  
+  def zf_correlated(self):
     return norm.ppf(self.uk)
 
   @staticmethod

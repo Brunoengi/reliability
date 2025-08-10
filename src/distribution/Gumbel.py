@@ -32,20 +32,25 @@ class Gumbel(AbstractDistribution):
     self.muhx = self.varhmean
     self.uhn = self.muhx - self.euler_gamma / self.alphahn
     
-    
   def x_uncorrelated(self, ns):
     return gumbel_r.rvs(loc=self.uhn, scale=self.betahn, size=ns)
-  
-  def fx(self, x):
-    return gumbel_r.pdf(x, self.ufn, self.betafn)
-  
-  def hx(self, x):
-    return gumbel_r.pdf(x, self.uhn, self.betahn)
   
   def x_correlated(self, zk_col):
     uk = norm.cdf(zk_col)
     return self.uhn - self.betahn * np.log(np.log(1 / uk))
   
-  def zf(self, x):
+  def fx_uncorrelated(self, x):
+    return gumbel_r.pdf(x, self.ufn, self.betafn)
+  
+  def fx_correlated(self, x):
+    return self.fx_uncorrelated(x)
+  
+  def hx_uncorrelated(self, x):
+    return gumbel_r.pdf(x, self.uhn, self.betahn)
+  
+  def hx_correlated(self, x):
+    return self.hx_uncorrelated(x)
+  
+  def zf_correlated(self, x):
     cdfx = gumbel_r.cdf(x, self.ufn, self.betafn)
     return norm.ppf(cdfx)

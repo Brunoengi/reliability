@@ -37,16 +37,16 @@ class Normal(AbstractDistribution):
     return self.muhx + self.sigmahx * zk_col
   
   def fx_correlated(self, x):
-    return norm.pdf(x, loc=self.mufx, scale=self.sigmafx)
+    return self.fx_uncorrelated(x)
   
   def fx_uncorrelated(self, x):
-    return self.fx_correlated(x)
-    
+    return norm.pdf(x, loc=self.mufx, scale=self.sigmafx)
+  
   def hx_correlated(self, x):
-    return norm.pdf(x, loc=self.muhx, scale=self.sigmahx)
+    return self.hx_uncorrelated(x)
   
   def hx_uncorrelated(self, x):
-    return self.hx_correlated(x)
+    return norm.pdf(x, loc=self.muhx, scale=self.sigmahx)
   
   def zf_correlated(self, x):
     return (x - self.mufx) / self.sigmafx

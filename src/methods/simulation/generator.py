@@ -174,11 +174,12 @@ class RandomVariablesGenerator:
             #   print('betahn', betahn, self.reliability.xvarClass[i].betahn)
               
               
-              uk = norm.cdf(zk_col)
+              
               x[:, i] = self.reliability.xvarClassCorrelated[i].x_correlated(zk_col)
-              zf[:, i] = self.reliability.xvarClassCorrelated[i].zf(zk_col)
+              zf[:, i] = self.reliability.xvarClassCorrelated[i].zf()
               fx = self.reliability.xvarClassCorrelated[i].fx(x[:, i])
-              hx = self.reliability.xvarClassCorrelated[i].hx(x[:, i])
+              hx = self.reliability.xvarClassCorrelated[i].hx(x[:, i]) 
+
 
           elif namedist == 'frechet':
             #   deltafx = sigmafx / mufx
@@ -365,8 +366,8 @@ class RandomVariablesGenerator:
         
         elif namedist.lower() == 'uniform':    
             x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
-            fx = self.reliability.xvarClassUncorrelated[i].fx(x[:, i])
-            hx = self.reliability.xvarClassUncorrelated[i].hx(x[:, i])
+            fx = self.reliability.xvarClassUncorrelated[i].fx_uncorrelated(x[:, i])
+            hx = self.reliability.xvarClassUncorrelated[i].hx_uncorrelated(x[:, i])
             weight = weight * (fx / hx)
             fxixj = fxixj * fx 
         #
@@ -386,8 +387,8 @@ class RandomVariablesGenerator:
         elif namedist.lower() == 'gumbel':
             
             x[:, i] = self.reliability.xvarClassUncorrelated[i].x_uncorrelated(ns)
-            fx = self.reliability.xvarClassUncorrelated[i].fx(x[:, i])
-            hx = self.reliability.xvarClassUncorrelated[i].hx(x[:, i])
+            fx = self.reliability.xvarClassUncorrelated[i].fx_uncorrelated(x[:, i])
+            hx = self.reliability.xvarClassUncorrelated[i].hx_uncorrelated(x[:, i])
             weight = weight * (fx / hx)
             fxixj = fxixj * fx 
 
