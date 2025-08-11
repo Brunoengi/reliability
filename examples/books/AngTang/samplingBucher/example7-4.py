@@ -6,12 +6,10 @@ from main import *
 # Step 0 - Beam: g(Y, Z, M) = Y*Z-M = 0
 #
 
-
 def gfunction(x, d):
 
     g = d[0]*x[0]*x[1]-d[1]*x[2]
     return g
-
 
 #
 # Data input
@@ -33,7 +31,7 @@ dvar = [
 ]
 
 # MC-IS adaptive method
-#
+
 beam = Reliability(xvar, dvar, gfunction)
 beam.bucher(100, 5000, 0.01)
 #

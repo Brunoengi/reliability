@@ -30,9 +30,9 @@ dvar = [
     {'varname': 'gamma1', 'varvalue': 1.00},
     {'varname': 'gamma2', 'varvalue': 1.00}
 ]
-#
+
 # MCS method
-#
+
 beam = Reliability(xvar, dvar, gfunction)
 beam.mc(100, 5000, 0.01)
 #

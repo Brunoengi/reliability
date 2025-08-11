@@ -43,9 +43,8 @@ dvar = [
     {'varname': 'factor5', 'varvalue': 1.00}
 ]
 
-#
 # MC-IS adaptive method
-#
+
 construction = Reliability(xvar, dvar, gfunction)
 construction.adaptive(100, 5000, 0.005)
 

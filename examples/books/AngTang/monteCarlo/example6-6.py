@@ -34,14 +34,8 @@ dvar = [
     {'varname': 'gamma2', 'varvalue': 1.00}
 ]
 
-corrmatrix = [[1.00, 0.01, 0.01],
-              [0.01, 1.00, 0.01],
-              [0.01, 0.01, 1.00]]
-
-
-#
 # MCS method
-#
-beam = Reliability(xvar, dvar, gfunction, None, corrmatrix)
+
+beam = Reliability(xvar, dvar, gfunction)
 beam.mc(100, 5000, 0.05)
 #

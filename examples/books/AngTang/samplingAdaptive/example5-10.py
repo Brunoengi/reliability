@@ -29,7 +29,7 @@ dvar = [
 ]
 
 # MC-IS adaptive method
-#
+
 storm = Reliability(xvar, dvar, gfunction)
 storm.adaptive(100, 5000, 0.005)
 

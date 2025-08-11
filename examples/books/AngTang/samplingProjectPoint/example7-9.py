@@ -34,9 +34,9 @@ dvar = [
 corrmatrix = [[1.00, 0.40, 0.00],
               [0.40, 1.00, 0.00],
               [0.00, 0.00, 1.00]]
-#
+
 # MC-IS based on project point
-#
+
 beam = Reliability(xvar, dvar, gfunction, None, corrmatrix)
 beam.sampling_project_point(100, 5000, 0.01)
 #

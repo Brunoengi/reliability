@@ -27,9 +27,9 @@ dvar = [
     {'varname': 'factor2', 'varvalue': 1.00},
     {'varname': 'factor3', 'varvalue': 1.00},
 ]
-#
+
 # MC-IS adaptive method
-#
+
 storm = Reliability(xvar, dvar, gfunction)
 storm.bucher(100, 5000, 0.005)
 

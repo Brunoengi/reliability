@@ -3,7 +3,7 @@ from utils.validate.base_types.validate_dictionary import ValidateDictionary
 from utils.validate.base_types.validate_class import ValidateClass 
 import numpy as np
 from scipy.optimize import fsolve
-from scipy.stats import norm, uniform, lognorm, gumbel_r, invweibull, weibull_min, beta as beta_dist
+from scipy.stats import norm, beta as beta_dist
 
 class Beta(AbstractDistribution):
   def __init__(self, props):
@@ -41,13 +41,6 @@ class Beta(AbstractDistribution):
     self.varhmean = varhmean
     self.muhx = self.varhmean
     self.ah, self.bh = fsolve(self.beta_limits, (1, 1), args=(self.muhx, self.sigmahx, self.q, self.r))
-    # Ensure that the instrumental support function covers the original function
-    if self.ah > self.loc:
-        self.ah = self.loc
-    if self.bh < self.loc + self.scale:
-        self.bh = self.loc + self.scale
-    self.loch = self.ah
-    self.scaleh = self.bh - self.ah 
     
   @staticmethod  
   def beta_limits(vars, mux, sigmax, q, r):

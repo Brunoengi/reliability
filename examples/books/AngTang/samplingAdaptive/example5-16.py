@@ -1,7 +1,7 @@
 """
 ANG, Alfredo H.-S.; TANG, Wilson H. Probability concepts in engineering: emphasis on applications in civil and environmental engineering. 2. ed. New York: Wiley, 2007.
 Example 5-16, page 232
-Expected pf = 0.03522
+Expected pf = 0.03522 and β = 1.809
 """
 from main import *
 
@@ -29,9 +29,9 @@ dvar = [
 
 corrmatrix = [[1.00, 0.75],
               [0.75, 1.00]]
-#
+
 # MC-IS adaptive method
-#
+
 column = Reliability(xvar, dvar, gfunction, None, corrmatrix)
 column.adaptive(500, 10000, 0.01)
 

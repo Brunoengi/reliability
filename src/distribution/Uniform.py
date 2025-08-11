@@ -60,7 +60,7 @@ class Uniform(AbstractDistribution):
   def hx_correlated(self, x):
     return self.hx_uncorrelated(x)
   
-  def zf_correlated(self):
+  def zf_correlated(self, x):
     return norm.ppf(self.uk)
 
   @staticmethod

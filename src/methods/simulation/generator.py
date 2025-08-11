@@ -17,7 +17,7 @@ class RandomVariablesGenerator:
       ## Get all properties about Reliability
       self.reliability = parent.reliability
 
-  def main(self, ns, nsigma=1.00, iprint=False):
+  def main(self, ns, iprint=False):
         """
         Method to generate random variables, check correlation matrix to use var_gen (correlated variables) or var_rvs (uncorrelated variables)
 
@@ -45,17 +45,14 @@ class RandomVariablesGenerator:
         fxu = np.ones(ns)
         
         if index_correlated:
-          xpc, wpc, fxc = self.var_gen(ns, index_correlated, nsigma)
+          xpc, wpc, fxc = self.var_gen(ns, index_correlated)
         
         if index_uncorrelated:
-          xpu, wpu, fxu = self.var_rvs(ns, index_uncorrelated, nsigma)
+          xpu, wpu, fxu = self.var_rvs(ns, index_uncorrelated)
         
-
-
         for i, idx in enumerate(index_correlated):
           x[:, idx] = xpc[:, i]
 
-        # Preencher as colunas dos não correlacionados
         if index_correlated:
           for i, idx in enumerate(index_correlated):
             x[:, idx] = xpc[:, i]
@@ -69,7 +66,7 @@ class RandomVariablesGenerator:
 
         return x, wp, fx
 
-  def var_gen(self, ns, indexes_correlated_xvar, nsigma=1.00, iprint=False):
+  def var_gen(self, ns, indexes_correlated_xvar, iprint=False):
       """
       Random variables generator for Monte Carlo Simulation methods, only to correlated variables
       """
@@ -126,7 +123,7 @@ class RandomVariablesGenerator:
 
       return x, weight, fxixj 
   
-  def var_rvs(self, ns, indexes_uncorrelated_xvar, nsigma=1.00, iprint=False):
+  def var_rvs(self, ns, indexes_uncorrelated_xvar, iprint=False):
     """
         Random variables generator for the Monte Carlo Simulation methods, only to uncorrelated variables
     """

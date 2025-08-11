@@ -28,13 +28,8 @@ dvar = [
     {'varname': 'factor3', 'varvalue': 1.00},
 ]
 
-corrmatrix = [[1.00, 0.01, 0.01],
-              [0.01, 1.00, 0.01],
-              [0.01, 0.01, 1.00]]
-
-
 # MCS method
-#
-storm = Reliability(xvar, dvar, gfunction, None, corrmatrix)
+
+storm = Reliability(xvar, dvar, gfunction)
 storm.mc(100, 5000, 0.005)
 

@@ -3,7 +3,6 @@ ANG, Alfredo H.-S.; TANG, Wilson H. Probability concepts in engineering: emphasi
 Example 4-11, page 163 - Adapted
 Expected pf = 0.0174 and β = 2.1075
 """
-import numpy as np
 from main import *
 
 #
@@ -38,16 +37,8 @@ dvar = [
     {'varname': 'factor4', 'varvalue': 1.00}
 ]
 
-corrmatrix = [[1.00, 0.01, 0.01, 0.01],
-              [0.01, 1.00, 0.01, 0.01],
-              [0.01, 0.01, 1.00, 0.01],
-              [0.01, 0.01, 0.01, 1.00]]
-
-
-
-#
 # MC-IS adaptive method
-#
-column = Reliability(xvar, dvar, gfunction, None, corrmatrix)
+
+column = Reliability(xvar, dvar, gfunction)
 column.adaptive(50, 10000, 0.01)
 #

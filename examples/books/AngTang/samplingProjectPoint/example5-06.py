@@ -43,8 +43,7 @@ dvar = [
     {'varname': 'factor5', 'varvalue': 1.00}
 ]
 
-#
-# MCS enhanced method
-#
+# MC-IS based on project point
+
 construction = Reliability(xvar, dvar, gfunction, None, None)
 construction.sampling_project_point(100, 5000, 0.005)

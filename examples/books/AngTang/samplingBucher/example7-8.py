@@ -30,9 +30,9 @@ dvar = [
     {'varname': 'gamma1', 'varvalue': 1.00},
     {'varname': 'gamma2', 'varvalue': 1.00}
 ]
-#
+
 # MC-IS adaptive method
-#
+
 beam = Reliability(xvar, dvar, gfunction)
 beam.bucher(100, 5000, 0.01)
 #

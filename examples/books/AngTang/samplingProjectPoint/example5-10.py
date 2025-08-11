@@ -29,9 +29,8 @@ dvar = [
 ]
 
 
+# MC-IS based on project point
 
-# MCS method
-#
 storm = Reliability(xvar, dvar, gfunction)
 storm.sampling_project_point(100, 5000, 0.005)
 

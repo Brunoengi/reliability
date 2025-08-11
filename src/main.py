@@ -42,14 +42,6 @@ class Reliability():
         self._simulation = MonteCarloMethods(self)
         self.index_correlated, self.index_uncorrelated = self.avaliableRz(self._correlation.correlation_summary())
         
-        print("self._xvar:")
-        for i, var in enumerate(self._xvar):
-          print(f"Var {i}: {var}")
-
-        print("\nself.xvarClass:")
-        for i, obj in enumerate(self.xvarClass):
-            print(f"Obj {i}: {vars(obj)}")
-        
     def avaliableRz(self, index_correlated_and_uncorrelated):
       # print('aaa',index_correlated_and_uncorrelated)
       index_correlated = index_correlated_and_uncorrelated[0]

@@ -1,11 +1,6 @@
 import scipy.optimize
 import numpy as np
-import scipy.linalg
-from math import log
-from scipy.stats import norm, uniform, lognorm, gumbel_r, invweibull, weibull_min, beta as beta_dist, gamma as gamma_dist, multivariate_normal
-from scipy.optimize import fsolve, newton
-from scipy.linalg import cholesky
-from math import sqrt, pi, log
+from scipy.stats import norm, weibull_min
 from scipy.special import gamma
 from distribution.AbstractDistribution import AbstractDistribution 
 from utils.validate.base_types.validate_dictionary import ValidateDictionary

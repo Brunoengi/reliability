@@ -1,4 +1,4 @@
-from scipy.stats import norm, uniform
+from scipy.stats import norm
 
 # -*- coding: utf-8 -*-
 """

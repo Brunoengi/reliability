@@ -37,8 +37,7 @@ dvar = [
     {'varname': 'factor4', 'varvalue': 1.00}
 ]
 
-#
 # MC-IS based on project point
-#
+
 column = Reliability(xvar, dvar, gfunction, None, None)
 column.sampling_project_point(100, 5000, 0.01)

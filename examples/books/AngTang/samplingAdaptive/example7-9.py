@@ -11,7 +11,6 @@ def gfunction(x, d):
     g = d[0]*x[0]*x[1]-d[1]*x[2]
     return g
 
-
 #
 # Data input
 #
@@ -34,8 +33,8 @@ dvar = [
 corrmatrix = [[1.00, 0.40, 0.00],
               [0.40, 1.00, 0.00],
               [0.00, 0.00, 1.00]]
-#
+
 # MC-IS adaptive method
-#
+
 beam = Reliability(xvar, dvar, gfunction, None, corrmatrix)
 beam.adaptive(100, 5000, 0.02)

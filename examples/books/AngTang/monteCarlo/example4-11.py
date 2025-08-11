@@ -37,15 +37,7 @@ dvar = [
     {'varname': 'factor4', 'varvalue': 1.00}
 ]
 
-corrmatrix = [[1.00, 0.01, 0.01, 0.01],
-              [0.01, 1.00, 0.01, 0.01],
-              [0.01, 0.01, 1.00, 0.01],
-              [0.01, 0.01, 0.01, 1.00]]
-
-
-
 # MCS  method
-#
-column = Reliability(xvar, dvar, gfunction, None, corrmatrix)
+
+column = Reliability(xvar, dvar, gfunction)
 column.mc(1000, 10000, 0.01)
-#

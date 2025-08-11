@@ -12,17 +12,12 @@ from main import *
 # Step 0 - Column: g(R, G, Q, W) = R-G-Q-W = 0
 #
 
-
-
-
 def gfunction(x, d):
 
     g = d[0] * x[0] - d[1] * x[1] - d[2] * x[2] - d[3] * x[3]
     return g
 
-
 # Data input
-#
 # Random variables: name, probability distribution, mean and coefficient of variation
 
 xvar = [
@@ -46,10 +41,8 @@ corrmatrix = [[1.00, 0.80, 0.00, 0.00],
               [0.80, 1.00, 0.30, 0.00],
               [0.00, 0.30, 1.00, 0.00],
               [0.00, 0.00, 0.00, 1.00]]
-#
+
 # MC-IS adaptive method
-#
+
 column = Reliability(xvar, dvar, gfunction, None, corrmatrix)
 column.adaptive(1000, 5000, 0.01)
-
-#
