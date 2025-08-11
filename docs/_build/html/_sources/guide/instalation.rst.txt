@@ -40,6 +40,6 @@ Installation
 
 .. code-block:: bash
 
-  pip pip install -e .
+  pip install -e .
 
   
