@@ -28,7 +28,7 @@ cd reliability
 ```bash
 pip install -r requirements.txt
 ```
-4 - Install the reability package:
+4 - Install the reliability package:
 ```bash
 pip install -e .
 ```
