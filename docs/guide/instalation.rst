@@ -36,7 +36,7 @@ Installation
 
   pip install -r requirements.txt
 
-4 - Install the realibity package:
+4 - Install the reability package:
 
 .. code-block:: bash
 
