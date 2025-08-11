@@ -1,3 +1,6 @@
+![Logo](docs/_static/images/logo.png)
+
+
 # Reliability - Python Structural Reliability Analysis
 
 Python Module for Structural Reliability Analysis
