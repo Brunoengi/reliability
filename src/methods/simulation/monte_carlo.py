@@ -553,17 +553,15 @@ class MonteCarloMethods:
     cov_pf = np.zeros(nc)
     sum1 = 0.00
     sum2 = 0.00
-
-    varhmean_array = [var['varhmean'] for var in self.reliability.xvar]
-    dvar_array = [var['varvalue'] for var in self.reliability.dvar]
-
-    gx_based_varhmean = self.reliability.fel(varhmean_array, dvar_array)
-
-    deduction = (1 - lambdas) * gx_based_varhmean
+    
+    dmatrix = np.array([self.reliability.d.T] * ns) 
+    
+    xp, wp, fx = self.generator.main(10000)
+    gx = list(map(self.reliability.fel, xp, dmatrix))
+    gx_inicial = np.array(gx)
+    
+    deduction = (1 - lambdas) * gx_inicial.mean()
     deductions = np.tile(deduction[:, None], (1, ns))
-
-    # Matrix dmatrix(ns, self.reliability.ndvar) for ns Monte Carlo simulations and self.reliability.ndvar design variables
-    dmatrix = np.array([self.reliability.d.T] * ns)
 
     for icycle in range(nc):
       kcycle = icycle + 1
