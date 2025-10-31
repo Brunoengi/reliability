@@ -3,7 +3,7 @@ ANG, Alfredo H.-S.; TANG, Wilson H. Probability concepts in engineering: emphasi
 Example 5-10, page 218
 Expected pf = 0.202
 """
-from main import *
+from struct_reliability import *
 import math
 
 def gfunction(x, d):

@@ -5,7 +5,7 @@ from scipy.stats import gamma as gamma_dist
 import time
 from scipy.optimize import curve_fit
 
-from visualize import DataVisualizeSimulation
+from ...visualize import DataVisualizeSimulation
 from .generator import RandomVariablesGenerator
 
 

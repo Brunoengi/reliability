@@ -5,7 +5,7 @@ Example 7.5 - Linear limit state function with normal correlated variables
 @author: MVREAL
 expected β = 2.25
 """
-from main import *
+from struct_reliability import *
 
 
 #

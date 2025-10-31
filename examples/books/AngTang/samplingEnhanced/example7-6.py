@@ -5,7 +5,7 @@ Example 7.6 - Nonlinear limit state function with normal correlated variables
 @author: MVREAL
 expected β = 2.862
 """
-from main import *
+from struct_reliability import *
 
 #
 # Step 0 - Beam: g(Y, Z, M) = Y*Z-M = 0

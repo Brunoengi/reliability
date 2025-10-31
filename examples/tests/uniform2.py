@@ -1,4 +1,4 @@
-from main import *
+from struct_reliability import *
 
 
 def gfunction(x, d):

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from utils.validate.domain_types.validate_xvar import ValidateXvar
+from ..utils.validate.domain_types.validate_xvar import ValidateXvar
 
 class AbstractDistribution(ABC):
   def __init__ (self, props: dict):

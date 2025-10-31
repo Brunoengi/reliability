@@ -2,8 +2,8 @@ import scipy.optimize
 import numpy as np
 from scipy.stats import norm, weibull_min
 from scipy.special import gamma
-from distribution.AbstractDistribution import AbstractDistribution 
-from utils.validate.base_types.validate_dictionary import ValidateDictionary
+from ..distribution.AbstractDistribution import AbstractDistribution 
+from ..utils.validate.base_types.validate_dictionary import ValidateDictionary
 
 class Weibull(AbstractDistribution):
   def __init__(self, props: dict):

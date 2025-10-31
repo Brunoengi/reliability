@@ -1,6 +1,6 @@
-from distribution.AbstractDistribution import AbstractDistribution 
-from utils.validate.base_types.validate_dictionary import ValidateDictionary
-from utils.validate.base_types.validate_class import ValidateClass 
+from ..distribution.AbstractDistribution import AbstractDistribution 
+from ..utils.validate.base_types.validate_dictionary import ValidateDictionary
+from ..utils.validate.base_types.validate_class import ValidateClass 
 import scipy.optimize
 import numpy as np
 from scipy.special import gamma

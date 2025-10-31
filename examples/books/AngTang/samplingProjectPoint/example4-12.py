@@ -9,7 +9,7 @@ Example 4-12, page 164
 Expected pf = 1 - 0.74 = 0.26
 """
 
-from main import *
+from struct_reliability import *
 
 def gfunction(x, d):
 

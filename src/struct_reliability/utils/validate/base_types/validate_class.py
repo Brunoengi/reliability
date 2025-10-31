@@ -1,4 +1,4 @@
-from utils.Exceptions import InvalidKeyError
+from ...Exceptions import InvalidKeyError
 
 class ValidateClass:
   @staticmethod

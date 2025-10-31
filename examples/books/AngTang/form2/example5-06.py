@@ -4,7 +4,7 @@ Example 5-06, page 209
 Expected pf = 1 - 0.721 = 0.279
 """
 
-from main import *
+from struct_reliability import *
 
 def gfunction(x, d):
 

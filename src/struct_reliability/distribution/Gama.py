@@ -1,6 +1,6 @@
-from distribution.AbstractDistribution import AbstractDistribution 
-from utils.validate.base_types.validate_dictionary import ValidateDictionary
-from utils.validate.base_types.validate_class import ValidateClass 
+from ..distribution.AbstractDistribution import AbstractDistribution 
+from ..utils.validate.base_types.validate_dictionary import ValidateDictionary
+from ..utils.validate.base_types.validate_class import ValidateClass 
 from scipy.stats import norm, gamma as gamma_dist
 
 

@@ -5,15 +5,15 @@ Created on Sat Sep 28 05:17:45 2024
 @author: BrunoTeixeira
 """
 
-from distribution.Beta import Beta
-from distribution.Frechet import Frechet
-from distribution.Gama import Gama
-from distribution.Gumbel import Gumbel
-from distribution.LogNormal import LogNormal
-from distribution.Normal import Normal
-from distribution.Uniform import Uniform
-from distribution.Weibull import Weibull
-from utils.Dictionary import DictionaryUtils
+from ..distribution.Beta import Beta
+from ..distribution.Frechet import Frechet
+from ..distribution.Gama import Gama
+from ..distribution.Gumbel import Gumbel
+from ..distribution.LogNormal import LogNormal
+from ..distribution.Normal import Normal
+from ..distribution.Uniform import Uniform
+from ..distribution.Weibull import Weibull
+from ..utils.Dictionary import DictionaryUtils
 
 DISTRIBUTION_MAP = {
   'gauss': {

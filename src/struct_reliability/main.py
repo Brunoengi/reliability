@@ -12,13 +12,13 @@ from scipy.optimize import fsolve
 from scipy.optimize import curve_fit
 import scipy.linalg
 from scipy.special import gamma
-from utils.distribution import createDistribution
-from utils.validate.domain_types.validate_dvar import ValidateDvar
-from utils.validate.domain_types.validate_gx import ValidateGx
-from utils.validate.domain_types.validate_corrmatrix import ValidateCorrelationMatrix
-from correlation import Correlation
-from methods.transformation import TransformationMethods
-from methods.simulation.monte_carlo import MonteCarloMethods
+from .utils.distribution import createDistribution
+from .utils.validate.domain_types.validate_dvar import ValidateDvar
+from .utils.validate.domain_types.validate_gx import ValidateGx
+from .utils.validate.domain_types.validate_corrmatrix import ValidateCorrelationMatrix
+from .correlation import Correlation
+from .methods.transformation import TransformationMethods
+from .methods.simulation.monte_carlo import MonteCarloMethods
 
 class Reliability():
 

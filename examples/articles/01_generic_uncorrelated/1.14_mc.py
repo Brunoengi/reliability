@@ -1,4 +1,4 @@
-from main import *
+from struct_reliability import *
 
 ## Expected β ≈ 2.13 (≈ -> less reliable answer)
 

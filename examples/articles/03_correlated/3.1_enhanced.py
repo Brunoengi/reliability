@@ -1,5 +1,5 @@
 # Expected pf = 0.03522 and β = 1.809
-from main import *
+from struct_reliability import *
 
 def gfunction(x, d):
 

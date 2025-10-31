@@ -4,7 +4,7 @@ Reliabilty Analysis
 Example 6.6 - Nonlinear limit state function with non-normal variables
 @author: MVREAL
 """
-from main import *
+from struct_reliability import *
 
 #
 # Step 0 - Beam: g(Y, Z, M) = Y*Z-M = 0

@@ -4,7 +4,7 @@ Example 4-11, page 163 - Adapted
 Expected pf = 0.0174 and β = 2.1075
 """
 import numpy as np
-from main import *
+from struct_reliability import *
 
 #
 # Step 0 - Column: g(R, G, Q, W) = R-G-Q-W = 0

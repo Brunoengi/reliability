@@ -12,7 +12,7 @@ from scipy import optimize
 import scipy.linalg
 from scipy.special import gamma
 import pandas as pd
-from visualize import DataVisualizeTransformation
+from ..visualize import DataVisualizeTransformation
 
 class TransformationBase:
 

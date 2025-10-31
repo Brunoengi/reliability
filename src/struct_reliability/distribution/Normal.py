@@ -7,9 +7,9 @@ Created on Tue Oct  8 12:32:15 2024
 @author: BrunoTeixeira
 """
 
-from distribution.AbstractDistribution import AbstractDistribution 
-from utils.validate.base_types.validate_class import ValidateClass
-from utils.validate.base_types.validate_dictionary import ValidateDictionary 
+from .AbstractDistribution import AbstractDistribution 
+from ..utils.validate.base_types.validate_class import ValidateClass
+from ..utils.validate.base_types.validate_dictionary import ValidateDictionary 
 
 class Normal(AbstractDistribution):
   def __init__(self, props: dict):

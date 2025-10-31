@@ -1,5 +1,5 @@
-from utils.validate.base_types.validate_dictionary import ValidateDictionary 
-from utils.validate.base_types.validate_list import ValidateList
+from ..base_types.validate_dictionary import ValidateDictionary 
+from ..base_types.validate_list import ValidateList
 
 class ValidateDvar():
   def __init__(self, dvar):

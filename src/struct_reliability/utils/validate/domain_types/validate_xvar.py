@@ -1,4 +1,4 @@
-from utils.validate.base_types.validate_dictionary import ValidateDictionary
+from ..base_types.validate_dictionary import ValidateDictionary
 
 # Contains general validations, specific validations are inserted in each distribution class
 

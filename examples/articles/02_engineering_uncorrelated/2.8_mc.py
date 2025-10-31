@@ -1,4 +1,4 @@
-from main import *
+from struct_reliability import *
 
 ## Expected β ≈ 2.29 (≈ -> less reliable answer)
 def gfunction_case8(x, d):

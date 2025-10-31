@@ -1,4 +1,4 @@
-from utils.validate.base_types.validate_list import ValidateList
+from ..base_types.validate_list import ValidateList
 import math
 import numpy as np
 

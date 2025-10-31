@@ -1,4 +1,4 @@
-from utils.validate.base_types.validate_function import ValidateFunction
+from ..base_types.validate_function import ValidateFunction
 import numpy as np
 
 

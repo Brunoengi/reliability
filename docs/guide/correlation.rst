@@ -55,7 +55,7 @@ The complete problem is presented below:
 
 .. code-block:: bash
   
-  from main import Reliability
+  from struct_reliability import *
 
   #
   # Step 0 - Column: g(R, G, Q, W) = R-G-Q-W = 0

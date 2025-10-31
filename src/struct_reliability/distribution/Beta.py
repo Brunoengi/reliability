@@ -1,6 +1,6 @@
-from distribution.AbstractDistribution import AbstractDistribution 
-from utils.validate.base_types.validate_dictionary import ValidateDictionary
-from utils.validate.base_types.validate_class import ValidateClass 
+from .AbstractDistribution import AbstractDistribution 
+from ..utils.validate.base_types.validate_dictionary import ValidateDictionary
+from ..utils.validate.base_types.validate_class import ValidateClass 
 import numpy as np
 from scipy.optimize import fsolve
 from scipy.stats import norm, beta as beta_dist

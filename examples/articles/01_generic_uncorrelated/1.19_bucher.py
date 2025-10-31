@@ -1,4 +1,4 @@
-from main import *
+from struct_reliability import *
 from scipy.stats import norm
 
 ## Expected β ≈ 3.73 (≈ -> less reliable answer)

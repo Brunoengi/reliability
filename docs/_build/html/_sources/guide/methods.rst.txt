@@ -9,7 +9,7 @@ An example containing the basic situation is described below:
 
   .. code-block:: bash
 
-    from main import Reliability
+    from struct_reliability import *
 
     def gfunction(x, d):
 

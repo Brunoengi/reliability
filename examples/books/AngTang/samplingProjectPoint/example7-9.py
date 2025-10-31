@@ -1,5 +1,5 @@
 ## Expected β = 2.658
-from main import *
+from struct_reliability import *
 
 #
 # Step 0 - Beam: g(Y, Z, M) = Y*Z-M = 0

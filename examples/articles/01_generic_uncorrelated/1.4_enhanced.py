@@ -1,4 +1,5 @@
-from main import *
+from struct_reliability import *
+
 
 ## Expected β = 2.53
 

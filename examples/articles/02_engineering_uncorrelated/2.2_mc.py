@@ -1,5 +1,5 @@
 import numpy as np
-from main import *
+from struct_reliability import *
 
 ## Expected β = 3.633
 

@@ -1,6 +1,6 @@
-from distribution.AbstractDistribution import AbstractDistribution 
-from utils.validate.base_types.validate_dictionary import ValidateDictionary
-from utils.validate.base_types.validate_class import ValidateClass 
+from ..distribution.AbstractDistribution import AbstractDistribution 
+from ..utils.validate.base_types.validate_dictionary import ValidateDictionary
+from ..utils.validate.base_types.validate_class import ValidateClass 
 from math import sqrt, pi
 from scipy.stats import norm, gumbel_r
 import numpy as np

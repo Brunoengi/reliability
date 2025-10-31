@@ -1,5 +1,5 @@
 import numpy as np
-from main import *
+from struct_reliability import *
 
 ## Expected β = 2.74
 def gfunction(x, d):

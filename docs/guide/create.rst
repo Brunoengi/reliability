@@ -24,7 +24,7 @@ In this case, we will only use the FORM method as an example
 
 .. code-block:: bash
 
-  from main import Reliability
+  from struct_reliability import *
 
   #
   # Step 0 - Column: g(R, G, Q, W) = R-G-Q-W = 0
@@ -100,7 +100,7 @@ Computational development
 
 .. code-block:: bash
 
-  from main import Reliability
+  from struct_reliability import *
 
   #
   # Step 0 - Beam: g(Y, Z, M) = Y*Z-M = 0
@@ -164,7 +164,7 @@ Computational development
 
 .. code-block:: bash
   
-  from main import Reliability
+  from struct_reliability import *
 
   #
   # Step 0 - Column: g(R, G, Q, W) = R-G-Q-W = 0
