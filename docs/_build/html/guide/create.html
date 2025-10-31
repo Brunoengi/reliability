@@ -48,7 +48,7 @@
 <section id="computational-development">
 <h3>Computational development<a class="headerlink" href="#computational-development" title="Link to this heading">¶</a></h3>
 <p>In this case, we will only use the FORM method as an example</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from<span class="w"> </span>main<span class="w"> </span>import<span class="w"> </span>Reliability
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from<span class="w"> </span>struct_reliability<span class="w"> </span>import<span class="w"> </span>*
 
 <span class="c1">#</span>
 <span class="c1"># Step 0 - Column: g(R, G, Q, W) = R-G-Q-W = 0</span>
@@ -108,7 +108,7 @@ column.form<span class="o">(</span><span class="nv">iHLRF</span><span class="o">
 <p>M: Gumbel distribution - <span class="math notranslate nohighlight">\(\mu_M = 1000\,\text{kN.cm},\hspace{1em} \delta_M = 0.20\,\hspace{1em} \sigma_M = 200\,\text{kN.cm}\)</span></p>
 <section id="id1">
 <h3>Computational development<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from<span class="w"> </span>main<span class="w"> </span>import<span class="w"> </span>Reliability
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from<span class="w"> </span>struct_reliability<span class="w"> </span>import<span class="w"> </span>*
 
 <span class="c1">#</span>
 <span class="c1"># Step 0 - Beam: g(Y, Z, M) = Y*Z-M = 0</span>
@@ -163,7 +163,7 @@ beam.sampling_project_point<span class="o">(</span><span class="m">100</span>,<s
 \end{bmatrix}\)</span></p>
 <section id="id2">
 <h3>Computational development<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from<span class="w"> </span>main<span class="w"> </span>import<span class="w"> </span>Reliability
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from<span class="w"> </span>struct_reliability<span class="w"> </span>import<span class="w"> </span>*
 
 <span class="c1">#</span>
 <span class="c1"># Step 0 - Column: g(R, G, Q, W) = R-G-Q-W = 0</span>
