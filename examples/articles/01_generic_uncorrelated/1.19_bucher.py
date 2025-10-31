@@ -1,5 +1,6 @@
 from struct_reliability import *
 from scipy.stats import norm
+import numpy as np
 
 ## Expected β ≈ 3.73 (≈ -> less reliable answer)
 
