@@ -43,27 +43,16 @@ class Reliability():
         self.index_correlated, self.index_uncorrelated = self.avaliableRz(self._correlation.correlation_summary())
         
     def avaliableRz(self, index_correlated_and_uncorrelated):
-      # print('aaa',index_correlated_and_uncorrelated)
+    
       index_correlated = index_correlated_and_uncorrelated[0]
       index_uncorrelated = index_correlated_and_uncorrelated[1]
-      # print(index_correlated, index_uncorrelated)
-      
+  
       self.xvarCorrelated   = [self.xvar[i] for i in index_correlated]
-      # print('correlated',self.xvarCorrelated)
       self.xvarUncorrelated = [self.xvar[i] for i in index_uncorrelated]
-      # print('uncorrelated',self.xvarUncorrelated)
       
       self.xvarClassCorrelated = [self.xvarClass[i] for i in index_correlated]
       self.xvarClassUncorrelated = [self.xvarClass[i] for i in index_uncorrelated]
     
-      # print("\nself.xvarClassCorrelated:")
-      # for i, obj in enumerate(self.xvarClassCorrelated):
-      #   print(f"Obj {i}: {vars(obj)}")
-      # print("\nself.xvarClassUncorrelated:")
-      # for i, obj in enumerate(self.xvarClassUncorrelated):
-      #   print(f"Obj {i}: {vars(obj)}")   
-        
-      
       return index_correlated, index_uncorrelated
        
     @property
